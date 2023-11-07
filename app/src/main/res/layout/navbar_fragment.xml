@@ -6,9 +6,22 @@
     tools:context=".NavBar">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/materialToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#AF0000"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme" />
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="KwikTix"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
 </FrameLayout>

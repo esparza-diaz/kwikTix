@@ -20,7 +20,7 @@ public class DBHelper {
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS users "+
                 "(username TEXT PRIMARY KEY,password TEXT,email TEXT, college TEXT, FOREIGN KEY(college) REFERENCES colleges(college))");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS listings "+
-                "(title TEXT PRIMARY KEY,date TEXT,college TEXT,username TEXT, FOREIGN KEY(college) REFERENCES colleges(college), FOREIGN KEY(username) REFERENCES users(username))");
+                "(title TEXT PRIMARY KEY,date TEXT,price TEXT, college TEXT,username TEXT, FOREIGN KEY(college) REFERENCES colleges(college), FOREIGN KEY(username) REFERENCES users(username))");
     }
 
     /**
@@ -48,11 +48,11 @@ public class DBHelper {
      * @param college
      * @param username
      */
-    public void addTicket(String title,String date,String college, String username){
+    public void addTicket(String title,String date,String price,String college, String username){
         createTable();
         try {
-            sqLiteDatabase.execSQL("INSERT INTO listings (title, date, college, username) VALUES (?,?,?,?)",
-                    new String[]{title,date,college,username});
+            sqLiteDatabase.execSQL("INSERT INTO listings (title, date, price, college, username) VALUES (?,?,?,?,?)",
+                    new String[]{title,date,price,college,username});
         } catch (SQLiteConstraintException e) {
             // Handle the exception (e.g., log it or show a message) TODO: Same title
             Log.i("Info Listings(Primary Key)", "Same primary key for " + title);
@@ -111,20 +111,50 @@ public class DBHelper {
         int titleIndex = c.getColumnIndex("title");
         int dateIndex = c.getColumnIndex("date");
         int collegeIndex = c.getColumnIndex("college");
+        int priceIndex = c.getColumnIndex("price");
         c.moveToFirst();
         ArrayList<Tickets> listings = new ArrayList<>();
         while(!c.isAfterLast()){
             String title = c.getString(titleIndex);
             String date = c.getString(dateIndex);
             String college = c.getString(collegeIndex);
-
-            Tickets ticket = new Tickets(title,date,college,username);
+            String price = c.getString(priceIndex);
+            Tickets ticket = new Tickets(title,date,price,college,username);
             listings.add(ticket);
             c.moveToNext();
         }
 
         c.close();
-        sqLiteDatabase.close();
+        return listings;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Tickets> getListings(){
+        createTable();
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings", null);
+        int titleIndex = c.getColumnIndex("title");
+        int dateIndex = c.getColumnIndex("date");
+        int collegeIndex = c.getColumnIndex("college");
+        int usernameIndex = c.getColumnIndex("username");
+        int priceIndex = c.getColumnIndex("price");
+        c.moveToFirst();
+        ArrayList<Tickets> listings = new ArrayList<>();
+        while(!c.isAfterLast()){
+            String title = c.getString(titleIndex);
+            String date = c.getString(dateIndex);
+            String college = c.getString(collegeIndex);
+            String username = c.getString(usernameIndex);
+            String price = c.getString(priceIndex);
+
+            Tickets ticket = new Tickets(title,date,price,college,username);
+            listings.add(ticket);
+            c.moveToNext();
+        }
+
+        c.close();
         return listings;
     }
 

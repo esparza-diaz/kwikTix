@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
      * Instantiates sql db and proper tables.
      */
     public void startDb() {
-        SQLiteDatabase sqLiteDatabase = openOrCreateDatabase("kwik", Context.MODE_PRIVATE,null);
+        SQLiteDatabase sqLiteDatabase = openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE,null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
         colleges = new ArrayList<>();
         // creates colleges db from college.csv
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         //create user test
         dbHelper.addUser("test","password","test@gmail.com", "Wisconsin");
         // create example listing
-        dbHelper.addTicket("ticket #1","1/20/23", "Wisconsin","test");
+        dbHelper.addTicket("ticket #1","1/20/23","10.99", "Wisconsin","test");
         //testing for UW- Madison. This successfully gets college name, latitude and longitude for camp randall
         Users user = dbHelper.getUser("test");
         //get college info from user
@@ -80,7 +80,10 @@ public class MainActivity extends AppCompatActivity {
         for (Tickets ticket: tickets){
             Log.i("Testing listing",ticket.getTitle() + " " + ticket.getDate() + " " + ticket.getCollege() + " " + ticket.getUsername());
         }
-
+        ArrayList<Tickets> allTix = dbHelper.getListings();
+        for (Tickets ticket: allTix){
+            Log.i("Testing listing",ticket.getTitle() + " " + ticket.getDate() + " " + ticket.getCollege() + " " + ticket.getUsername() + " " + ticket.getPrice());
+        }
     }
 
     public void goToMainActivity() {

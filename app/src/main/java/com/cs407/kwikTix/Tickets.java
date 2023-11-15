@@ -5,12 +5,14 @@ public class Tickets {
     private String date;
     private String college;
     private String username;
+    private String price;
 
-    public Tickets(String title, String date, String college, String username) {
+    public Tickets(String title, String date, String price, String college, String username) {
         this.title = title;
         this.date = date;
         this.college = college;
         this.username = username;
+        this.price = price;
     }
 
     public String getTitle() {
@@ -27,5 +29,9 @@ public class Tickets {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getPrice() {
+        return price;
     }
 }

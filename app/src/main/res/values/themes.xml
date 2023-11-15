@@ -3,6 +3,7 @@
     <style name="Base.Theme.KwikTix" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#AF0000</item>
     </style>
 
     <style name="Theme.KwikTix" parent="Base.Theme.KwikTix" />

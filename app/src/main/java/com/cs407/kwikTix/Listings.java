@@ -1,12 +1,14 @@
 package com.cs407.kwikTix;
 
+import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -65,19 +67,42 @@ public class Listings extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.listings_fragment, container, false);
-        ListView notesListView = (ListView) v.findViewById(R.id.myListings);
+        ListView ticketsListView = (ListView) v.findViewById(R.id.myListings);
 
         Listing l1 = new Listing("Iowa Game", 50.00);
         Listing l2 = new Listing("Iowa Game", 70.00);
         Listing l3 = new Listing("Nebraska Game", 55.00);
 
         // TODO: HARDCODED LISTINGS
-        ArrayList<String> displayListings = new ArrayList<>();
-        displayListings.add(String.format("Title:%s\nPrice: $%s\n", l1.getTitle(), l1.getPrice()));
-        displayListings.add(String.format("Title:%s\nPrice: $%s\n", l2.getTitle(), l2.getPrice()));
-        displayListings.add(String.format("Title:%s\nPrice: $%s\n", l3.getTitle(), l3.getPrice()));
-        ArrayAdapter adapter = new ArrayAdapter(v.getContext(), android.R.layout.simple_list_item_1, displayListings);
-        notesListView.setAdapter(adapter);
+        ArrayList<Listing> displayListings = new ArrayList<>();
+        displayListings.add(l1);
+        displayListings.add(l2);
+        displayListings.add(l3);
+
+        TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
+        ticketsListView.setAdapter(adapter);
+
+        FragmentManager fragmentManager = getParentFragmentManager();
+        ticketsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Listing selectedListing = displayListings.get(i);
+
+                // Create a new instance of SingleTicketFragment and pass the selectedListing
+                SingleTicket singleTicketFragment = new SingleTicket();
+                Bundle args = new Bundle();
+                args.putSerializable("selectedListing", selectedListing);
+                singleTicketFragment.setArguments(args);
+
+                // Replace Listings fragment with SingleTicketFragment
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, singleTicketFragment)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("showing Listings")
+                        .commit();
+            }
+        });
+
         return v;
     }
 }

@@ -1,6 +1,8 @@
 package com.cs407.kwikTix;
 
-public class Listing {
+import java.io.Serializable;
+
+public class Listing implements Serializable {
     private String title;
     private Double price;
 

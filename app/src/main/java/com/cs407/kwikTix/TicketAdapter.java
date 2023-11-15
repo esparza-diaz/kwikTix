@@ -11,9 +11,9 @@ import com.cs407.kwikTix.Listing;
 
 import java.util.List;
 
-public class TicketAdapter extends ArrayAdapter<Listing> {
+public class TicketAdapter extends ArrayAdapter<Tickets> {
 
-    public TicketAdapter(Context context, List<Listing> tickets) {
+    public TicketAdapter(Context context, List<Tickets> tickets) {
         super(context, 0, tickets);
     }
 
@@ -23,7 +23,7 @@ public class TicketAdapter extends ArrayAdapter<Listing> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_ticket, parent, false);
         }
 
-        Listing currentListing = getItem(position);
+        Tickets currentListing = getItem(position);
 
         TextView titleTextView = convertView.findViewById(R.id.titleTextView);
         TextView priceTextView = convertView.findViewById(R.id.priceTextView);

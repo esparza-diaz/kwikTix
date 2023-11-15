@@ -1,6 +1,8 @@
 package com.cs407.kwikTix;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -62,6 +64,10 @@ public class Listings extends Fragment {
         }
     }
 
+    TicketAdapter adapter;
+    ArrayList<Tickets> displayListings;
+    SQLiteDatabase sqLiteDatabase;
+    DBHelper dbHelper;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,15 +75,16 @@ public class Listings extends Fragment {
         View v =  inflater.inflate(R.layout.listings_fragment, container, false);
         ListView ticketsListView = (ListView) v.findViewById(R.id.myListings);
 
-        Listing l1 = new Listing("Iowa Game", 50.00);
-        Listing l2 = new Listing("Iowa Game", 70.00);
-        Listing l3 = new Listing("Nebraska Game", 55.00);
+        Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test");
+        Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test");
+        // Init DB
+        sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
+        dbHelper = new DBHelper(sqLiteDatabase);
 
+        dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername());
+        dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername());
         // TODO: HARDCODED LISTINGS
-        ArrayList<Listing> displayListings = new ArrayList<>();
-        displayListings.add(l1);
-        displayListings.add(l2);
-        displayListings.add(l3);
+        displayListings = dbHelper.getListings();
 
         TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
         ticketsListView.setAdapter(adapter);
@@ -86,7 +93,7 @@ public class Listings extends Fragment {
         ticketsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Listing selectedListing = displayListings.get(i);
+                Tickets selectedListing = displayListings.get(i);
 
                 // Create a new instance of SingleTicketFragment and pass the selectedListing
                 SingleTicket singleTicketFragment = new SingleTicket();
@@ -98,11 +105,19 @@ public class Listings extends Fragment {
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainerView, singleTicketFragment)
                         .setReorderingAllowed(true)
-                        .addToBackStack("showing Listings")
+                        .addToBackStack("showing Single Ticket")
                         .commit();
             }
         });
 
         return v;
+    }
+
+    public void refreshListings() {
+        // TODO: Update the data from the database
+        displayListings = dbHelper.getListings();
+
+        // Notify the adapter that the data has changed
+        adapter.notifyDataSetChanged();
     }
 }

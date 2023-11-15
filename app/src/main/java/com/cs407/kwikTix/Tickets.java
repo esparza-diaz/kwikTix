@@ -1,6 +1,8 @@
 package com.cs407.kwikTix;
 
-public class Tickets {
+import java.io.Serializable;
+
+public class Tickets implements Serializable {
     private String title;
     private String date;
     private String college;

@@ -53,6 +53,7 @@ public class DBHelper {
         try {
             sqLiteDatabase.execSQL("INSERT INTO listings (title, date, price, college, username) VALUES (?,?,?,?,?)",
                     new String[]{title,date,price,college,username});
+            Log.i("Yay", "Ticket created");
         } catch (SQLiteConstraintException e) {
             // Handle the exception (e.g., log it or show a message) TODO: Same title
             Log.i("Info Listings(Primary Key)", "Same primary key for " + title);
@@ -133,6 +134,7 @@ public class DBHelper {
      * @return
      */
     public ArrayList<Tickets> getListings(){
+        Log.i("Yay", "Getting al Listings");
         createTable();
         Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings", null);
         int titleIndex = c.getColumnIndex("title");
@@ -179,6 +181,28 @@ public class DBHelper {
         return college;
     }
 
+    public ArrayList<Colleges> getAllColleges(){
+        createTable();
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM colleges",null);
+        int nameIndex = c.getColumnIndex("college");
+        int latIndex = c.getColumnIndex("latitude");
+        int lonIndex = c.getColumnIndex("longitude");
+
+        c.moveToFirst();
+        ArrayList<Colleges> colleges = new ArrayList<>();
+        while(!c.isAfterLast()) {
+            String name = c.getString(nameIndex);
+            String latitude = c.getString(latIndex);
+            String longitude = c.getString(lonIndex);
+
+            Colleges college = new Colleges(name, latitude, longitude);
+            colleges.add(college);
+            c.moveToNext();
+        }
+
+        c.close();
+        return colleges;
+    }
     /*
     public void updateNotes(String content,String date,String title,String username){
         createTable();

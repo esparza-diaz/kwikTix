@@ -65,7 +65,7 @@ public class SingleTicket extends Fragment {
         // Retrieve the selectedListing from arguments
         Bundle args = getArguments();
         if (args != null) {
-            Listing selectedListing = (Listing) args.getSerializable("selectedListing");
+            Tickets selectedListing = (Tickets) args.getSerializable("selectedListing");
             if (selectedListing != null) {
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
@@ -77,6 +77,11 @@ public class SingleTicket extends Fragment {
                 TextView ticketPriceTextView = v.findViewById(R.id.ticketPrice);
                 ticketPriceTextView.setText(selectedListing.getPrice().toString());
 
+                TextView sellerNameTextView = v.findViewById(R.id.sellerName);
+                sellerNameTextView.setText(selectedListing.getUsername().toString());
+
+                TextView dateTimeTextView = v.findViewById(R.id.dateTime);
+                dateTimeTextView.setText(selectedListing.getDate().toString());
                 // Handle Back button click
                 ImageButton backButton = v.findViewById(R.id.backButton);
                 backButton.setOnClickListener(new View.OnClickListener() {

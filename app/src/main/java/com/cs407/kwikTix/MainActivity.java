@@ -20,15 +20,23 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
+    private ArrayList<String> colleges; // stores college names
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // instantiate sql db
+        startDb();
+    }
 
-        // Create colleges table from college.csv onCreate
+    /**
+     * Instantiates sql db and proper tables.
+     */
+    public void startDb() {
         SQLiteDatabase sqLiteDatabase = openOrCreateDatabase("kwik", Context.MODE_PRIVATE,null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
+        colleges = new ArrayList<>();
+        // creates colleges db from college.csv
         try {
             InputStream inputStream = getAssets().open("colleges.csv");
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -47,18 +55,32 @@ public class MainActivity extends AppCompatActivity {
                 String latitude = fields[9].trim();
                 String longitude = fields[10].trim();
 
-                //add to db
+                // store names to arrayList for college names
+                colleges.add(team);
+
+                //add to db to be used for mapping
                 dbHelper.addCollege(team,latitude,longitude);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+        //create user test
+        dbHelper.addUser("test","password","test@gmail.com", "Wisconsin");
+        // create example listing
+        dbHelper.addTicket("ticket #1","1/20/23", "Wisconsin","test");
         //testing for UW- Madison. This successfully gets college name, latitude and longitude for camp randall
-        ArrayList<Colleges> colleges = dbHelper.getColleges("Wisconsin");
-        for (Colleges college : colleges){
-            Log.i("Testing",college.getCollege() + " " + college.getLatitude() + " " + college.getLongitude());
+        Users user = dbHelper.getUser("test");
+        //get college info from user
+        Colleges college = dbHelper.getCollege(user.getCollege());
+        // get listings for user test
+        ArrayList<Tickets> tickets = dbHelper.getListings("test");
+        Log.i("Testing user", user.getUsername() + " " + user.getPassword() + " " + user.getEmail() + " " + user.getCollege());
+        Log.i("Testing location",college.getCollege() + " " + college.getLatitude() + " " + college.getLongitude());
+        for (Tickets ticket: tickets){
+            Log.i("Testing listing",ticket.getTitle() + " " + ticket.getDate() + " " + ticket.getCollege() + " " + ticket.getUsername());
         }
+
     }
 
     public void goToMainActivity() {

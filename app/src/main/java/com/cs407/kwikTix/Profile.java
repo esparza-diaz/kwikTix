@@ -1,5 +1,8 @@
 package com.cs407.kwikTix;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -25,7 +30,7 @@ public class Profile extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private String userLoggedIn;
     private String mParam2;
 
     public Profile() {
@@ -54,8 +59,7 @@ public class Profile extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            userLoggedIn = getArguments().getString("username");
         }
     }
 
@@ -65,6 +69,22 @@ public class Profile extends Fragment {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_profile, container, false);
         ListView ticketsListView = (ListView) v.findViewById(R.id.profileListings);
+
+        //TODO: Current using this button to logout, must change
+        Button logout = v.findViewById(R.id.manageSettings);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //clear sharedPreference
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
+
+                Intent intent = new Intent(requireContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         Listing l1 = new Listing("Iowa Game", 50.00);
         Listing l2 = new Listing("Iowa Game", 70.00);

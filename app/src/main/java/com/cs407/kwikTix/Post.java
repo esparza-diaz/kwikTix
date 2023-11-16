@@ -33,7 +33,7 @@ public class Post extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private String userLoggedIn;
     private String mParam2;
 
     public Post() {
@@ -62,8 +62,7 @@ public class Post extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            userLoggedIn = getArguments().getString("username");
         }
     }
 
@@ -114,7 +113,7 @@ public class Post extends Fragment {
 
                 SQLiteDatabase sqLiteDatabase = view.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE,null);
                 DBHelper dbHelper = new DBHelper(sqLiteDatabase);
-                dbHelper.addTicket(gameTitle, price, college, dateTime, "test");
+                dbHelper.addTicket(gameTitle, dateTime,price, college, "test");
 
                 Listings listingsFragment = (Listings) getParentFragmentManager().findFragmentByTag("showing Listings");
                 if (listingsFragment != null) {

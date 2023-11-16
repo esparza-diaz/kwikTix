@@ -8,8 +8,10 @@ import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,7 +26,7 @@ public class SingleTicket extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private String userLoggedIn;
     private String mParam2;
 
     public SingleTicket() {
@@ -53,8 +55,7 @@ public class SingleTicket extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            userLoggedIn = getArguments().getString("username");
         }
     }
 
@@ -70,6 +71,9 @@ public class SingleTicket extends Fragment {
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(selectedListing.getTitle());
+
+                TextView locationNameTextView = v.findViewById(R.id.gameLocation);
+                locationNameTextView.setText(selectedListing.getCollege());
 
                 TextView gameNameTextView = v.findViewById(R.id.gameName);
                 gameNameTextView.setText(selectedListing.getTitle());
@@ -89,6 +93,14 @@ public class SingleTicket extends Fragment {
                     public void onClick(View view) {
                         FragmentManager fragmentManager = getParentFragmentManager();
                         fragmentManager.popBackStack();
+                    }
+                });
+
+                Button buy = v.findViewById(R.id.buyNowButton);
+                buy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(requireContext(), "Buying ticket as: " + userLoggedIn, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

@@ -57,6 +57,28 @@
 
         </LinearLayout>
 
+        <!-- Location -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location: "
+                android:textStyle="bold"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/gameLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wisconsin"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
         <!-- Price -->
         <LinearLayout
             android:layout_width="match_parent"

@@ -1,17 +1,16 @@
 package com.cs407.kwikTix;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class Listings extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private String userLoggedIn;
     private String mParam2;
 
     public static ArrayList<Listing> listings;
@@ -59,8 +58,7 @@ public class Listings extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            userLoggedIn = getArguments().getString("username");
         }
     }
 
@@ -99,6 +97,7 @@ public class Listings extends Fragment {
                 SingleTicket singleTicketFragment = new SingleTicket();
                 Bundle args = new Bundle();
                 args.putSerializable("selectedListing", selectedListing);
+                args.putString("username",userLoggedIn);
                 singleTicketFragment.setArguments(args);
 
                 // Replace Listings fragment with SingleTicketFragment

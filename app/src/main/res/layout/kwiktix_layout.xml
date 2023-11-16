@@ -40,10 +40,8 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragmentContainerView"
-                android:name="com.cs407.kwikTix.Listings"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:layout="@layout/listings_fragment" />
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 

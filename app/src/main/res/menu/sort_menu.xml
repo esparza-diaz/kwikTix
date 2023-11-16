@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/sortByPrice"
+        android:title="Sort by Price" />
+    <item
+        android:id="@+id/sortByTime"
+        android:title="Sort by Time" />
+    <item
+        android:id="@+id/noFilter"
+        android:title="No filter" />
+</menu>

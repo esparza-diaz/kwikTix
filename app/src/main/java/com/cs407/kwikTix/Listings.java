@@ -7,13 +7,22 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,6 +75,7 @@ public class Listings extends Fragment {
     ArrayList<Tickets> displayListings;
     SQLiteDatabase sqLiteDatabase;
     DBHelper dbHelper;
+    List<Colleges> collegeList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,6 +93,8 @@ public class Listings extends Fragment {
         dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername());
         // TODO: HARDCODED LISTINGS
         displayListings = dbHelper.getListings();
+
+        collegeList = dbHelper.getAllColleges();
 
         TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
         ticketsListView.setAdapter(adapter);
@@ -109,7 +121,81 @@ public class Listings extends Fragment {
             }
         });
 
+        ImageButton sortButton = v.findViewById(R.id.sortButton);
+        sortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showSortMenu(view);
+            }
+        });
+
+
+        ImageButton filterButton = v.findViewById(R.id.filterButton);
+
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCollegeFilterPopup(view);
+            }
+        });
+
         return v;
+    }
+
+    private void showCollegeFilterPopup(View view) {
+        // Inflate the popup layout
+        View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.filter_menu, null);
+
+        // Set up the PopupWindow
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
+
+        Spinner collegeSpinner = popupView.findViewById(R.id.collegesSpinner);
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerAdapter.add("All Colleges");
+        // Add college names to the adapter
+        for (Colleges college : collegeList) {
+            spinnerAdapter.add(college.getCollege());
+        }
+
+
+        collegeSpinner.setAdapter(spinnerAdapter);
+        // Set up the filter button in the popup
+        Button filterByCollegeButton = popupView.findViewById(R.id.filterByCollegeButton);
+        filterByCollegeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle filter by college
+                String selectedCollege = (String) collegeSpinner.getSelectedItem();
+                // Apply the filter based on the selected college
+                // ...
+
+                // Dismiss the popup
+                popupWindow.dismiss();
+            }
+        });
+
+        // Show the popup at the center of the screen
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
+
+    private void showSortMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.inflate(R.menu.sort_menu); // Create a menu resource file (res/menu/filter_menu.xml)
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                //handleFilterSelection(menuItem.getItemId());
+                return true;
+            }
+        });
+
+        popupMenu.show();
     }
 
     public void refreshListings() {

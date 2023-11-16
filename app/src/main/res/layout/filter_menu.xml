@@ -1,0 +1,24 @@
+<!-- res/layout/filter_menu.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#AF0000">
+
+    <Spinner
+        android:id="@+id/collegesSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:background="#fff"/>
+
+    <Button
+        android:id="@+id/filterByCollegeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filter"
+        android:background="#fff"
+        android:layout_marginTop="8dp"/>
+</LinearLayout>

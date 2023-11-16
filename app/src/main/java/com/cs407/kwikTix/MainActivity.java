@@ -122,4 +122,9 @@ public class MainActivity extends AppCompatActivity {
     public void onLoginButtonClick(View view) {
         goToMainActivity();
     }
+
+    public void onSignupButtonClick(View view) {
+        // TODO Implement
+        Log.d("Signup Button", "onSignupButtonClick: Clicked");
+    }
 }

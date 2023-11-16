@@ -114,17 +114,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void goToMainActivity() {
-        Intent intent = new Intent(this, KwikTix.class);
-        startActivity(intent);
-    }
-
-    public void onLoginButtonClick(View view) {
-        goToMainActivity();
-    }
-
     public void onSignupButtonClick(View view) {
         // TODO Implement
         Log.d("Signup Button", "onSignupButtonClick: Clicked");
+        Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+        startActivity(intent);
     }
 }

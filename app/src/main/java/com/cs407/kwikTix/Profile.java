@@ -3,6 +3,7 @@ package com.cs407.kwikTix;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -63,6 +64,10 @@ public class Profile extends Fragment {
         }
     }
 
+    TicketAdapter adapter;
+    ArrayList<Tickets> displayListings;
+    SQLiteDatabase sqLiteDatabase;
+    DBHelper dbHelper;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,17 +90,11 @@ public class Profile extends Fragment {
                 startActivity(intent);
             }
         });
+        sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
+        dbHelper = new DBHelper(sqLiteDatabase);
+        displayListings = dbHelper.getListings(userLoggedIn);
 
-        Listing l1 = new Listing("Iowa Game", 50.00);
-        Listing l2 = new Listing("Iowa Game", 70.00);
-        Listing l3 = new Listing("Nebraska Game", 55.00);
-
-        // TODO: HARDCODED LISTINGS
-        ArrayList<String> displayListings = new ArrayList<>();
-        displayListings.add(String.format("Title:%s\nPrice: $%s\n", l1.getTitle(), l1.getPrice()));
-        displayListings.add(String.format("Title:%s\nPrice: $%s\n", l2.getTitle(), l2.getPrice()));
-        displayListings.add(String.format("Title:%s\nPrice: $%s\n", l3.getTitle(), l3.getPrice()));
-        ArrayAdapter adapter = new ArrayAdapter(v.getContext(), android.R.layout.simple_list_item_1, displayListings);
+        TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
         ticketsListView.setAdapter(adapter);
         return v;
     }

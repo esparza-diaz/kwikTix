@@ -18,7 +18,7 @@ public class DBHelper {
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS colleges "+
                 "(college TEXT PRIMARY KEY,latitude TEXT, longitude TEXT)");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS users "+
-                "(username TEXT PRIMARY KEY,password TEXT,email TEXT, college TEXT, FOREIGN KEY(college) REFERENCES colleges(college))");
+                "(username TEXT PRIMARY KEY,password TEXT,email TEXT, phone TEXT, prefContactMethod TEXT, college TEXT, FOREIGN KEY(college) REFERENCES colleges(college))");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS listings "+
                 "(title TEXT PRIMARY KEY,date TEXT,price TEXT, college TEXT,username TEXT, FOREIGN KEY(college) REFERENCES colleges(college), FOREIGN KEY(username) REFERENCES users(username))");
     }
@@ -28,13 +28,15 @@ public class DBHelper {
      * @param username
      * @param password
      * @param email
+     * @param phone
+     * @param prefContactMethod
      * @param college
      */
-    public void addUser(String username,String password,String email, String college){
+    public void addUser(String username,String password,String email, String phone, String prefContactMethod, String college){
         createTable();
         try {
-            sqLiteDatabase.execSQL("INSERT INTO users (username, password, email, college) VALUES (?,?,?,?)",
-                    new String[]{username,password,email,college});
+            sqLiteDatabase.execSQL("INSERT INTO users (username, password, email, phone, prefContactMethod, college) VALUES (?,?,?,?,?,?)",
+                    new String[]{username, password, email, phone, prefContactMethod, college});
         } catch (SQLiteConstraintException e) {
             // Handle the exception (e.g., log it or show a message) TODO: Logic to catch for same user
             Log.i("Info User(Primary Key)", "Same primary key for " + username);
@@ -88,13 +90,17 @@ public class DBHelper {
                 new String[]{"%" + username + "%"});
         int passwordIndex = c.getColumnIndex("password");
         int emailIndex = c.getColumnIndex("email");
+        int phoneIndex = c.getColumnIndex("phone");
+        int prefContactMethodIndex = c.getColumnIndex("prefContactMethod");
         int collegeIndex = c.getColumnIndex("college");
         c.moveToFirst();
         String password = c.getString(passwordIndex);
         String email = c.getString(emailIndex);
+        String phone = c.getString(phoneIndex);
+        String prefContactMethod = c.getString(prefContactMethodIndex);
         String college = c.getString(collegeIndex);
 
-        Users user = new Users(username, password, email, college);
+        Users user = new Users(username, password, email, phone, prefContactMethod, college);
 
         c.close();
         return user;

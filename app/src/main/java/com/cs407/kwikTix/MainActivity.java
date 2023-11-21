@@ -38,23 +38,27 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }else {
             setContentView(R.layout.activity_main);
-            Button button = findViewById(R.id.loginButton);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
-                    Intent intent = new Intent(MainActivity.this, KwikTix.class);
-                    EditText username = (EditText) findViewById(R.id.signinName);
-                    if (username.getText().toString().trim().isEmpty()){
-                        username.setError("Please enter a non-empty value");
-                    }else {
-                        intent.putExtra("username", username.getText().toString().trim());
-                        sharedPreferences.edit().putString("username", username.getText().toString().trim()).apply();
-                        startActivity(intent);
-                    }
-                }
-            });
         }
+    }
+
+    public void onSigninButtonClick(View view) {
+        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+        Intent intent = new Intent(MainActivity.this, KwikTix.class);
+        EditText username = (EditText) findViewById(R.id.signinName);
+        if (username.getText().toString().trim().isEmpty()){
+            username.setError("Please enter a non-empty value");
+        }else {
+            intent.putExtra("username", username.getText().toString().trim());
+            sharedPreferences.edit().putString("username", username.getText().toString().trim()).apply();
+            startActivity(intent);
+        }
+    }
+
+    public void onSignupButtonClick(View view) {
+        // TODO Implement
+        Log.d("Signup Button", "onSignupButtonClick: Clicked");
+        Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -94,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //create user test
-        dbHelper.addUser("test","password","test@gmail.com", "Wisconsin");
+        dbHelper.addUser("test","password","test@gmail.com", "696-969-6969", "E-Mail", "Wisconsin");
         // create example listing
         dbHelper.addTicket("ticket #1","1/20/23","10.99", "Wisconsin","test");
         //testing for UW- Madison. This successfully gets college name, latitude and longitude for camp randall
@@ -103,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
         Colleges college = dbHelper.getCollege(user.getCollege());
         // get listings for user test
         ArrayList<Tickets> tickets = dbHelper.getListings("test");
-        Log.i("Testing user", user.getUsername() + " " + user.getPassword() + " " + user.getEmail() + " " + user.getCollege());
+        Log.i("Testing user", user.getUsername() + " " + user.getPassword() + " " + user.getEmail() + " " + user.getPhone()
+                + " " + user.getPrefContactMethod() + " " + user.getCollege());
         Log.i("Testing location",college.getCollege() + " " + college.getLatitude() + " " + college.getLongitude());
         for (Tickets ticket: tickets){
             Log.i("Testing listing",ticket.getTitle() + " " + ticket.getDate() + " " + ticket.getCollege() + " " + ticket.getUsername());
@@ -112,12 +117,5 @@ public class MainActivity extends AppCompatActivity {
         for (Tickets ticket: allTix){
             Log.i("Testing listing",ticket.getTitle() + " " + ticket.getDate() + " " + ticket.getCollege() + " " + ticket.getUsername() + " " + ticket.getPrice());
         }
-    }
-
-    public void onSignupButtonClick(View view) {
-        // TODO Implement
-        Log.d("Signup Button", "onSignupButtonClick: Clicked");
-        Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
-        startActivity(intent);
     }
 }

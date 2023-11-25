@@ -74,13 +74,22 @@
             android:layout_width="match_parent"
             android:layout_height="50dp" />
 
+        <Spinner
+            android:id="@+id/signupCollege"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginTop="75dp"
+            android:layout_height="50dp"
+            android:layout_width="match_parent" />
+
         <Button
-            android:id="@+id/signupButton"
+            android:id="@+id/signupPageButton"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="75dp"
             android:layout_marginHorizontal="50dp"
-            android:text="Sign Up" />
+            android:text="Sign Up"
+            android:onClick="onSignupPageButtonClick"/>
+
 
     </LinearLayout>
 

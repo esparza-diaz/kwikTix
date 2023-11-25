@@ -44,6 +44,17 @@ public class DBHelper {
     }
 
     /**
+     * Deletes user from the users SQL database
+     *
+     * @param username
+     */
+    public void deleteUser(String username){
+        createTable();
+        sqLiteDatabase.delete("users", "DELETE FROM users WHERE username=" + username,
+                new String[]{username});
+    }
+
+    /**
      * Adds ticket to listings db
      * @param title
      * @param date
@@ -217,17 +228,6 @@ public class DBHelper {
                 new String[]{content,date,title,username});
     }
 
-    public void deleteNotes(String content,String title){
-        createTable();
-        String date = "";
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT date FROM notes WHERE content=?",
-                new String[]{content});
-        if(cursor.moveToNext()){
-            date = cursor.getString(0);
-        }
-        sqLiteDatabase.execSQL("DELETE FROM notes WHERE content=? AND date=?",
-                new String[]{content,date});
-        cursor.close();
-    }
+
  */
 }

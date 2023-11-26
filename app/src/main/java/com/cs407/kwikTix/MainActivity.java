@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -23,6 +25,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<String> colleges; // stores college names
+    DBHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +42,36 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }else {
             setContentView(R.layout.activity_main);
+            // Tries unpacking values from signup
+            try {
+                Intent intent = getIntent();
+                ArrayList<String> newUserInfo = intent.getStringArrayListExtra("newUserInfo");
+                String newUserUsername = newUserInfo.get(0);
+                String newUserPassword = newUserInfo.get(1);
+                String newUserEmail = newUserInfo.get(2);
+                String newUserPhone = newUserInfo.get(3);
+                String newUserPrefContactMethod = newUserInfo.get(4);
+                String newUserCollege = newUserInfo.get(5);
+
+                // Logs info for testing purposes
+                for (String info: newUserInfo) {
+                    Log.d("newUserInfo", info);
+                }
+
+                // Adds new user to SQLiteDatabase
+                dbHelper.addUser(
+                        newUserUsername,
+                        newUserPassword,
+                        newUserEmail,
+                        newUserPhone,
+                        newUserPrefContactMethod,
+                        newUserCollege
+                );
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error Message", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -67,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void startDb() {
         SQLiteDatabase sqLiteDatabase = openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE,null);
-        DBHelper dbHelper = new DBHelper(sqLiteDatabase);
+        dbHelper = new DBHelper(sqLiteDatabase);
         colleges = new ArrayList<>();
         // creates colleges db from college.csv
         try {

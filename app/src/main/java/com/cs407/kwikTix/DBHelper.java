@@ -32,7 +32,7 @@ public class DBHelper {
      * @param prefContactMethod
      * @param college
      */
-    public void addUser(String username,String password,String email, String phone, String prefContactMethod, String college){
+    public void addUser(String username,String password,String email, String phone, String prefContactMethod, String college) throws SQLiteConstraintException{
         createTable();
         try {
             sqLiteDatabase.execSQL("INSERT INTO users (username, password, email, phone, prefContactMethod, college) VALUES (?,?,?,?,?,?)",
@@ -40,6 +40,7 @@ public class DBHelper {
         } catch (SQLiteConstraintException e) {
             // Handle the exception (e.g., log it or show a message) TODO: Logic to catch for same user
             Log.i("Info User(Primary Key)", "Same primary key for " + username);
+            throw e;
         }
     }
 
@@ -49,7 +50,7 @@ public class DBHelper {
      * @param username
      */
     public void deleteUser(String username){
-        createTable();
+        createTable(); // TODO add delete option in manage settings area
         sqLiteDatabase.delete("users", "DELETE FROM users WHERE username=" + username,
                 new String[]{username});
     }

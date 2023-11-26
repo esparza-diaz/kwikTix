@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="50dp"
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="40dp"
             android:ems="10"
             android:inputType="textPassword"
             android:text=""
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="50dp"
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="45dp"
             android:ems="10"
             android:inputType="text"
             android:text=""
@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="50dp"
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="40dp"
             android:ems="10"
             android:inputType="phone"
             android:text=""
@@ -70,14 +70,14 @@
         <Spinner
             android:id="@+id/signupContactMethodDropdown"
             android:layout_marginHorizontal="50dp"
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="40dp"
             android:layout_width="match_parent"
             android:layout_height="50dp" />
 
         <Spinner
             android:id="@+id/signupCollege"
             android:layout_marginHorizontal="50dp"
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="40dp"
             android:layout_height="50dp"
             android:layout_width="match_parent" />
 
@@ -85,8 +85,9 @@
             android:id="@+id/signupPageButton"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="75dp"
             android:layout_marginHorizontal="50dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="100dp"
             android:text="Sign Up"
             android:onClick="onSignupPageButtonClick"/>
 

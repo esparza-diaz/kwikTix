@@ -32,7 +32,7 @@ public class DBHelper {
      * @param prefContactMethod
      * @param college
      */
-    public void addUser(String username,String password,String email, String phone, String prefContactMethod, String college) throws SQLiteConstraintException{
+    public void addUser(String username,String password,String email, String phone, String prefContactMethod, String college) {
         createTable();
         try {
             sqLiteDatabase.execSQL("INSERT INTO users (username, password, email, phone, prefContactMethod, college) VALUES (?,?,?,?,?,?)",
@@ -40,7 +40,6 @@ public class DBHelper {
         } catch (SQLiteConstraintException e) {
             // Handle the exception (e.g., log it or show a message) TODO: Logic to catch for same user
             Log.i("Info User(Primary Key)", "Same primary key for " + username);
-            throw e;
         }
     }
 

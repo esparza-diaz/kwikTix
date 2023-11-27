@@ -89,10 +89,10 @@ public class Listings extends Fragment {
         sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
 
-        dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername());
-        dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername());
+        //dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername());
+        //dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername());
         // TODO: HARDCODED LISTINGS
-        displayListings = dbHelper.getListings();
+        displayListings = dbHelper.getListings(null,null);
 
         collegeList = dbHelper.getAllColleges();
 
@@ -200,7 +200,7 @@ public class Listings extends Fragment {
 
     public void refreshListings() {
         // TODO: Update the data from the database
-        displayListings = dbHelper.getListings();
+        displayListings = dbHelper.getListings(null,null);
 
         // Notify the adapter that the data has changed
         adapter.notifyDataSetChanged();

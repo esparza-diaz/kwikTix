@@ -113,7 +113,7 @@ public class Post extends Fragment {
 
                 SQLiteDatabase sqLiteDatabase = view.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE,null);
                 DBHelper dbHelper = new DBHelper(sqLiteDatabase);
-                dbHelper.addTicket(gameTitle, dateTime,price, college, "test");
+                dbHelper.addTicket(gameTitle, dateTime,price, college, userLoggedIn);
 
                 Listings listingsFragment = (Listings) getParentFragmentManager().findFragmentByTag("showing Listings");
                 if (listingsFragment != null) {

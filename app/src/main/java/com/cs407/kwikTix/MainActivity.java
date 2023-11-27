@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -23,6 +24,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<String> colleges; // stores college names
+    DBHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +48,20 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
                     Intent intent = new Intent(MainActivity.this, KwikTix.class);
                     EditText username = (EditText) findViewById(R.id.signinName);
-                    if (username.getText().toString().trim().isEmpty()){
+                    EditText password = (EditText) findViewById(R.id.signinPassword);
+                    String user = username.getText().toString().trim();
+                    String pass = password.getText().toString().trim();
+                    if (user.isEmpty()){
                         username.setError("Please enter a non-empty value");
                     }else {
-                        intent.putExtra("username", username.getText().toString().trim());
-                        sharedPreferences.edit().putString("username", username.getText().toString().trim()).apply();
-                        startActivity(intent);
+                        Users user_ = dbHelper.getUser(user);
+                        if (user_.getPassword().equals(pass)) {
+                            intent.putExtra("username", username.getText().toString().trim());
+                            sharedPreferences.edit().putString("username", username.getText().toString().trim()).apply();
+                            startActivity(intent);
+                        }else{
+                            password.setError("Incorrect Login Information");
+                        }
                     }
                 }
             });
@@ -62,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void startDb() {
         SQLiteDatabase sqLiteDatabase = openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE,null);
-        DBHelper dbHelper = new DBHelper(sqLiteDatabase);
+        dbHelper = new DBHelper(sqLiteDatabase);
         colleges = new ArrayList<>();
         // creates colleges db from college.csv
         try {
@@ -73,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             String line;
 
             // Read and process each line
-            //br.readLine();
+            br.readLine();
             while ((line = br.readLine()) != null) {
                 // Split the line into fields using a comma as the delimiter
                 String[] fields = line.split(",");
@@ -95,7 +106,9 @@ public class MainActivity extends AppCompatActivity {
 
         //create user test
         dbHelper.addUser("test","password","test@gmail.com", "Wisconsin");
+        dbHelper.addUser("test2","password","test@gmail.com", "Wisconsin");
         // create example listing
+        /*
         dbHelper.addTicket("ticket #1","1/20/23","10.99", "Wisconsin","test");
         //testing for UW- Madison. This successfully gets college name, latitude and longitude for camp randall
         Users user = dbHelper.getUser("test");
@@ -112,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         for (Tickets ticket: allTix){
             Log.i("Testing listing",ticket.getTitle() + " " + ticket.getDate() + " " + ticket.getCollege() + " " + ticket.getUsername() + " " + ticket.getPrice());
         }
+         */
     }
 
     public void goToMainActivity() {

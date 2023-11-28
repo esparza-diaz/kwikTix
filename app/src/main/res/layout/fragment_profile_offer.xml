@@ -3,19 +3,39 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
-
-    <ImageButton
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/baseline_arrow_back_24"
-        android:contentDescription="Back"
-        android:layout_gravity="start"
-        android:layout_marginBottom="16dp" />
+    android:orientation="vertical">
 
     <!-- Ticket Name -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="0dp"
+            android:contentDescription="Back"
+            android:src="@drawable/baseline_arrow_back_24" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:text="My Offers"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="8dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/ticketName"
         android:layout_width="match_parent"
@@ -23,17 +43,22 @@
         android:text="Ticket Name"
         android:textSize="30sp"
         android:textStyle="bold"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp" />
 
     <!-- Ticket Details -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginBottom="16dp"
         android:background="#e0e0e0"
+        android:orientation="vertical"
         android:padding="16dp"
-        android:layout_marginBottom="16dp">
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp">
 
         <!-- Game -->
         <LinearLayout
@@ -45,8 +70,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Game: "
-                android:textStyle="bold"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/gameName"
@@ -67,8 +92,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Location: "
-                android:textStyle="bold"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/gameLocation"
@@ -88,9 +113,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Price: "
-                android:textStyle="bold"
-                android:textSize="22sp" />
+                android:text="Listing Price: "
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ticketPrice"
@@ -111,8 +136,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Seller: "
-                android:textStyle="bold"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/sellerName"
@@ -133,8 +158,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Date/Time: "
-                android:textStyle="bold"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/dateTime"
@@ -150,39 +175,93 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/buyNowButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Buy Now"
-            android:textSize="20sp"
-            android:padding="16dp"
-            android:background="#FF0000"
-            android:textColor="#fff"
-            android:layout_marginBottom="8dp" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="#e0e0e0"
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <Button
-                android:id="@+id/counterOfferButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Send Counter Offer"
-                android:textSize="20sp"
-                android:padding="16dp"
-                android:background="#FF0000"
-                android:textColor="#fff"
-                android:layout_marginRight="8dp" />
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Offered Price: "
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/offeredPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="50.00"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: "
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/offerStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Waiting"
+                android:textSize="22sp" />
+            <!-- Statuses: -->
+            <!-- Waiting, Pending, Accepted, Declined -->
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/changeOfferButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="#FF0000"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:paddingRight="54dp"
+                android:paddingLeft="54dp"
+                android:text="Change Offer"
+                android:textColor="#fff"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="8dp"
                 android:text="$"
                 android:textSize="20sp" />
 
@@ -190,10 +269,26 @@
                 android:id="@+id/counterOfferAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Offer Amount"
+                android:layout_marginBottom="8dp"
+                android:paddingRight="8dp"
+                android:paddingLeft="8dp"
+                android:hint="Amount"
                 android:inputType="numberDecimal"
                 android:textSize="20sp" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/buyNowButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="#FF0000"
+            android:padding="16dp"
+            android:text="Revoke Offer"
+            android:textColor="#fff"
+            android:textSize="20sp" />
+
     </LinearLayout>
+
 </LinearLayout>

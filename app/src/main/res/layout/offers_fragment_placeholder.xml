@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <!-- Ticket Name -->
+    android:orientation="vertical"
+    tools:context=".Offers">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="32dp"
-        android:orientation="horizontal">
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
         <ImageButton
             android:id="@+id/backButton"
@@ -31,29 +29,28 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="8dp"
-            android:text="My Purchases"
+            android:text="My Listings"
             android:textSize="22sp"
             android:textStyle="bold" />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/ticketName3"
+        android:id="@+id/ticketName2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
         android:text="Ticket Name"
         android:textSize="30sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:padding="16dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
         android:background="#e0e0e0"
         android:orientation="vertical"
         android:padding="16dp">
@@ -111,7 +108,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Listing Price: "
+                android:text="Listed Price: "
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -125,26 +122,6 @@
         </LinearLayout>
 
         <!-- Seller -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Seller: "
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/sellerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ticket Seller"
-                android:textSize="22sp" />
-
-        </LinearLayout>
 
         <!-- Date/Time -->
         <LinearLayout
@@ -173,64 +150,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="#e0e0e0"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/currOfferings"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Purchased Price: "
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/purchasedPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="50.00"
-                android:textSize="22sp" />
-
-        </LinearLayout>
+            android:layout_weight="1"
+            android:text="All Offers"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/myOffers"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="24dp"
-        android:background="#e0e0e0"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/acquireTicketHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="How to get your ticket: "
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
-            android:id="@+id/acquireTicketInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Instructions to get ticket . . ."
-            android:textSize="18sp"/>
-
-    </LinearLayout>
-
-    <!-- Ticket Details -->
+        android:layout_height="0dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
+        android:layout_weight="1" />
 
 </LinearLayout>

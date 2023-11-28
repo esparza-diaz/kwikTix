@@ -134,7 +134,7 @@ public class DBHelper {
      * @return
      */
     public ArrayList<Tickets> getListings(){
-        Log.i("Yay", "Getting al Listings");
+        Log.i("Yay", "Getting all Listings");
         createTable();
         Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings", null);
         int titleIndex = c.getColumnIndex("title");
@@ -159,6 +159,37 @@ public class DBHelper {
         c.close();
         return listings;
     }
+
+    public ArrayList<Tickets> getOffers(){
+        Log.i("Yay", "Getting all Offers");
+        createTable();
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings", null);
+        int titleIndex = c.getColumnIndex("title");
+        int dateIndex = c.getColumnIndex("date");
+        int collegeIndex = c.getColumnIndex("college");
+        int usernameIndex = c.getColumnIndex("username");
+        int priceIndex = c.getColumnIndex("price");
+        //int offerAmountIndex = c.getColumnIndex("offerAmount");
+        c.moveToFirst();
+        ArrayList<Tickets> offers = new ArrayList<>();
+        while(!c.isAfterLast()){
+            String title = c.getString(titleIndex);
+            String date = c.getString(dateIndex);
+            String college = c.getString(collegeIndex);
+            String username = c.getString(usernameIndex);
+            String price = c.getString(priceIndex);
+            //String offerAmount = c.getString(offerAmountIndex);
+
+            Tickets ticket = new Tickets(title,date,price,college,username);
+            //Tickets ticket = new Tickets(title,date,price,college,username, offerAmount);
+            offers.add(ticket);
+            c.moveToNext();
+        }
+
+        c.close();
+        return offers;
+    }
+
 
     /**
      * Returns college information given the name of the college

@@ -149,24 +149,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <Button
+            android:id="@+id/counterOfferButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <Button
-                android:id="@+id/counterOfferButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="See Offers"
-                android:textSize="20sp"
-                android:padding="16dp"
-                android:background="#FF0000"
-                android:textColor="#fff"
-                android:layout_marginBottom="8dp" />
-
-        </LinearLayout>
+            android:layout_marginBottom="8dp"
+            android:background="#FF0000"
+            android:padding="16dp"
+            android:text="See Offers"
+            android:textColor="#fff"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/buyNowButton"
@@ -178,5 +170,6 @@
             android:text="Revoke Listing"
             android:textColor="#fff"
             android:textSize="20sp" />
+
     </LinearLayout>
 </LinearLayout>

@@ -76,12 +76,14 @@ public class Listings extends Fragment {
     SQLiteDatabase sqLiteDatabase;
     DBHelper dbHelper;
     List<Colleges> collegeList;
+
+    ListView ticketsListView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.listings_fragment, container, false);
-        ListView ticketsListView = (ListView) v.findViewById(R.id.myListings);
+        ticketsListView = (ListView) v.findViewById(R.id.myListings);
 
         Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test");
         Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test");
@@ -96,7 +98,7 @@ public class Listings extends Fragment {
 
         collegeList = dbHelper.getAllColleges();
 
-        TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
+        adapter = new TicketAdapter(v.getContext(), displayListings);
         ticketsListView.setAdapter(adapter);
 
         FragmentManager fragmentManager = getParentFragmentManager();
@@ -109,7 +111,7 @@ public class Listings extends Fragment {
                 SingleTicket singleTicketFragment = new SingleTicket();
                 Bundle args = new Bundle();
                 args.putSerializable("selectedListing", selectedListing);
-                args.putString("username",userLoggedIn);
+                // args.putString("username",userLoggedIn);
                 singleTicketFragment.setArguments(args);
 
                 // Replace Listings fragment with SingleTicketFragment
@@ -173,6 +175,7 @@ public class Listings extends Fragment {
                 String selectedCollege = (String) collegeSpinner.getSelectedItem();
                 // Apply the filter based on the selected college
                 // ...
+                refreshListings(selectedCollege);
 
                 // Dismiss the popup
                 popupWindow.dismiss();
@@ -198,9 +201,21 @@ public class Listings extends Fragment {
         popupMenu.show();
     }
 
-    public void refreshListings() {
+    public void refreshListings(String collegeName) {
         // TODO: Update the data from the database
-        displayListings = dbHelper.getListings(null,null);
+        if(collegeName == "All Colleges") {
+            displayListings = dbHelper.getListings(null, null);
+        } else if (collegeName != null) {
+            Log.i("TEST", collegeName);
+            displayListings = dbHelper.getListings(null,collegeName);
+        } else {
+            displayListings = dbHelper.getListings(null,null);
+        }
+        // Notify the adapter that the data has changed
+        Log.i("TEST", displayListings.toString());
+
+        adapter.clear();
+        adapter.addAll(displayListings);
 
         // Notify the adapter that the data has changed
         adapter.notifyDataSetChanged();

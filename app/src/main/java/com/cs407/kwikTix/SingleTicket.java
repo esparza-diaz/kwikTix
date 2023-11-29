@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,8 @@ public class SingleTicket extends Fragment {
         if (args != null) {
             Tickets selectedListing = (Tickets) args.getSerializable("selectedListing");
             if (selectedListing != null) {
+                Log.i("TEST",selectedListing.getTitle());
+                Log.i("TEST",selectedListing.getUsername());
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(selectedListing.getTitle());

@@ -156,13 +156,15 @@ public class DBHelper {
             int dateIndex = c.getColumnIndex("date");
             int collegeIndex = c.getColumnIndex("college");
             int priceIndex = c.getColumnIndex("price");
+            int usernameIndex = c.getColumnIndex("username");
             c.moveToFirst();
             while (!c.isAfterLast()) {
                 String title = c.getString(titleIndex);
                 String date = c.getString(dateIndex);
                 String loc = c.getString(collegeIndex);
                 String price = c.getString(priceIndex);
-                Tickets ticket = new Tickets(title, date, price, loc, username);
+                String user = c.getString(usernameIndex);
+                Tickets ticket = new Tickets(title, date, price, loc, user);
                 listings.add(ticket);
                 c.moveToNext();
             }

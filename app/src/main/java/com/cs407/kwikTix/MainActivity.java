@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 // Adds new user to SQLiteDatabase
-                dbHelper.addUser(
+                boolean userAdded = dbHelper.addUser(
                         newUserUsername,
                         newUserPassword,
                         newUserEmail,
@@ -68,9 +68,17 @@ public class MainActivity extends AppCompatActivity {
                         newUserCollege
                 );
 
+                if (!userAdded) {
+                    Toast.makeText(this, "Username Taken: Please Choose Another!", Toast.LENGTH_LONG).show();
+                }
+
+//            } catch (SQLiteConstraintException e) {
+//                e.printStackTrace();
+//                Log.d("SQL Exception", "SQLiteConstraintException");
+//                Toast.makeText(this, "SQL ERROR", Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Error Message", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error Message", Toast.LENGTH_LONG).show();
             }
         }
     }

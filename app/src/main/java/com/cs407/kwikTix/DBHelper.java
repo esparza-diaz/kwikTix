@@ -31,15 +31,19 @@ public class DBHelper {
      * @param phone
      * @param prefContactMethod
      * @param college
+     *
+     * @return True is addition of user is successful; false is username is already taken
      */
-    public void addUser(String username,String password,String email, String phone, String prefContactMethod, String college) {
+    public boolean addUser(String username,String password,String email, String phone, String prefContactMethod, String college) throws SQLiteConstraintException {
         createTable();
         try {
             sqLiteDatabase.execSQL("INSERT INTO users (username, password, email, phone, prefContactMethod, college) VALUES (?,?,?,?,?,?)",
                     new String[]{username, password, email, phone, prefContactMethod, college});
+            return true;
         } catch (SQLiteConstraintException e) {
             // Handle the exception (e.g., log it or show a message) TODO: Logic to catch for same user
             Log.i("Info User(Primary Key)", "Same primary key for " + username);
+            return false;
         }
     }
 

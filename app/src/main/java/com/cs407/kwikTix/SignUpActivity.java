@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SignUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -90,8 +91,17 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         email = ((EditText) findViewById(R.id.signupEmail)).getText().toString();
         phone = ((EditText) findViewById(R.id.signupPhone)).getText().toString();
 
+        ArrayList<String> newUserInfo = new ArrayList<>();
+        newUserInfo.add(username);
+        newUserInfo.add(password);
+        newUserInfo.add(email);
+        newUserInfo.add(phone);
+        newUserInfo.add(prefContactMethod);
+        newUserInfo.add(college);
+
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-        intent.putExtra("newUserInfo", new String [] {username, password, email, phone, prefContactMethod, college});
+        intent.putExtra("newUserInfo", newUserInfo);
+        startActivity(intent);
     }
 
 

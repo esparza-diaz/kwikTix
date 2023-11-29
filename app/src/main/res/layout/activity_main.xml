@@ -45,14 +45,33 @@
             android:text=""
             android:hint="Password"/>
 
-        <Button
-            android:id="@+id/loginButton"
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="150dp"
-            android:layout_marginHorizontal="50dp"
-            android:onClick="onLoginButtonClick"
-            android:text="Login" />
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginBottom="75dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:text="Login"
+                android:onClick="onSigninButtonClick"/>
+
+            <Button
+                android:id="@+id/signupButton"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="75dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:text="Sign Up"
+                android:onClick="onSignupButtonClick"/>
+        </RelativeLayout>
+
 
     </LinearLayout>
 

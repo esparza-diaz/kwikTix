@@ -70,14 +70,10 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!userAdded) {
                     Toast.makeText(this, "Username Taken: Please Choose Another!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Successfully Added: " + newUserUsername + " !", Toast.LENGTH_LONG).show();
                 }
-
-//            } catch (SQLiteConstraintException e) {
-//                e.printStackTrace();
-//                Log.d("SQL Exception", "SQLiteConstraintException");
-//                Toast.makeText(this, "SQL ERROR", Toast.LENGTH_LONG).show();
             } catch (Exception e) {
-                e.printStackTrace();
                 Toast.makeText(this, "Error Message", Toast.LENGTH_LONG).show();
             }
         }

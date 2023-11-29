@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -34,12 +35,6 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
 
         Intent intent = getIntent();
         colleges = intent.getStringArrayListExtra("collegesArrayList");
-
-//        // Convert ArrayList to String Array
-//        String[] collegesArray = new String[colleges.size()];
-//        for (int i = 0; i < colleges.size(); i++) {
-//            collegesArray[i] = colleges.get(i);
-//        }
 
         prefContactMethodSpinner = (Spinner) findViewById(R.id.signupContactMethodDropdown);
         collegesSpinner = (Spinner) findViewById(R.id.signupCollege);
@@ -91,17 +86,32 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         email = ((EditText) findViewById(R.id.signupEmail)).getText().toString();
         phone = ((EditText) findViewById(R.id.signupPhone)).getText().toString();
 
-        ArrayList<String> newUserInfo = new ArrayList<>();
-        newUserInfo.add(username);
-        newUserInfo.add(password);
-        newUserInfo.add(email);
-        newUserInfo.add(phone);
-        newUserInfo.add(prefContactMethod);
-        newUserInfo.add(college);
+        // Checks if user input is valid
+        if (username == null || username == "") {
+            Toast.makeText(this, "Please Fill Each Entry", Toast.LENGTH_LONG).show();
+        } else if (password == null || password == "") {
+            Toast.makeText(this, "Please Fill Each Entry", Toast.LENGTH_LONG).show();
+        } else if (email == null || email == "") {
+            Toast.makeText(this, "Please Fill Each Entry", Toast.LENGTH_LONG).show();
+        } else if (phone == null || phone == "") {
+            Toast.makeText(this, "Please Fill Each Entry", Toast.LENGTH_LONG).show();
+        } else if (prefContactMethod == null || prefContactMethod.equals("Preferred Contact Method")) {
+            Toast.makeText(this, "Please Fill Each Entry", Toast.LENGTH_LONG).show();
+        } else if (college == null || college.equals("team")) {
+            Toast.makeText(this, "Please Fill Each Entry", Toast.LENGTH_LONG).show();
+        } else {
+            ArrayList<String> newUserInfo = new ArrayList<>();
+            newUserInfo.add(username);
+            newUserInfo.add(password);
+            newUserInfo.add(email);
+            newUserInfo.add(phone);
+            newUserInfo.add(prefContactMethod);
+            newUserInfo.add(college);
 
-        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-        intent.putExtra("newUserInfo", newUserInfo);
-        startActivity(intent);
+            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+            intent.putExtra("newUserInfo", newUserInfo);
+            startActivity(intent);
+        }
     }
 
 

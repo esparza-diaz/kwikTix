@@ -85,11 +85,19 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="50dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="100dp"
             android:text="Sign Up"
             android:onClick="onSignupPageButtonClick"/>
 
+        <Button
+            android:id="@+id/backToLoginButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="150dp"
+            android:layout_marginBottom="20dp"
+            android:text="Back"
+            android:onClick="onBackToLoginButtonClick"/>
 
     </LinearLayout>
 

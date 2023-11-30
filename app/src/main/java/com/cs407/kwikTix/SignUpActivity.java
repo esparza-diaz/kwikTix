@@ -84,6 +84,11 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         Log.i("PREF CONTACT - Nothing Selected", prefContactMethod);
     }
 
+    public void onBackToLoginButtonClick(View view) {
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
     public void onSignupPageButtonClick(View view) {
         username = ((EditText) findViewById(R.id.signupName)).getText().toString();
         password = ((EditText) findViewById(R.id.signupPassword)).getText().toString();

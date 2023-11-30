@@ -77,7 +77,7 @@ public class Post extends Fragment {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        SQLiteDatabase sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE,null);
+        SQLiteDatabase sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE,null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
 
         List<Colleges> collegeList = dbHelper.getAllColleges();
@@ -111,7 +111,7 @@ public class Post extends Fragment {
 
                 //Tickets newTicket = new Tickets(gameTitle, price, college, dateTime, "test");
 
-                SQLiteDatabase sqLiteDatabase = view.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE,null);
+                SQLiteDatabase sqLiteDatabase = view.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE,null);
                 DBHelper dbHelper = new DBHelper(sqLiteDatabase);
                 dbHelper.addTicket(gameTitle, dateTime,price, college, userLoggedIn);
 

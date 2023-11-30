@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,15 +52,15 @@ public class MainActivity extends AppCompatActivity {
                     EditText password = (EditText) findViewById(R.id.signinPassword);
                     String user = username.getText().toString().trim();
                     String pass = password.getText().toString().trim();
-                    if (user.isEmpty()){
+                    if (user.isEmpty()) {
                         username.setError("Please enter a non-empty value");
-                    }else {
+                    } else {
                         Users user_ = dbHelper.getUser(user);
-                        if (user_.getPassword().equals(pass)) {
+                        if (user_ != null && user_.getPassword().equals(pass)) {
                             intent.putExtra("username", username.getText().toString().trim());
                             sharedPreferences.edit().putString("username", username.getText().toString().trim()).apply();
                             startActivity(intent);
-                        }else{
+                        } else {
                             password.setError("Incorrect Login Information");
                         }
                     }
@@ -68,11 +69,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void onSignupButtonClick(View view) {
+        // TODO Implement
+        Log.d("Signup Button", "onSignupButtonClick: Clicked");
+        Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+        intent.putStringArrayListExtra("collegesArrayList", colleges);
+        startActivity(intent);
+    }
+
     /**
-     * Instantiates sql db and proper tables.
+     * Instantiates colleges list
      */
     public void startDb() {
-        SQLiteDatabase sqLiteDatabase = openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE,null);
+        SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE,null);
         dbHelper = new DBHelper(sqLiteDatabase);
         colleges = new ArrayList<>();
         // creates colleges db from college.csv
@@ -105,10 +114,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //create user test
-        dbHelper.addUser("test","password","test@gmail.com", "Wisconsin");
-        dbHelper.addUser("test2","password","test@gmail.com", "Wisconsin");
-        // create example listing
         /*
+        dbHelper.addUser("test","password","test@gmail.com", "696-969-6969", "E-Mail", "Wisconsin");
+        // create example listing
+
         dbHelper.addTicket("ticket #1","1/20/23","10.99", "Wisconsin","test");
         //testing for UW- Madison. This successfully gets college name, latitude and longitude for camp randall
         Users user = dbHelper.getUser("test");
@@ -116,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
         Colleges college = dbHelper.getCollege(user.getCollege());
         // get listings for user test
         ArrayList<Tickets> tickets = dbHelper.getListings("test");
-        Log.i("Testing user", user.getUsername() + " " + user.getPassword() + " " + user.getEmail() + " " + user.getCollege());
+        Log.i("Testing user", user.getUsername() + " " + user.getPassword() + " " + user.getEmail() + " " + user.getPhone()
+                + " " + user.getPrefContactMethod() + " " + user.getCollege());
         Log.i("Testing location",college.getCollege() + " " + college.getLatitude() + " " + college.getLongitude());
         for (Tickets ticket: tickets){
             Log.i("Testing listing",ticket.getTitle() + " " + ticket.getDate() + " " + ticket.getCollege() + " " + ticket.getUsername());
@@ -126,14 +136,5 @@ public class MainActivity extends AppCompatActivity {
             Log.i("Testing listing",ticket.getTitle() + " " + ticket.getDate() + " " + ticket.getCollege() + " " + ticket.getUsername() + " " + ticket.getPrice());
         }
          */
-    }
-
-    public void goToMainActivity() {
-        Intent intent = new Intent(this, KwikTix.class);
-        startActivity(intent);
-    }
-
-    public void onLoginButtonClick(View view) {
-        goToMainActivity();
     }
 }

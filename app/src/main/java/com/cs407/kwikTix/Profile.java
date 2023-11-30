@@ -90,7 +90,7 @@ public class Profile extends Fragment {
                 startActivity(intent);
             }
         });
-        sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
+        sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
         displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
 

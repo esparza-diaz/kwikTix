@@ -18,7 +18,7 @@ public class DBHelper {
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS colleges "+
                 "(college TEXT PRIMARY KEY,latitude TEXT, longitude TEXT)");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS users "+
-                "(username TEXT PRIMARY KEY,password TEXT,email TEXT, college TEXT, FOREIGN KEY(college) REFERENCES colleges(college))");
+                "(username TEXT PRIMARY KEY,password TEXT,email TEXT, phone TEXT, prefContactMethod TEXT, college TEXT, FOREIGN KEY(college) REFERENCES colleges(college))");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS listings "+
                 "(id INTEGER, title TEXT,date TEXT,price TEXT, college TEXT,username TEXT, FOREIGN KEY(college) REFERENCES colleges(college), FOREIGN KEY(username) REFERENCES users(username), PRIMARY KEY (username,id))");
     }
@@ -28,17 +28,34 @@ public class DBHelper {
      * @param username
      * @param password
      * @param email
+     * @param phone
+     * @param prefContactMethod
      * @param college
+     *
+     * @return True is addition of user is successful; false is username is already taken
      */
-    public void addUser(String username,String password,String email, String college){
+    public boolean addUser(String username,String password,String email, String phone, String prefContactMethod, String college) throws SQLiteConstraintException {
         createTable();
         try {
-            sqLiteDatabase.execSQL("INSERT INTO users (username, password, email, college) VALUES (?,?,?,?)",
-                    new String[]{username,password,email,college});
+            sqLiteDatabase.execSQL("INSERT INTO users (username, password, email, phone, prefContactMethod, college) VALUES (?,?,?,?,?,?)",
+                    new String[]{username, password, email, phone, prefContactMethod, college});
+            return true;
         } catch (SQLiteConstraintException e) {
             // Handle the exception (e.g., log it or show a message) TODO: Logic to catch for same user
             Log.i("Info User(Primary Key)", "Same primary key for " + username);
+            return false;
         }
+    }
+
+    /**
+     * Deletes user from the users SQL database
+     *
+     * @param username
+     */
+    public void deleteUser(String username){
+        createTable(); // TODO add delete option in manage settings area
+        sqLiteDatabase.delete("users", "DELETE FROM users WHERE username=" + username,
+                new String[]{username});
     }
 
     /**
@@ -82,23 +99,31 @@ public class DBHelper {
      * @param username
      * @return Users item containing user information
      */
-    public Users getUser(String username){
+    public Users getUser(String username) {
         createTable();
         Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM users WHERE username LIKE ?",
                 new String[]{"%" + username + "%"});
-        int passwordIndex = c.getColumnIndex("password");
-        int emailIndex = c.getColumnIndex("email");
-        int collegeIndex = c.getColumnIndex("college");
-        c.moveToFirst();
-        String password = c.getString(passwordIndex);
-        String email = c.getString(emailIndex);
-        String college = c.getString(collegeIndex);
+        Users user = null;
+        if (c.moveToFirst()) {
+            int passwordIndex = c.getColumnIndex("password");
+            int emailIndex = c.getColumnIndex("email");
+            int phoneIndex = c.getColumnIndex("phone");
+            int prefContactMethodIndex = c.getColumnIndex("prefContactMethod");
+            int collegeIndex = c.getColumnIndex("college");
 
-        Users user = new Users(username, password, email, college);
+            String password = c.getString(passwordIndex);
+            String email = c.getString(emailIndex);
+            String phone = c.getString(phoneIndex);
+            String prefContactMethod = c.getString(prefContactMethodIndex);
+            String college = c.getString(collegeIndex);
+
+            user = new Users(username, password, email, phone, prefContactMethod, college);
+        }
 
         c.close();
         return user;
     }
+
 
     /**
      * Gets listings for a specific user
@@ -336,17 +361,6 @@ public class DBHelper {
                 new String[]{content,date,title,username});
     }
 
-    public void deleteNotes(String content,String title){
-        createTable();
-        String date = "";
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT date FROM notes WHERE content=?",
-                new String[]{content});
-        if(cursor.moveToNext()){
-            date = cursor.getString(0);
-        }
-        sqLiteDatabase.execSQL("DELETE FROM notes WHERE content=? AND date=?",
-                new String[]{content,date});
-        cursor.close();
-    }
+
  */
 }

@@ -99,7 +99,7 @@ public class Listings extends Fragment {
         Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test");
         Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test");
         // Init DB
-        sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
+        sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
 
         //dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername());

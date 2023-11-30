@@ -92,7 +92,7 @@ public class Profile extends Fragment {
         });
         sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
-        displayListings = dbHelper.getListings(userLoggedIn,null);
+        displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
 
         TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
         ticketsListView.setAdapter(adapter);

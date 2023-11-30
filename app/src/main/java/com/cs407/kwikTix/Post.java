@@ -117,7 +117,7 @@ public class Post extends Fragment {
 
                 Listings listingsFragment = (Listings) getParentFragmentManager().findFragmentByTag("showing Listings");
                 if (listingsFragment != null) {
-                    listingsFragment.refreshListings(null);
+                    listingsFragment.refreshListings();
                 }
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.beginTransaction()

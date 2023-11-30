@@ -1,11 +1,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/sortByPrice"
-        android:title="Sort by Price" />
+        android:title="Sort by Price">
+        <menu>
+            <item
+                android:id="@+id/ascendingPrice"
+                android:title="Ascending" />
+            <item
+                android:id="@+id/descendingPrice"
+                android:title="Descending" />
+        </menu>
+    </item>
     <item
         android:id="@+id/sortByTime"
-        android:title="Sort by Time" />
+        android:title="Sort by Time">
+        <menu>
+            <item
+                android:id="@+id/ascendingTime"
+                android:title="Ascending" />
+            <item
+                android:id="@+id/descendingTime"
+                android:title="Descending" />
+        </menu>
+    </item>
     <item
         android:id="@+id/noFilter"
-        android:title="No filter" />
+        android:title="Default" />
 </menu>

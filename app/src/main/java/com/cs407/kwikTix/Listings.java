@@ -1,7 +1,10 @@
 package com.cs407.kwikTix;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -16,10 +19,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +83,12 @@ public class Listings extends Fragment {
     List<Colleges> collegeList;
 
     ListView ticketsListView;
+
+    // inputs used for filter
+    String college = "All Colleges";
+    String sort_by = null;
+    boolean desc = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,7 +105,7 @@ public class Listings extends Fragment {
         //dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername());
         //dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername());
         // TODO: HARDCODED LISTINGS
-        displayListings = dbHelper.getListings(null,null);
+        displayListings = dbHelper.getListings(null,null, null, false);
 
         collegeList = dbHelper.getAllColleges();
 
@@ -172,10 +183,18 @@ public class Listings extends Fragment {
             @Override
             public void onClick(View v) {
                 // Handle filter by college
-                String selectedCollege = (String) collegeSpinner.getSelectedItem();
+                college = (String) collegeSpinner.getSelectedItem();
                 // Apply the filter based on the selected college
                 // ...
-                refreshListings(selectedCollege);
+                ImageView imageView = view.findViewById(R.id.filterButton);
+                if (college.equals("All Colleges")) {
+                    imageView.setColorFilter(null);
+                }else{
+                    int color = Color.parseColor("#FF0000");
+                    imageView.setColorFilter(color);
+                }
+
+                refreshListings();
 
                 // Dismiss the popup
                 popupWindow.dismiss();
@@ -191,29 +210,53 @@ public class Listings extends Fragment {
         popupMenu.inflate(R.menu.sort_menu); // Create a menu resource file (res/menu/filter_menu.xml)
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                //handleFilterSelection(menuItem.getItemId());
+                int itemId = menuItem.getItemId();
+                ImageView imageView = view.findViewById(R.id.sortButton);
+                if (itemId == R.id.ascendingPrice) {
+                    sort_by = "price";
+                    desc = false;
+                    int color = Color.parseColor("#FF0000");
+                    imageView.setColorFilter(color);
+                } else if(itemId == R.id.descendingPrice) {
+                    sort_by = "price";
+                    desc = true;
+                    int color = Color.parseColor("#FF0000");
+                    imageView.setColorFilter(color);
+                } else if(itemId == R.id.ascendingTime) {
+                    sort_by = "date";
+                    desc = false;
+                    int color = Color.parseColor("#FF0000");
+                    imageView.setColorFilter(color);
+                } else if (itemId == R.id.descendingTime) {
+                    sort_by = "date";
+                    desc = true;
+                    int color = Color.parseColor("#FF0000");
+                    imageView.setColorFilter(color);
+                } else if (itemId == R.id.noFilter) {
+                    sort_by = null;
+                    imageView.setColorFilter(null);
+                }
+                refreshListings();
                 return true;
             }
         });
-
         popupMenu.show();
     }
 
-    public void refreshListings(String collegeName) {
+    public void refreshListings() {
         // TODO: Update the data from the database
-        if(collegeName == "All Colleges") {
-            displayListings = dbHelper.getListings(null, null);
-        } else if (collegeName != null) {
-            Log.i("TEST", collegeName);
-            displayListings = dbHelper.getListings(null,collegeName);
+        if(college.equals("All Colleges")) {
+            displayListings = dbHelper.getListings(null, null, sort_by, desc);
         } else {
-            displayListings = dbHelper.getListings(null,null);
+            displayListings = dbHelper.getListings(null, college, sort_by, desc);
         }
         // Notify the adapter that the data has changed
         Log.i("TEST", displayListings.toString());
 
+        if (displayListings.size() == 0){
+            Toast.makeText(requireContext(),"No tickets found. Modify filters.", Toast.LENGTH_LONG).show();
+        }
         adapter.clear();
         adapter.addAll(displayListings);
 

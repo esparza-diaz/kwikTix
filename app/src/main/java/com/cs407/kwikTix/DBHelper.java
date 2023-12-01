@@ -61,6 +61,26 @@ public class DBHelper {
     }
 
     /**
+     * Adds ticket to listings db
+     * @param ticket
+     * @param offerUsername
+     * @param tempKey
+     */
+    public void addOffer(Tickets ticket, String offerUsername, int tempKey, Double offer){
+        createTable();
+        String seller = ticket.getUsername();
+        String offerAmount= offer.toString();
+        try {
+            sqLiteDatabase.execSQL("INSERT INTO offers (offerAmount, seller, offerUsername) VALUES (?,?,?,?,?)",
+                    new String[]{offerAmount,seller, offerUsername});
+            Log.i("Yay", "Offer created");
+        } catch (SQLiteConstraintException e) {
+            // Handle the exception (e.g., log it or show a message) TODO: Same title
+            Log.i("Info Offer(Primary Key)", "Same primary key for " + tempKey);
+        }
+    }
+
+    /**
      * Adds college to colleges db
      * @param college - name of college
      * @param latitude - lat of college
@@ -160,29 +180,22 @@ public class DBHelper {
         return listings;
     }
 
-    public ArrayList<Tickets> getOffers(){
+    public ArrayList<Tickets> getOffers(Tickets t, String username){
         Log.i("Yay", "Getting all Offers");
         createTable();
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings", null);
-        int titleIndex = c.getColumnIndex("title");
-        int dateIndex = c.getColumnIndex("date");
-        int collegeIndex = c.getColumnIndex("college");
-        int usernameIndex = c.getColumnIndex("username");
-        int priceIndex = c.getColumnIndex("price");
-        //int offerAmountIndex = c.getColumnIndex("offerAmount");
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers", null);
+        int offerIndex = c.getColumnIndex("offerUsername");
+        int sellerIndex = c.getColumnIndex("seller");
+        int offerAmountIndex = c.getColumnIndex("offerAmount");
         c.moveToFirst();
-        ArrayList<Tickets> offers = new ArrayList<>();
+        ArrayList<Offers> offers = new ArrayList<>();
         while(!c.isAfterLast()){
-            String title = c.getString(titleIndex);
-            String date = c.getString(dateIndex);
-            String college = c.getString(collegeIndex);
-            String username = c.getString(usernameIndex);
-            String price = c.getString(priceIndex);
-            //String offerAmount = c.getString(offerAmountIndex);
+            String offer = c.getString(offerIndex);
+            String seller = c.getString(sellerIndex);
+            String offerAmount = c.getString(offerAmountIndex);
 
-            Tickets ticket = new Tickets(title,date,price,college,username);
-            //Tickets ticket = new Tickets(title,date,price,college,username, offerAmount);
-            offers.add(ticket);
+            Offers off = new Offers(offer, seller, offerAmount);
+            offers.add(off);
             c.moveToNext();
         }
 

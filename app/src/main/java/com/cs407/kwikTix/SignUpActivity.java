@@ -24,9 +24,13 @@ import java.util.ArrayList;
 
 public class SignUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     String username;
+    EditText usernameInput;
     String password;
+    EditText passwordInput;
     String email;
+    EditText emailInput;
     String phone;
+    EditText phoneInput;
     String prefContactMethod;
     String college;
     ArrayList<String> colleges;
@@ -93,8 +97,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
 
     private boolean phoneInputValidation(String phone) {
         // Checks if empty
-        if (phone == null || phone == "") {
-            Toast.makeText(this, "Please Fill Each Entry", Toast.LENGTH_LONG).show();
+        if (phone == null || phone.equals("Phone") || phone.equals("")) {
             return false;
         }
 
@@ -115,15 +118,15 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
 
     private boolean usernameInputValidation(String username, DBHelper dbhelper) {
         // Checks if username is empty or null
-        if (username == null || username == "") {
-            Toast.makeText(this, "Please Fill Each Entry", Toast.LENGTH_LONG).show();
+        Log.d("UserValidation", "Username" + username);
+        if (username == null || username.equals("Username") || username.equals("")) {
+            return false;
         }
 
         // Checks if username is already taken
         Users user = dbhelper.getUser(username);
         if (user != null) {
-            Log.d("UserValidation", user.toString());
-            Toast.makeText(this, "Username Taken: Please Choose Another!", Toast.LENGTH_LONG).show();
+            Log.d("UserValidation", user.toString() + "taken");
             return false;
         } else {
             Log.d("UserValidation", "User is null (NOT TAKEN)");
@@ -133,8 +136,12 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     private boolean emailInputValidation(String email) {
+        // Checks if email is null or empty
+        if (email == null || email.equals("Email") || email.equals("")) {
+            return false;
+        }
+
         if (email.contains(" ")) {
-            Toast.makeText(this, "Email Cannot Contain Spaces!", Toast.LENGTH_LONG);
             return false;
         }
 
@@ -144,7 +151,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         boolean validUWSuffix = matcher.find();
 
         if (!validUWSuffix) {
-            Toast.makeText(this, "Not a valid UW email!", Toast.LENGTH_LONG);
+//            Toast.makeText(this, "Not a valid UW email!", Toast.LENGTH_LONG);
             return false;
         } else {
             Log.d("UserValidation", "valid uw email");
@@ -155,8 +162,8 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
 
     private boolean passwordInputValidation(String password) {
         // Checks if password is null or empty
-        if (password == null || password == "") {
-            Toast.makeText(this, "Please Fill Each Entry", Toast.LENGTH_LONG).show();
+        if (password == null || password.equals("Password") || password.equals("")) {
+//            Toast.makeText(this, "Please Fill Each Entry", Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -166,7 +173,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     private boolean prefContactMethodInputValidation(String prefContactMethod) {
         // Checks if prefContactMethod is the non-default value (a selection was made)
         if (prefContactMethod == null || prefContactMethod.equals("Preferred Contact Method")) {
-            Toast.makeText(this, "Please Fill Each Entry", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please Select Preferred Contact Method!", Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -176,7 +183,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     private boolean collegeInputValidation(String college) {
         // Checks if college is the non-default value (a selection was made)
         if (college == null || college.equals("Select College")) {
-            Toast.makeText(this, "Please Fill Each Entry", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please Select College!", Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -188,28 +195,39 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE,null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
 
-        username = ((EditText) findViewById(R.id.signupName)).getText().toString();
-        password = ((EditText) findViewById(R.id.signupPassword)).getText().toString();
-        email = ((EditText) findViewById(R.id.signupEmail)).getText().toString();
-        phone = ((EditText) findViewById(R.id.signupPhone)).getText().toString();
+        usernameInput = ((EditText) findViewById(R.id.signupName));
+        username = usernameInput.getText().toString();
+
+        passwordInput = ((EditText) findViewById(R.id.signupPassword));
+        password = passwordInput.getText().toString();
+
+        emailInput = ((EditText) findViewById(R.id.signupEmail));
+        email = emailInput.getText().toString();
+
+        phoneInput = ((EditText) findViewById(R.id.signupPhone));
+        phone = phoneInput.getText().toString();
 
         if (!usernameInputValidation(username, dbHelper)){
             Log.d("UserValidation", "Username Error");
+            usernameInput.setError("Invalid Username!");
             return;
         };
         if (!passwordInputValidation(password)) {
             Log.d("UserValidation", "Password Error");
+            passwordInput.setError("Invalid Password!");
             return;
         }
         if (!emailInputValidation(email)) {
             Log.d("UserValidation", "Email Error");
+            emailInput.setError("Invalid Email!");
             return;
         }
         if (!phoneInputValidation(phone)) {
             Log.d("UserValidation", "Phone: Error");
+            phoneInput.setError("Invalid Phone Number!");
             return;
         }
-        if (prefContactMethodInputValidation(prefContactMethod)) {
+        if (!prefContactMethodInputValidation(prefContactMethod)) {
             Log.d("UserValidation", "PCM Error");
             return;
         }

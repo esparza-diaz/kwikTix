@@ -7,9 +7,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+import com.google.android.material.navigation.NavigationBarView;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -40,57 +43,44 @@ public class KwikTix  extends AppCompatActivity {
                 .setReorderingAllowed(true)
                 .addToBackStack("showing Listings")
                 .commit();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_bar);
+        bottomNavigationView.setOnItemSelectedListener(navListener);
     }
 
-    public void goToListings(MenuItem item) {
-        Listings listingsFragment = new Listings();
+    private NavigationBarView.OnItemSelectedListener navListener =
+            new NavigationBarView.OnItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    Fragment selectedFragment = null;
 
-        // Create an Intent to hold the username data
-        Bundle bundle = new Bundle();
-        bundle.putString("username", userLoggedIn);
+                    Log.i("TEST", String.valueOf(item.getItemId()));
+                    switch (item.getItemId()) {
+                        case 2131231054:
+                            selectedFragment = new Listings();
+                            break;
+                        case 2131231055:
+                            selectedFragment = new Post();
+                            break;
+                        case 2131231056:
+                            selectedFragment = new Profile();
+                            break;
+                    }
 
-        // Set the data bundle to the fragment
-        listingsFragment.setArguments(bundle);
+                    if (selectedFragment != null) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("username", userLoggedIn);
+                        selectedFragment.setArguments(bundle);
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, listingsFragment)
-                .setReorderingAllowed(true)
-                .addToBackStack("showing Listings")
-                .commit();
-    }
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainerView, selectedFragment)
+                                .setReorderingAllowed(true)
+                                .addToBackStack("showing Fragment")
+                                .commit();
+                    }
 
-    public void goToPost(MenuItem item) {
-        Post postFragment = new Post();
-
-        // Create an Intent to hold the username data
-        Bundle bundle = new Bundle();
-        bundle.putString("username", userLoggedIn);
-
-        // Set the data bundle to the fragment
-        postFragment.setArguments(bundle);
-
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, postFragment)
-                .setReorderingAllowed(true)
-                .addToBackStack("showing Post")
-                .commit();
-    }
-
-    public void goToProfile(MenuItem item) {
-        Profile profileFragment = new Profile();
-
-        // Create an Intent to hold the username data
-        Bundle bundle = new Bundle();
-        bundle.putString("username", userLoggedIn);
-
-        // Set the data bundle to the fragment
-        profileFragment.setArguments(bundle);
-
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, profileFragment)
-                .setReorderingAllowed(true)
-                .addToBackStack("showing Profile")
-                .commit();
-    }
+                    return true;
+                }
+            };
 
 }

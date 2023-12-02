@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -152,8 +153,38 @@ public class Listings extends Fragment {
             }
         });
 
+        ticketsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // Handle long click event
+                Tickets selectedListing = displayListings.get(position);
+                showQuickViewPopup(view, selectedListing);
+                return true;
+            }
+        });
+
         return v;
+
     }
+
+    private void showQuickViewPopup(View view, Tickets selectedListing) {
+        // Inflate the quick view popup layout
+        View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.quick_view_popup, null);
+
+        // Set up the PopupWindow
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
+
+        // Customize the quick view content based on the selected listing
+        TextView collegeTextView = popupView.findViewById(R.id.quickViewCollege);
+        collegeTextView.setText(selectedListing.getCollege());
+
+        // Show the popup at the center of the screen
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
+
+
 
     private void showCollegeFilterPopup(View view) {
         // Inflate the popup layout

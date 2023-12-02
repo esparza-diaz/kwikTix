@@ -1,5 +1,7 @@
 package com.cs407.kwikTix;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -7,6 +9,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +22,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,16 +77,95 @@ public class Post extends Fragment {
         }
     }
 
+    private EditText priceEditText;
+    private TextWatcher priceTextWatcher;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_post, container, false);
 
-        Spinner collegeSpinner = v.findViewById(R.id.collegeSpinner);
+        priceEditText = v.findViewById(R.id.priceEditText);
 
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Add TextWatcher to format the price input
+        priceTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+                // No action needed before text changes
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                // No action needed when text is changing
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                formatPriceInput(editable);
+            }
+        };
+        priceEditText.addTextChangedListener(priceTextWatcher);
+
+
+        EditText dateTimeEditText = v.findViewById(R.id.dateTimeEditText);
+        dateTimeEditText.setFocusable(false); // To disable manual editing
+
+        // Set up DatePickerDialog
+        DatePickerDialog.OnDateSetListener dateSetListener = (view, year, monthOfYear, dayOfMonth) -> {
+            // Set the selected date to the editText
+            String date = (monthOfYear + 1) + "/" + dayOfMonth + "/" + year;
+            dateTimeEditText.setText(date);
+        };
+
+        dateTimeEditText.setOnClickListener(view -> {
+            // Show DatePickerDialog
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    requireContext(),
+                    dateSetListener,
+                    year,
+                    month,
+                    day
+            );
+            datePickerDialog.show();
+        });
+
+        EditText timeEditText = v.findViewById(R.id.timeEditText);
+        timeEditText.setFocusable(false); // To disable manual editing
+
+        // Set up TimePickerDialog
+        TimePickerDialog.OnTimeSetListener timeSetListener = (view, hourOfDay, minute) -> {
+            // Set the selected time to the editText
+            String amPm = (hourOfDay < 12) ? "AM" : "PM";
+            String time = String.format(Locale.US, "%02d:%02d %s", (hourOfDay % 12 == 0) ? 12 : hourOfDay % 12, minute, amPm);
+            timeEditText.setText(time);
+        };
+
+        timeEditText.setOnClickListener(view -> {
+            // Show TimePickerDialog
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+
+            TimePickerDialog timePickerDialog = new TimePickerDialog(
+                    requireContext(),
+                    timeSetListener,
+                    hour,
+                    minute,
+                    false
+            );
+            timePickerDialog.show();
+        });
+
+        Spinner homeTeamSpinner = v.findViewById(R.id.homeTeamSpinner);
+        Spinner awayTeamSpinner = v.findViewById(R.id.awayTeamSpinner);
+
+        ArrayAdapter<String> teamAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item);
+        teamAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         SQLiteDatabase sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE,null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
@@ -84,21 +174,37 @@ public class Post extends Fragment {
 
         // Add college names to the adapter
         for (Colleges college : collegeList) {
-            spinnerAdapter.add(college.getCollege());
+            teamAdapter.add(college.getCollege());
         }
 
         // Set the adapter to the Spinner
-        collegeSpinner.setAdapter(spinnerAdapter);
+        homeTeamSpinner.setAdapter(teamAdapter);
+        awayTeamSpinner.setAdapter(teamAdapter);
 
         Button postButton = v.findViewById(R.id.postButton);
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Get the values from the input fields
-                String gameTitle = ((EditText) v.findViewById(R.id.gameTitleEditText)).getText().toString();
-                String price = ((EditText) v.findViewById(R.id.priceEditText)).getText().toString();
-                String college = ((Spinner) v.findViewById(R.id.collegeSpinner)).getSelectedItem().toString();
-                String dateTime = ((EditText) v.findViewById(R.id.dateTimeEditText)).getText().toString();
+                String homeTeam = homeTeamSpinner.getSelectedItem().toString();
+                String awayTeam = awayTeamSpinner.getSelectedItem().toString();
+                String gameTitle = homeTeam + " vs " + awayTeam;
+                String price = ((EditText) v.findViewById(R.id.priceEditText)).getText().toString().replaceAll("[^0-9.]", "");;
+                String college = ((Spinner) v.findViewById(R.id.homeTeamSpinner)).getSelectedItem().toString();
+                String date = ((EditText) v.findViewById(R.id.dateTimeEditText)).getText().toString();
+                String time = ((EditText) v.findViewById(R.id.timeEditText)).getText().toString();
+
+                // Combine date and time into a DateTime object
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.US);
+                try {
+                    calendar.setTime(dateFormat.parse(date + " " + time));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                String dateTime = calendar.getTime().toString();
+
 
                 // Check if any of the fields is empty
                 if (gameTitle.isEmpty() || price.isEmpty() || college.isEmpty() || dateTime.isEmpty()) {
@@ -129,5 +235,22 @@ public class Post extends Fragment {
         });
 
         return v;
+    }
+
+    private void formatPriceInput(Editable editable) {
+        String input = editable.toString();
+
+        // Remove previous formatting
+        String cleanString = input.replaceAll("[^0-9]", "");
+
+        // Format the input as currency
+        if (!cleanString.isEmpty()) {
+            double parsed = Double.parseDouble(cleanString);
+            String formatted = DecimalFormat.getCurrencyInstance().format((parsed / 100));
+            priceEditText.removeTextChangedListener(priceTextWatcher);
+            priceEditText.setText(formatted);
+            priceEditText.setSelection(formatted.length());
+            priceEditText.addTextChangedListener(priceTextWatcher);
+        }
     }
 }

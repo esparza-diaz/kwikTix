@@ -2,9 +2,11 @@ package com.cs407.kwikTix;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -180,9 +182,29 @@ public class Listings extends Fragment {
         TextView collegeTextView = popupView.findViewById(R.id.quickViewCollege);
         collegeTextView.setText(selectedListing.getCollege());
 
+        // Get college information from the database
+        Colleges college = dbHelper.getCollege(selectedListing.getCollege());
+
+        // Open Google Maps with the location of the college
+        ImageButton openMapButton = popupView.findViewById(R.id.openMapButton);
+        openMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGoogleMaps(Double.parseDouble(college.getLatitude()), Double.parseDouble(college.getLongitude()));
+            }
+        });
+
         // Show the popup at the center of the screen
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
+
+    private void openGoogleMaps(double latitude, double longitude) {
+        String uri = String.format("geo:%f,%f?q=%f,%f", latitude, longitude, latitude, longitude);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setPackage("com.google.android.apps.maps");
+        startActivity(intent);
+    }
+
 
 
 
@@ -276,7 +298,6 @@ public class Listings extends Fragment {
     }
 
     public void refreshListings() {
-        // TODO: Update the data from the database
         if(college.equals("All Colleges")) {
             displayListings = dbHelper.getListings(null, null, sort_by, desc);
         } else {

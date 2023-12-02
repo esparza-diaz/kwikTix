@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:backgroundTint="@color/design_default_color_on_primary">
+    android:backgroundTint="@color/red"
+    android:background="#AF0000">
 
     <!-- College TextView -->
     <TextView
@@ -14,10 +15,31 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textSize="18sp"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Add more TextViews or other UI elements as needed -->
+    <!-- Open Map Button -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
+        <ImageButton
+            android:id="@+id/openMapButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/baseline_map_24"
+            android:contentDescription="Open in Maps" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Game Location"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
 </LinearLayout>

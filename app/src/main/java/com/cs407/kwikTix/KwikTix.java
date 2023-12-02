@@ -54,17 +54,12 @@ public class KwikTix  extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selectedFragment = null;
 
-                    Log.i("TEST", String.valueOf(item.getItemId()));
-                    switch (item.getItemId()) {
-                        case 2131231054:
-                            selectedFragment = new Listings();
-                            break;
-                        case 2131231055:
-                            selectedFragment = new Post();
-                            break;
-                        case 2131231056:
-                            selectedFragment = new Profile();
-                            break;
+                    if (R.id.navigation_listings == item.getItemId()) {
+                        selectedFragment = new Listings();
+                    } else if (R.id.navigation_post == item.getItemId()) {
+                        selectedFragment = new Post();
+                    } else if (R.id.navigation_profile == item.getItemId()) {
+                        selectedFragment = new Profile();
                     }
 
                     if (selectedFragment != null) {

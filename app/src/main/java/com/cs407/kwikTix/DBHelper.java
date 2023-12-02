@@ -21,6 +21,8 @@ public class DBHelper {
                 "(username TEXT PRIMARY KEY,password TEXT,email TEXT, college TEXT, FOREIGN KEY(college) REFERENCES colleges(college))");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS listings "+
                 "(title TEXT PRIMARY KEY,date TEXT,price TEXT, college TEXT,username TEXT, FOREIGN KEY(college) REFERENCES colleges(college), FOREIGN KEY(username) REFERENCES users(username))");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS offers "+
+                "(title TEXT PRIMARY KEY,offerAmount TEXT,buyerUsername TEXT, FOREIGN KEY(listings) REFERENCES colleges(listings))");
     }
 
     /**
@@ -63,16 +65,17 @@ public class DBHelper {
     /**
      * Adds ticket to listings db
      * @param ticket
-     * @param offerUsername
+     * @param buyerUsername
      * @param tempKey
      */
-    public void addOffer(Tickets ticket, String offerUsername, int tempKey, Double offer){
+    public void addOffer(Tickets ticket, String buyerUsername, int tempKey, Double offer){
         createTable();
         String seller = ticket.getUsername();
         String offerAmount= offer.toString();
+        String listings = ticket.getTitle();
         try {
-            sqLiteDatabase.execSQL("INSERT INTO offers (offerAmount, seller, offerUsername) VALUES (?,?,?,?,?)",
-                    new String[]{offerAmount,seller, offerUsername});
+            sqLiteDatabase.execSQL("INSERT INTO offers (offerAmount, buyerUsername, seller, listings) VALUES (?,?,?,?,?)",
+                    new String[]{offerAmount,seller, buyerUsername, listings});
             Log.i("Yay", "Offer created");
         } catch (SQLiteConstraintException e) {
             // Handle the exception (e.g., log it or show a message) TODO: Same title
@@ -120,6 +123,7 @@ public class DBHelper {
         return user;
     }
 
+
     /**
      * Gets listings for a specific user
      * @param username
@@ -147,6 +151,25 @@ public class DBHelper {
 
         c.close();
         return listings;
+    }
+
+    public Tickets getTicket(String key){
+        createTable();
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE title LIKE ?",
+                new String[]{"%" + key + "%"});
+        int dateIndex = c.getColumnIndex("date");
+        int collegeIndex = c.getColumnIndex("college");
+        int priceIndex = c.getColumnIndex("price");
+        int usernameIndex = c.getColumnIndex("username");
+        c.moveToFirst();
+        String date = c.getString(dateIndex);
+        String college = c.getString(collegeIndex);
+        String price = c.getString(priceIndex);
+        String username=c.getString(usernameIndex);
+        Tickets t = new Tickets(key,date,price,college,username);
+
+        c.close();
+        return t;
     }
 
     /**
@@ -180,21 +203,49 @@ public class DBHelper {
         return listings;
     }
 
-    public ArrayList<Tickets> getOffers(Tickets t, String username){
+    public ArrayList<Offer> getMyOffers(String buyerUsername){
         Log.i("Yay", "Getting all Offers");
         createTable();
         Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers", null);
-        int offerIndex = c.getColumnIndex("offerUsername");
+        int buyerIndex = c.getColumnIndex("buyerUsername");
+        int sellerIndex = c.getColumnIndex("seller");
+        int offerAmountIndex = c.getColumnIndex("offerAmount");
+        int titleIndex = c.getColumnIndex("title");
+        c.moveToFirst();
+        ArrayList<Offer> offers = new ArrayList<>();
+        while(!c.isAfterLast()){
+            String title = c.getString(titleIndex);
+            String buyer = c.getString(buyerIndex);
+            String seller = c.getString(sellerIndex);
+            String offerAmount = c.getString(offerAmountIndex);
+            Tickets t = getTicket(title);
+
+            Offer off = new Offer(t, title, buyer, offerAmount, seller);
+            offers.add(off);
+            c.moveToNext();
+        }
+
+        c.close();
+        return offers;
+    }
+
+    public ArrayList<Offer> getTicketOffers(Tickets t){
+        Log.i("Yay", "Getting all Offers");
+        String title = t.getTitle();
+        createTable();
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers WHERE title LIKE ?",
+                new String[]{"%" + title + "%"});
+        int buyerIndex = c.getColumnIndex("buyerUsername");
         int sellerIndex = c.getColumnIndex("seller");
         int offerAmountIndex = c.getColumnIndex("offerAmount");
         c.moveToFirst();
-        ArrayList<Offers> offers = new ArrayList<>();
+        ArrayList<Offer> offers = new ArrayList<>();
         while(!c.isAfterLast()){
-            String offer = c.getString(offerIndex);
+            String buyer = c.getString(buyerIndex);
             String seller = c.getString(sellerIndex);
             String offerAmount = c.getString(offerAmountIndex);
 
-            Offers off = new Offers(offer, seller, offerAmount);
+            Offer off = new Offer(t, title, buyer, offerAmount, seller);
             offers.add(off);
             c.moveToNext();
         }

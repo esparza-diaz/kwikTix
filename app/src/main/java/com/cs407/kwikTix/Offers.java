@@ -56,7 +56,7 @@ public class Offers extends Fragment {
      * @return A new instance of fragment Listings.
      */
     // TODO: Rename and change types and number of parameters
-    public static Offers newInstance(String param1, String param2, String param3) {
+    public static Offers newInstance(Tickets t, String param1, String param2, String param3) {
         Offers fragment = new Offers();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -102,12 +102,11 @@ public class Offers extends Fragment {
         //dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername(), t2.getOfferAmount());
 
         // TODO: HARDCODED LISTINGS
-        displayOffers = dbHelper.getOffers();
+        //displayOffers = dbHelper.getOffers();
         dbHelper.addOffer(t1, userLoggedIn, 1, 40.00);
         dbHelper.addOffer(t2, userLoggedIn, 2, 60.00);
-        t1Offers = dbHelper.getOffers(t1, userLoggedIn);
-        t2Offers = dbHelper.getOffers(t2, userLoggedIn);
-
+//      t1Offers = dbHelper.getOffers(t1, userLoggedIn);
+//      t2Offers = dbHelper.getOffers(t2, userLoggedIn);
         TicketAdapter adapter = new TicketAdapter(v.getContext(), displayOffers);
         ticketsListView.setAdapter(adapter);
 
@@ -139,7 +138,7 @@ public class Offers extends Fragment {
 
     public void refreshOffers() {
         // TODO: Update the data from the database
-        displayOffers = dbHelper.getOffers();
+        //displayOffers = dbHelper.getOffers();
 
         // Notify the adapter that the data has changed
         adapter.notifyDataSetChanged();

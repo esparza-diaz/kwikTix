@@ -146,15 +146,14 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         }
 
         // Regular expression to verify email
-        Pattern pattern = Pattern.compile("(\\w@((cs\\.)?|(cae\\.)?)wisc\\.edu)$");
+        Pattern pattern = Pattern.compile("^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$");
         Matcher matcher = pattern.matcher(email);
         boolean validUWSuffix = matcher.find();
 
         if (!validUWSuffix) {
-//            Toast.makeText(this, "Not a valid UW email!", Toast.LENGTH_LONG);
             return false;
         } else {
-            Log.d("UserValidation", "valid uw email");
+            Log.d("UserValidation", "valid email");
         }
 
         return true;

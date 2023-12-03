@@ -124,21 +124,19 @@ public class DBHelper {
         return user;
     }
 
-    public void setUser(String username, String email, String phone, String prefContactMethod, String college) {
+    public void setUser(String username, String email, String phone, String prefContactMethod) {
         Users user = getUser(username);
         Log.d("ManageProfile", "User Info Pre: "
                 + user.getEmail() + ", "
                 + user.getPhone() + ", "
-                + user.getPrefContactMethod() + ", "
-                + user.getCollege());
-        sqLiteDatabase.execSQL("UPDATE users set email=?, phone=?, prefContactMethod=?, college=? WHERE username=username",
-                new String[]{email, phone, prefContactMethod, college});
+                + user.getPrefContactMethod());
+        sqLiteDatabase.execSQL("UPDATE users set email=?, phone=?, prefContactMethod=? WHERE username=username",
+                new String[]{email, phone, prefContactMethod});
         user = getUser(username);
         Log.d("ManageProfile", "User Info Post: "
                 + user.getEmail() + ", "
                 + user.getPhone() + ", "
-                + user.getPrefContactMethod() + ", "
-                + user.getCollege());
+                + user.getPrefContactMethod());
     }
         /*
     public void updateNotes(String content,String date,String title,String username){

@@ -80,19 +80,31 @@ public class Profile extends Fragment {
         displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
 
         //TODO: Current using this button to logout, must change
-        Button logout = v.findViewById(R.id.manageSettings);
+        Button logout = v.findViewById(R.id.Logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //clear sharedPreference
-                dbHelper.setUser(userLoggedIn, "new@gmail.com", "1233333412", "come@33me", "HOMESCHOLED");
-//                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
-//                SharedPreferences.Editor editor = sharedPreferences.edit();
-//                editor.clear();
-//                editor.apply();
-//
-//                Intent intent = new Intent(requireContext(), MainActivity.class);
-//                startActivity(intent);
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
+
+                Intent intent = new Intent(requireContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Manage Settings button opens new activity to edit user information
+        Button manageSettingsButton = v.findViewById(R.id.manageSettings);
+        manageSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view) {
+                //TODO Implement user updating: below line updates sql database
+                // dbHelper.setUser(userLoggedIn, "new@gmail.com", "1233333412", "come@33me", "HOMESCHOLED");
+                Intent intent = new Intent(requireContext(), ManageSettings.class);
+                intent.putExtra("username", userLoggedIn);
+                startActivity(intent);
             }
         });
 

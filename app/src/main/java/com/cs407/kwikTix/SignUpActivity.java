@@ -80,6 +80,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         collegesSpinner.setOnItemSelectedListener(this);
     }
 
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         if (parent == prefContactMethodSpinner) {

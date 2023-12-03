@@ -7,13 +7,17 @@ public class Offer implements Serializable {
     private String sellerUsername;
     private String title;
     private String price;
+    private Tickets ticket;
 
     public Offer(Tickets t, String title, String buyerUsername, String offerAmount, String seller) {
+        this.ticket = t;
         this.title = title;
         this.price = offerAmount;
         this.buyerUsername = buyerUsername;
         this.sellerUsername = seller;
     }
+
+    public Tickets getTicket() { return this.ticket; }
 
     public String getTitle() {
         return this.title;

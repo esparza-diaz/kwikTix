@@ -23,6 +23,15 @@ import androidx.fragment.app.FragmentManager;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
+// TODO: DELETE MEEEEEEEEEEEEEEEE
+
+
+
+
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Offers#newInstance} factory method to
@@ -37,12 +46,9 @@ public class Offers extends Fragment {
     private static final String ARG_PARAM3 = "param3";
 
     // TODO: Rename and change types of parameters
+    //private String sellerUsername;
     private String userLoggedIn;
-    private String userOffered;
-    private String mParam2;
-
-    public static ArrayList<Offer> t1offers;
-    public static ArrayList<Offer> t2offers;
+    //private String offerAmount;
 
     public Offers() {
     }
@@ -70,8 +76,9 @@ public class Offers extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userLoggedIn = getArguments().getString("seller");
-            userOffered = getArguments().getString("offer");
+            //sellerUsername = getArguments().getString("sellerUsername");
+            userLoggedIn = getArguments().getString("buyerUsername");
+            //offerAmount = getArguments().getString("offerAmount");
         }
     }
 

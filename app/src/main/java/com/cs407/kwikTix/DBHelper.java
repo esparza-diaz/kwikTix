@@ -204,7 +204,7 @@ public class DBHelper {
     }
 
     public ArrayList<Offer> getMyOffers(String buyerUsername){
-        Log.i("Yay", "Getting all Offers");
+        Log.i("Yay", "Getting offers made by logged in user");
         createTable();
         Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers", null);
         int buyerIndex = c.getColumnIndex("buyerUsername");
@@ -230,7 +230,7 @@ public class DBHelper {
     }
 
     public ArrayList<Offer> getTicketOffers(Tickets t){
-        Log.i("Yay", "Getting all Offers");
+        Log.i("Yay", "Getting offers on a particular ticket");
         String title = t.getTitle();
         createTable();
         Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers WHERE title LIKE ?",

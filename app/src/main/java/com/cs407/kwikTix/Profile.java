@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -73,10 +76,9 @@ public class Profile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_profile, container, false);
-        ListView ticketsListView = (ListView) v.findViewById(R.id.profileListings);
+        //ListView ticketsListView = (ListView) v.findViewById(R.id.profileListings);
 
-        //TODO: Current using this button to logout, must change
-        Button logout = v.findViewById(R.id.manageSettings);
+        Button logout = v.findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,12 +92,67 @@ public class Profile extends Fragment {
                 startActivity(intent);
             }
         });
+
+        //TODO: Current using this button to logout, must change
+        Button manageSettings = v.findViewById(R.id.manageSettings);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //clear sharedPreference
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
+
+                Intent intent = new Intent(requireContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        LinearLayout myListings = v.findViewById(R.id.clickableMyListings);
+        myListings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                FragmentManager fragmentManager = getParentFragmentManager();
+                Listings listingsFragment = new Listings();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("username", userLoggedIn);
+                listingsFragment.setArguments(bundle);
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, listingsFragment)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("showing Post")
+                        .commit();
+            }
+        });
+
+        LinearLayout myOffers = v.findViewById(R.id.clickableMyOffers);
+        myOffers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                FragmentManager fragmentManager = getParentFragmentManager();
+                Offers offersFragment = new Offers();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("username", userLoggedIn);
+                offersFragment.setArguments(bundle);
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, offersFragment)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("showing Post")
+                        .commit();
+            }
+        });
+
         sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
         displayListings = dbHelper.getListings(userLoggedIn);
 
-        TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
-        ticketsListView.setAdapter(adapter);
+        //TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
+        //ticketsListView.setAdapter(adapter);
         return v;
     }
 }

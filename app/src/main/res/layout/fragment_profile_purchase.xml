@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Ticket Name -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="32dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="0dp"
+            android:contentDescription="Back"
+            android:src="@drawable/baseline_arrow_back_24" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:text="My Purchases"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/ticketName3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Ticket Name"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#e0e0e0"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Game -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Game: "
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/gameName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Iowa Game"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
+        <!-- Location -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location: "
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/gameLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wisconsin"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
+        <!-- Price -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Listing Price: "
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ticketPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="50.00"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
+        <!-- Seller -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seller: "
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/sellerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ticket Seller"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
+        <!-- Date/Time -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date/Time: "
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/dateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date/Time of Game"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#e0e0e0"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Purchased Price: "
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/purchasedPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="50.00"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="#e0e0e0"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/acquireTicketHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="How to get your ticket: "
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/acquireTicketInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Instructions to get ticket . . ."
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+    <!-- Ticket Details -->
+
+</LinearLayout>

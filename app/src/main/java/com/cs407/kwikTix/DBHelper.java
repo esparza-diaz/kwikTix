@@ -124,6 +124,31 @@ public class DBHelper {
         return user;
     }
 
+    public void setUser(String username, String email, String phone, String prefContactMethod) {
+        Users user = getUser(username);
+        Log.d("ManageProfile", "User Info Pre: "
+                + user.getEmail() + ", "
+                + user.getPhone() + ", "
+                + user.getPrefContactMethod());
+        sqLiteDatabase.execSQL("UPDATE users set email=?, phone=?, prefContactMethod=? WHERE username=username",
+                new String[]{email, phone, prefContactMethod});
+        user = getUser(username);
+        Log.d("ManageProfile", "User Info Post: "
+                + user.getEmail() + ", "
+                + user.getPhone() + ", "
+                + user.getPrefContactMethod());
+    }
+        /*
+    public void updateNotes(String content,String date,String title,String username){
+        createTable();
+        Notes note = new Notes(date,username,title,content);
+        sqLiteDatabase.execSQL("UPDATE notes set content=?, date=? where title=? and username=?",
+                new String[]{content,date,title,username});
+    }
+
+
+ */
+// String strSQL = "UPDATE myTable SET Column1 = someValue WHERE columnId = "+ someValue;
 
     /**
      * Gets listings for a specific user
@@ -353,14 +378,4 @@ public class DBHelper {
         c.close();
         return colleges;
     }
-    /*
-    public void updateNotes(String content,String date,String title,String username){
-        createTable();
-        Notes note = new Notes(date,username,title,content);
-        sqLiteDatabase.execSQL("UPDATE notes set content=?, date=? where title=? and username=?",
-                new String[]{content,date,title,username});
-    }
-
-
- */
 }

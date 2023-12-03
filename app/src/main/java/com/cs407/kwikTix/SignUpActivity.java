@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -46,6 +47,13 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         colleges = intent.getStringArrayListExtra("collegesArrayList");
         colleges.add(0,"Select College");
 
+        // Gets input text boxes for future use
+        usernameInput = ((EditText) findViewById(R.id.signupName));
+        passwordInput = ((EditText) findViewById(R.id.signupPassword));
+        emailInput = ((EditText) findViewById(R.id.signupEmail));
+        phoneInput = ((EditText) findViewById(R.id.signupPhone));
+        phoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher("US"));
+
         prefContactMethodSpinner = (Spinner) findViewById(R.id.signupContactMethodDropdown);
         collegesSpinner = (Spinner) findViewById(R.id.signupCollege);
 
@@ -72,6 +80,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         collegesSpinner.setOnItemSelectedListener(this);
     }
 
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         if (parent == prefContactMethodSpinner) {
@@ -101,18 +110,18 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
             return false;
         }
 
-        // Checks if input is number
-        try {
-            Integer.parseInt(phone);
-        } catch (NumberFormatException e) {
-            Log.d("phoneInputValidation", "Can't parse phone input as int");
+        // Regular expression to verify phone
+        Pattern pattern = Pattern.compile("^(1\\s)?\\(\\d{3}\\)\\s(\\d{3})-(\\d{4})$");
+        Matcher matcher = pattern.matcher(phone);
+        boolean validPhone = matcher.find();
+
+        if (!validPhone) {
+            Log.d("UserValidation", "Phone regex didn't match");
             return false;
+        } else {
+            Log.d("UserValidation", "valid phone");
         }
 
-        // Checks if input has length 10
-        if (phone.length() != 10) {
-            return false;
-        }
         return true;
     }
 
@@ -194,16 +203,11 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE,null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
 
-        usernameInput = ((EditText) findViewById(R.id.signupName));
         username = usernameInput.getText().toString();
-
-        passwordInput = ((EditText) findViewById(R.id.signupPassword));
         password = passwordInput.getText().toString();
-
-        emailInput = ((EditText) findViewById(R.id.signupEmail));
         email = emailInput.getText().toString();
 
-        phoneInput = ((EditText) findViewById(R.id.signupPhone));
+        // Strip away everything but 10 digits from phone number // 1 (012) 345-6789
         phone = phoneInput.getText().toString();
 
         if (!usernameInputValidation(username, dbHelper)){
@@ -225,6 +229,10 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
             Log.d("UserValidation", "Phone: Error");
             phoneInput.setError("Invalid Phone Number!");
             return;
+        } else {
+            phone = phone.substring(phone.length()-13).replace(" ", "").replace(")", "");
+            phone = phone.replace("-", "");
+            Log.d("UserValidation", "Update phone: " + phone);
         }
         if (!prefContactMethodInputValidation(prefContactMethod)) {
             Log.d("UserValidation", "PCM Error");

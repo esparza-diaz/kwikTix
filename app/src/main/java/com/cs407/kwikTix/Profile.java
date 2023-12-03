@@ -75,8 +75,12 @@ public class Profile extends Fragment {
         View v =  inflater.inflate(R.layout.fragment_profile, container, false);
         ListView ticketsListView = (ListView) v.findViewById(R.id.profileListings);
 
+        sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
+        dbHelper = new DBHelper(sqLiteDatabase);
+        displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
+
         //TODO: Current using this button to logout, must change
-        Button logout = v.findViewById(R.id.manageSettings);
+        Button logout = v.findViewById(R.id.Logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,9 +94,19 @@ public class Profile extends Fragment {
                 startActivity(intent);
             }
         });
-        sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
-        dbHelper = new DBHelper(sqLiteDatabase);
-        displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
+
+        // Manage Settings button opens new activity to edit user information
+        Button manageSettingsButton = v.findViewById(R.id.manageSettings);
+        manageSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view) {
+                //TODO Implement user updating: below line updates sql database
+                // dbHelper.setUser(userLoggedIn, "new@gmail.com", "1233333412", "come@33me", "HOMESCHOLED");
+                Intent intent = new Intent(requireContext(), ManageSettings.class);
+                intent.putExtra("username", userLoggedIn);
+                startActivity(intent);
+            }
+        });
 
         TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
         ticketsListView.setAdapter(adapter);

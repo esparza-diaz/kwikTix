@@ -64,7 +64,7 @@
             android:ems="10"
             android:inputType="phone"
             android:text=""
-            android:hint="Phone"/>
+            android:hint="Phone: (Type 10 Digits Only)"/>
 
         <Spinner
             android:id="@+id/signupContactMethodDropdown"

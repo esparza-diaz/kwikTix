@@ -75,24 +75,26 @@ public class Profile extends Fragment {
         View v =  inflater.inflate(R.layout.fragment_profile, container, false);
         ListView ticketsListView = (ListView) v.findViewById(R.id.profileListings);
 
+        sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
+        dbHelper = new DBHelper(sqLiteDatabase);
+        displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
+
         //TODO: Current using this button to logout, must change
         Button logout = v.findViewById(R.id.manageSettings);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //clear sharedPreference
-                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.clear();
-                editor.apply();
-
-                Intent intent = new Intent(requireContext(), MainActivity.class);
-                startActivity(intent);
+                dbHelper.setUser(userLoggedIn, "new@gmail.com", "1233333412", "come@33me", "HOMESCHOLED");
+//                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = sharedPreferences.edit();
+//                editor.clear();
+//                editor.apply();
+//
+//                Intent intent = new Intent(requireContext(), MainActivity.class);
+//                startActivity(intent);
             }
         });
-        sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
-        dbHelper = new DBHelper(sqLiteDatabase);
-        displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
 
         TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
         ticketsListView.setAdapter(adapter);

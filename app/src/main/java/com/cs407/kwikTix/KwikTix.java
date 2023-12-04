@@ -34,6 +34,14 @@ public class KwikTix  extends AppCompatActivity {
         Intent intent = getIntent();
         userLoggedIn = intent.getStringExtra("username");
 
+        // Specifies which fragment to go to
+        String fragmentToStart = null;
+        try {
+            fragmentToStart = intent.getStringExtra("fragment");
+        } catch (Exception e) {
+
+        }
+
         Listings listingsFragment = new Listings();
 
         // Create an Intent to hold the username data
@@ -43,12 +51,26 @@ public class KwikTix  extends AppCompatActivity {
         // Set the data bundle to the fragment
         listingsFragment.setArguments(bundle);
 
-        // Begin the fragment transaction
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, listingsFragment)
-                .setReorderingAllowed(true)
-                .addToBackStack("showing Listings")
-                .commit();
+
+        if (fragmentToStart != null) {
+            if (fragmentToStart.equals("Profile")) {
+                Fragment profileFragment = new Profile();
+                // Begin the fragment transaction
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, profileFragment)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("showing Listings")
+                        .commit();
+            }
+        } else {
+            // Begin the fragment transaction
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView, listingsFragment)
+                    .setReorderingAllowed(true)
+                    .addToBackStack("showing Listings")
+                    .commit();
+        }
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_bar);
         bottomNavigationView.setOnItemSelectedListener(navListener);

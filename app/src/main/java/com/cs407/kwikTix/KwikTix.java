@@ -7,9 +7,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+import com.google.android.material.navigation.NavigationBarView;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -18,13 +21,27 @@ public class KwikTix  extends AppCompatActivity {
 
     FragmentManager fragmentManager = getSupportFragmentManager();
     private String userLoggedIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.kwiktix_layout);
+
+        // Gets Notifications corresponding to this user's ticket's sold, offers made on their tickets,
+        // and the status of the offers that they made on others' tickets (accepted or rejected)
+
+
         Intent intent = getIntent();
         userLoggedIn = intent.getStringExtra("username");
 
+        // Specifies which fragment to go to
+        String fragmentToStart = null;
+        try {
+            fragmentToStart = intent.getStringExtra("fragment");
+        } catch (Exception e) {
+
+        }
+
         Listings listingsFragment = new Listings();
 
         // Create an Intent to hold the username data
@@ -34,63 +51,59 @@ public class KwikTix  extends AppCompatActivity {
         // Set the data bundle to the fragment
         listingsFragment.setArguments(bundle);
 
-        // Begin the fragment transaction
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, listingsFragment)
-                .setReorderingAllowed(true)
-                .addToBackStack("showing Listings")
-                .commit();
+
+        if (fragmentToStart != null) {
+            if (fragmentToStart.equals("Profile")) {
+                Fragment profileFragment = new Profile();
+                // Begin the fragment transaction
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, profileFragment)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("showing Listings")
+                        .commit();
+            }
+        } else {
+            // Begin the fragment transaction
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView, listingsFragment)
+                    .setReorderingAllowed(true)
+                    .addToBackStack("showing Listings")
+                    .commit();
+        }
+
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_bar);
+        bottomNavigationView.setOnItemSelectedListener(navListener);
     }
 
-    public void goToListings(MenuItem item) {
-        Listings listingsFragment = new Listings();
+    private NavigationBarView.OnItemSelectedListener navListener =
+            new NavigationBarView.OnItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    Fragment selectedFragment = null;
 
-        // Create an Intent to hold the username data
-        Bundle bundle = new Bundle();
-        bundle.putString("username", userLoggedIn);
+                    if (R.id.navigation_listings == item.getItemId()) {
+                        selectedFragment = new Listings();
+                    } else if (R.id.navigation_post == item.getItemId()) {
+                        selectedFragment = new Post();
+                    } else if (R.id.navigation_profile == item.getItemId()) {
+                        selectedFragment = new Profile();
+                    }
 
-        // Set the data bundle to the fragment
-        listingsFragment.setArguments(bundle);
+                    if (selectedFragment != null) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("username", userLoggedIn);
+                        selectedFragment.setArguments(bundle);
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, listingsFragment)
-                .setReorderingAllowed(true)
-                .addToBackStack("showing Listings")
-                .commit();
-    }
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainerView, selectedFragment)
+                                .setReorderingAllowed(true)
+                                .addToBackStack("showing Fragment")
+                                .commit();
+                    }
 
-    public void goToPost(MenuItem item) {
-        Post postFragment = new Post();
-
-        // Create an Intent to hold the username data
-        Bundle bundle = new Bundle();
-        bundle.putString("username", userLoggedIn);
-
-        // Set the data bundle to the fragment
-        postFragment.setArguments(bundle);
-
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, postFragment)
-                .setReorderingAllowed(true)
-                .addToBackStack("showing Post")
-                .commit();
-    }
-
-    public void goToProfile(MenuItem item) {
-        Profile profileFragment = new Profile();
-
-        // Create an Intent to hold the username data
-        Bundle bundle = new Bundle();
-        bundle.putString("username", userLoggedIn);
-
-        // Set the data bundle to the fragment
-        profileFragment.setArguments(bundle);
-
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, profileFragment)
-                .setReorderingAllowed(true)
-                .addToBackStack("showing Profile")
-                .commit();
-    }
+                    return true;
+                }
+            };
 
 }

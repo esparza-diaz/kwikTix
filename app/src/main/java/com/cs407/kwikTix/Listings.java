@@ -1,7 +1,12 @@
 package com.cs407.kwikTix;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -16,10 +21,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,27 +84,35 @@ public class Listings extends Fragment {
     SQLiteDatabase sqLiteDatabase;
     DBHelper dbHelper;
     List<Colleges> collegeList;
+
+    ListView ticketsListView;
+
+    // inputs used for filter
+    String college = "All Colleges";
+    String sort_by = null;
+    boolean desc = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.listings_fragment, container, false);
-        ListView ticketsListView = (ListView) v.findViewById(R.id.myListings);
+        ticketsListView = (ListView) v.findViewById(R.id.myListings);
 
         Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test");
         Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test");
         // Init DB
-        sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
+        sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
 
-        dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername());
-        dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername());
+        //dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername());
+        //dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername());
         // TODO: HARDCODED LISTINGS
-        displayListings = dbHelper.getListings();
+        displayListings = dbHelper.getListings(null,null, null, false);
 
         collegeList = dbHelper.getAllColleges();
 
-        TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
+        adapter = new TicketAdapter(v.getContext(), displayListings);
         ticketsListView.setAdapter(adapter);
 
         FragmentManager fragmentManager = getParentFragmentManager();
@@ -109,7 +125,7 @@ public class Listings extends Fragment {
                 SingleTicket singleTicketFragment = new SingleTicket();
                 Bundle args = new Bundle();
                 args.putSerializable("selectedListing", selectedListing);
-                args.putString("username",userLoggedIn);
+                // args.putString("username",userLoggedIn);
                 singleTicketFragment.setArguments(args);
 
                 // Replace Listings fragment with SingleTicketFragment
@@ -139,8 +155,58 @@ public class Listings extends Fragment {
             }
         });
 
+        ticketsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // Handle long click event
+                Tickets selectedListing = displayListings.get(position);
+                showQuickViewPopup(view, selectedListing);
+                return true;
+            }
+        });
+
         return v;
+
     }
+
+    private void showQuickViewPopup(View view, Tickets selectedListing) {
+        // Inflate the quick view popup layout
+        View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.quick_view_popup, null);
+
+        // Set up the PopupWindow
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
+
+        // Customize the quick view content based on the selected listing
+        TextView collegeTextView = popupView.findViewById(R.id.quickViewCollege);
+        collegeTextView.setText(selectedListing.getTitle());
+
+        // Get college information from the database
+        Colleges college = dbHelper.getCollege(selectedListing.getCollege());
+
+        // Open Google Maps with the location of the college
+        ImageButton openMapButton = popupView.findViewById(R.id.openMapButton);
+        openMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGoogleMaps(Double.parseDouble(college.getLatitude()), Double.parseDouble(college.getLongitude()));
+            }
+        });
+
+        // Show the popup at the center of the screen
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
+
+    private void openGoogleMaps(double latitude, double longitude) {
+        String uri = String.format("geo:%f,%f?q=%f,%f", latitude, longitude, latitude, longitude);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setPackage("com.google.android.apps.maps");
+        startActivity(intent);
+    }
+
+
+
 
     private void showCollegeFilterPopup(View view) {
         // Inflate the popup layout
@@ -170,9 +236,18 @@ public class Listings extends Fragment {
             @Override
             public void onClick(View v) {
                 // Handle filter by college
-                String selectedCollege = (String) collegeSpinner.getSelectedItem();
+                college = (String) collegeSpinner.getSelectedItem();
                 // Apply the filter based on the selected college
                 // ...
+                ImageView imageView = view.findViewById(R.id.filterButton);
+                if (college.equals("All Colleges")) {
+                    imageView.setColorFilter(null);
+                }else{
+                    int color = Color.parseColor("#FF0000");
+                    imageView.setColorFilter(color);
+                }
+
+                refreshListings();
 
                 // Dismiss the popup
                 popupWindow.dismiss();
@@ -188,19 +263,54 @@ public class Listings extends Fragment {
         popupMenu.inflate(R.menu.sort_menu); // Create a menu resource file (res/menu/filter_menu.xml)
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                //handleFilterSelection(menuItem.getItemId());
+                int itemId = menuItem.getItemId();
+                ImageView imageView = view.findViewById(R.id.sortButton);
+                if (itemId == R.id.ascendingPrice) {
+                    sort_by = "price";
+                    desc = false;
+                    int color = Color.parseColor("#FF0000");
+                    imageView.setColorFilter(color);
+                } else if(itemId == R.id.descendingPrice) {
+                    sort_by = "price";
+                    desc = true;
+                    int color = Color.parseColor("#FF0000");
+                    imageView.setColorFilter(color);
+                } else if(itemId == R.id.ascendingTime) {
+                    sort_by = "date";
+                    desc = false;
+                    int color = Color.parseColor("#FF0000");
+                    imageView.setColorFilter(color);
+                } else if (itemId == R.id.descendingTime) {
+                    sort_by = "date";
+                    desc = true;
+                    int color = Color.parseColor("#FF0000");
+                    imageView.setColorFilter(color);
+                } else if (itemId == R.id.noFilter) {
+                    sort_by = null;
+                    imageView.setColorFilter(null);
+                }
+                refreshListings();
                 return true;
             }
         });
-
         popupMenu.show();
     }
 
     public void refreshListings() {
-        // TODO: Update the data from the database
-        displayListings = dbHelper.getListings();
+        if(college.equals("All Colleges")) {
+            displayListings = dbHelper.getListings(null, null, sort_by, desc);
+        } else {
+            displayListings = dbHelper.getListings(null, college, sort_by, desc);
+        }
+        // Notify the adapter that the data has changed
+        Log.i("TEST", displayListings.toString());
+
+        if (displayListings.size() == 0){
+            Toast.makeText(requireContext(),"No tickets found. Modify filters.", Toast.LENGTH_LONG).show();
+        }
+        adapter.clear();
+        adapter.addAll(displayListings);
 
         // Notify the adapter that the data has changed
         adapter.notifyDataSetChanged();

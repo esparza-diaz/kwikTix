@@ -42,10 +42,15 @@ public class ManageSettings extends AppCompatActivity implements AdapterView.OnI
 
         sqLiteDatabase = getApplicationContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
+        Users user = dbHelper.getUser(username);
 
         emailInput = ((EditText) findViewById(R.id.editEmail));
+        // Auto-populates user info
+        emailInput.setText(user.getEmail());
+
         phoneInput = ((EditText) findViewById(R.id.editPhone));
         phoneInput.addTextChangedListener(new PhoneNumberFormattingTextWatcher("US"));
+        phoneInput.setText(user.getPhone());
 
         prefContactMethodSpinner = (Spinner) findViewById(R.id.editContactMethodDropdown);
 

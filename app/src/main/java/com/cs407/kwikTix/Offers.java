@@ -93,8 +93,8 @@ public class Offers extends Fragment {
         View v =  inflater.inflate(R.layout.offers_fragment_placeholder, container, false);
         ListView ticketsListView = (ListView) v.findViewById(R.id.myOffers);
 
-        Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test");
-        Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test");
+        //Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test");
+        //Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test");
         //Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test", "40.00");
         //Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test", "60.00");
 
@@ -102,16 +102,16 @@ public class Offers extends Fragment {
         sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
 
-        dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername());
-        dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername());
+        //dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername());
+        //dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername());
         // TODO: figure out how to add the offer amount(s) associated with tickets
         //dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername(), t1.getOfferAmount());
         //dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername(), t2.getOfferAmount());
 
         // TODO: HARDCODED LISTINGS
         //displayOffers = dbHelper.getOffers();
-        dbHelper.addOffer(t1, userLoggedIn, 1, 40.00);
-        dbHelper.addOffer(t2, userLoggedIn, 2, 60.00);
+        //dbHelper.addOffer(t1, userLoggedIn, 1, 40.00);
+        //dbHelper.addOffer(t2, userLoggedIn, 2, 60.00);
 //      t1Offers = dbHelper.getOffers(t1, userLoggedIn);
 //      t2Offers = dbHelper.getOffers(t2, userLoggedIn);
         TicketAdapter adapter = new TicketAdapter(v.getContext(), displayOffers);

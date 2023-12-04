@@ -20,6 +20,10 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -92,13 +96,29 @@ public class SingleTicket extends Fragment {
                 gameNameTextView.setText(selectedListing.getTitle());
 
                 TextView ticketPriceTextView = v.findViewById(R.id.ticketPrice);
-                ticketPriceTextView.setText(selectedListing.getPrice().toString());
+                ticketPriceTextView.setText("$" + selectedListing.getPrice().toString());
 
                 TextView sellerNameTextView = v.findViewById(R.id.sellerName);
                 sellerNameTextView.setText(selectedListing.getUsername().toString());
 
+                SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+                SimpleDateFormat outputFormat = new SimpleDateFormat("EEE MM/dd/yyyy 'at' hh:mm a", Locale.getDefault());
                 TextView dateTimeTextView = v.findViewById(R.id.dateTime);
-                dateTimeTextView.setText(selectedListing.getDate().toString());
+                String dateString = selectedListing.getDate().toString();
+                try {
+                    // Parse the input string into a Date object
+                    Date date = inputFormat.parse(dateString);
+
+                    // Format the Date object into the desired output format
+                    String formattedDate = outputFormat.format(date);
+
+                    // Set the formatted date to your TextView
+                    dateTimeTextView.setText(formattedDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    dateTimeTextView.setText(dateString);
+                    // Handle parsing exception
+                }
                 // Handle Back button click
                 ImageButton backButton = v.findViewById(R.id.backButton);
                 backButton.setOnClickListener(new View.OnClickListener() {

@@ -180,7 +180,7 @@ public class Listings extends Fragment {
 
         // Customize the quick view content based on the selected listing
         TextView collegeTextView = popupView.findViewById(R.id.quickViewCollege);
-        collegeTextView.setText(selectedListing.getCollege());
+        collegeTextView.setText(selectedListing.getTitle());
 
         // Get college information from the database
         Colleges college = dbHelper.getCollege(selectedListing.getCollege());

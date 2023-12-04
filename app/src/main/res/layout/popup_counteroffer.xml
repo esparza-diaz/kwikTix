@@ -1,0 +1,28 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/rounded_corner_background">
+
+    <TextView
+        android:id="@+id/counterOfferMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="We successfully sent the CounterOffer to INSERT_USERNAME for INSERT_DOLLAR"
+        android:textSize="24sp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Watch for a notification to see if your offer is accepted or rejected"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>

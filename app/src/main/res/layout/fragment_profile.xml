@@ -23,7 +23,6 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_marginBottom="8dp">
-
         <Button
             android:id="@+id/manageSettings"
             android:layout_width="1dp"

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -73,14 +76,13 @@ public class Profile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_profile, container, false);
-        ListView ticketsListView = (ListView) v.findViewById(R.id.profileListings);
+        //ListView ticketsListView = (ListView) v.findViewById(R.id.clickableMyListings);
 
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
         displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
 
-        //TODO: Current using this button to logout, must change
-        Button logout = v.findViewById(R.id.Logout);
+        Button logout = v.findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,7 +111,53 @@ public class Profile extends Fragment {
         });
 
         TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
-        ticketsListView.setAdapter(adapter);
+        //ticketsListView.setAdapter(adapter);
         return v;
+
+/*<<<<<<< HEAD
+        LinearLayout myListings = v.findViewById(R.id.clickableMyListings);
+        myListings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                FragmentManager fragmentManager = getParentFragmentManager();
+                Listings listingsFragment = new Listings();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("username", userLoggedIn);
+                listingsFragment.setArguments(bundle);
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, listingsFragment)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("showing Post")
+                        .commit();
+            }
+        });
+
+        LinearLayout myOffers = v.findViewById(R.id.clickableMyOffers);
+        myOffers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                FragmentManager fragmentManager = getParentFragmentManager();
+                Offers offersFragment = new Offers();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("username", userLoggedIn);
+                offersFragment.setArguments(bundle);
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, offersFragment)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("showing Post")
+                        .commit();
+            }
+        });
+
+        sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
+        dbHelper = new DBHelper(sqLiteDatabase);
+        displayListings = dbHelper.getListings(userLoggedIn);
+=======*/
+
+
     }
 }

@@ -156,6 +156,7 @@ public class ManageSettings extends AppCompatActivity implements AdapterView.OnI
 
     public void onExitButtonClick(View view) {
         Intent intent = new Intent(getApplicationContext(), KwikTix.class);
+        intent.putExtra("fragment", "Profile");
         startActivity(intent);
     }
 

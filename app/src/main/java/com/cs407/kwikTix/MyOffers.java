@@ -87,13 +87,13 @@ public class MyOffers extends Fragment {
         sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
 
-        Tickets t1 = dbHelper.getTicket("Iowa Game");
-        Tickets t2 = dbHelper.getTicket("Nebraska Game");
+        //Tickets t1 = dbHelper.getTicket("Iowa Game");
+        //Tickets t2 = dbHelper.getTicket("Nebraska Game");
 
         displayOffers = dbHelper.getMyOffers(userLoggedIn);
-        dbHelper.addOffer(t1, userLoggedIn, 1, 40.00);
-        dbHelper.addOffer(t1, userLoggedIn, 2, 45.00);
-        dbHelper.addOffer(t2, userLoggedIn, 1, 60.00);
+       // dbHelper.addOffer(t1, userLoggedIn, 1, 40.00);
+       // dbHelper.addOffer(t1, userLoggedIn, 2, 45.00);
+       // dbHelper.addOffer(t2, userLoggedIn, 1, 60.00);
         OfferAdapter adapter = new OfferAdapter(v.getContext(), displayOffers);
         offersListView.setAdapter(adapter);
 

@@ -5,13 +5,24 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.os.Handler;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,6 +79,8 @@ public class SingleTicket extends Fragment {
         if (args != null) {
             Tickets selectedListing = (Tickets) args.getSerializable("selectedListing");
             if (selectedListing != null) {
+                Log.i("TEST",selectedListing.getTitle());
+                Log.i("TEST",selectedListing.getUsername());
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(selectedListing.getTitle());
@@ -100,7 +113,7 @@ public class SingleTicket extends Fragment {
                 buy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(requireContext(), "Buying ticket as: " + userLoggedIn, Toast.LENGTH_SHORT).show();
+                        showCongratulationsPopup();
                     }
                 });
             }
@@ -108,4 +121,55 @@ public class SingleTicket extends Fragment {
 
         return v;
     }
+
+    private void showCongratulationsPopup() {
+        View overlayView = LayoutInflater.from(requireContext()).inflate(R.layout.overlay_confetti, null);
+
+        GifImageView confettiGif = overlayView.findViewById(R.id.confettiGif);
+        try {
+            InputStream inputStream = requireContext().getAssets().open("confetti.gif");
+            confettiGif.setImageDrawable(new GifDrawable(inputStream));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        View rootView = requireActivity().getWindow().getDecorView().getRootView();
+
+        ((ViewGroup) rootView).addView(overlayView);
+
+        View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_congratulations, null);
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
+
+        popupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
+
+        new Handler().postDelayed(() -> {
+            ((ViewGroup) rootView).removeView(overlayView);
+
+            if (popupWindow.isShowing()) {
+                popupWindow.dismiss();
+            }
+
+            Listings listingsFragment = (Listings) getParentFragmentManager().findFragmentByTag("showing Listings");
+            if (listingsFragment != null) {
+                listingsFragment.refreshListings();
+            }
+
+            FragmentManager fragmentManager = getParentFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView, Listings.class, null)
+                    .setReorderingAllowed(true)
+                    .addToBackStack("showing Listings")
+                    .commit();
+        }, 4500);
+    }
+
+
+
+
+
+
+
+
 }

@@ -22,19 +22,42 @@
         android:layout_marginBottom="16dp">
 
         <TextView
-            android:id="@+id/gameLabel"
+            android:id="@+id/homeTeamLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Game Title"
+            android:text="Home Team"
             android:textSize="20sp"
             android:layout_gravity="center_vertical"
             android:paddingEnd="8dp" />
 
-        <EditText
-            android:id="@+id/gameTitleEditText"
-            android:layout_width="match_parent"
+        <Spinner
+            android:id="@+id/homeTeamSpinner"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:layout_weight="1"
+            android:padding="8dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/awayTeamLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Away Team"
+            android:textSize="20sp"
+            android:layout_gravity="center_vertical"
+            android:paddingEnd="8dp" />
+
+        <Spinner
+            android:id="@+id/awayTeamSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:padding="8dp" />
     </LinearLayout>
 
@@ -48,7 +71,7 @@
             android:id="@+id/priceLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Price $"
+            android:text="Price"
             android:textSize="20sp"
             android:layout_gravity="center_vertical"
             android:paddingEnd="8dp" />
@@ -65,46 +88,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="20dp">
-
-        <TextView
-            android:id="@+id/collegeLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="College"
-            android:textSize="20sp"
-            android:layout_gravity="center_vertical"
-            android:paddingEnd="8dp" />
-
-        <Spinner
-            android:id="@+id/collegeSpinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="8dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginBottom="16dp">
 
         <TextView
             android:id="@+id/dateTimeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date/Time"
+            android:text="Date"
             android:textSize="20sp"
             android:layout_gravity="center_vertical"
             android:paddingEnd="8dp" />
 
         <EditText
             android:id="@+id/dateTimeEditText"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:layout_weight="1"
+            android:inputType="none"
+            android:focusable="false"
+            android:onClick="showDatePicker"
             android:padding="8dp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -113,21 +117,24 @@
         android:orientation="horizontal"
         android:layout_marginBottom="16dp">
 
-        <ImageButton
-            android:id="@+id/insertImageButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_notifications_black_24dp"
-            android:contentDescription="Insert Image" />
-
         <TextView
-            android:id="@+id/insertImageText"
+            android:id="@+id/timeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Insert Image"
+            android:text="Time"
             android:textSize="20sp"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="8dp" />
+            android:paddingEnd="8dp" />
+
+        <EditText
+            android:id="@+id/timeEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="none"
+            android:focusable="false"
+            android:onClick="showTimePicker"
+            android:padding="8dp" />
     </LinearLayout>
 
     <Button

@@ -119,37 +119,37 @@ public class ManageSettings extends AppCompatActivity implements AdapterView.OnI
         return true;
     }
 
-        public void onSaveButtonClick(View view) {
-            email = emailInput.getText().toString();
+    public void onSaveButtonClick(View view) {
+        email = emailInput.getText().toString();
 
-            // Strip away everything but 10 digits from phone number // 1 (012) 345-6789
-            phone = phoneInput.getText().toString();
+        // Strip away everything but 10 digits from phone number // 1 (012) 345-6789
+        phone = phoneInput.getText().toString();
 
-            if (!emailInputValidation(email)) {
-                Log.d("UserValidation", "Email Error");
-                emailInput.setError("Invalid Email!");
-                return;
-            }
-            if (!phoneInputValidation(phone)) {
-                Log.d("UserValidation", "Phone: Error");
-                phoneInput.setError("Invalid Phone Number!");
-                return;
-            } else {
-                phone = phone.substring(phone.length()-13).replace(" ", "").replace(")", "");
-                phone = phone.replace("-", "");
-                Log.d("UserValidation", "Update phone: " + phone);
-            }
-            if (!prefContactMethodInputValidation(prefContactMethod)) {
-                Log.d("UserValidation", "PCM Error");
-                return;
-            }
+        if (!emailInputValidation(email)) {
+            Log.d("UserValidation", "Email Error");
+            emailInput.setError("Invalid Email!");
+            return;
+        }
+        if (!phoneInputValidation(phone)) {
+            Log.d("UserValidation", "Phone: Error");
+            phoneInput.setError("Invalid Phone Number!");
+            return;
+        } else {
+            phone = phone.substring(phone.length()-13).replace(" ", "").replace(")", "");
+            phone = phone.replace("-", "");
+            Log.d("UserValidation", "Update phone: " + phone);
+        }
+        if (!prefContactMethodInputValidation(prefContactMethod)) {
+            Log.d("UserValidation", "PCM Error");
+            return;
+        }
 
-            // Puts updated user info into DB
-            dbHelper.setUser(username, email, phone, prefContactMethod);
-            Toast.makeText(this, "Information Updated", Toast.LENGTH_LONG).show();
+        // Puts updated user info into DB
+        dbHelper.setUser(username, email, phone, prefContactMethod);
+        Toast.makeText(this, "Information Updated", Toast.LENGTH_LONG).show();
     }
 
-    private void onExitButtonClick(View view) {
+    public void onExitButtonClick(View view) {
         Intent intent = new Intent(getApplicationContext(), KwikTix.class);
         startActivity(intent);
     }

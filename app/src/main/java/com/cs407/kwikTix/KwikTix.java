@@ -21,10 +21,16 @@ public class KwikTix  extends AppCompatActivity {
 
     FragmentManager fragmentManager = getSupportFragmentManager();
     private String userLoggedIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.kwiktix_layout);
+
+        // Gets Notifications corresponding to this user's ticket's sold, offers made on their tickets,
+        // and the status of the offers that they made on others' tickets (accepted or rejected)
+
+
         Intent intent = getIntent();
         userLoggedIn = intent.getStringExtra("username");
 

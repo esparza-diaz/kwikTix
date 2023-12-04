@@ -172,6 +172,7 @@ public class Post extends Fragment {
 
         List<Colleges> collegeList = dbHelper.getAllColleges();
 
+        teamAdapter.add("Choose College");
         // Add college names to the adapter
         for (Colleges college : collegeList) {
             teamAdapter.add(college.getCollege());
@@ -188,6 +189,15 @@ public class Post extends Fragment {
                 // Get the values from the input fields
                 String homeTeam = homeTeamSpinner.getSelectedItem().toString();
                 String awayTeam = awayTeamSpinner.getSelectedItem().toString();
+
+                if (homeTeam.equals("Choose College") || awayTeam.equals("Choose College")) {
+                    Toast.makeText(requireContext(), "Please select a college", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (homeTeam.equals(awayTeam)) {
+                    Toast.makeText(requireContext(), "Home team cannot be the same as away team", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String gameTitle = homeTeam + " vs " + awayTeam;
                 String price = ((EditText) v.findViewById(R.id.priceEditText)).getText().toString().replaceAll("[^0-9.]", "");;
                 String college = ((Spinner) v.findViewById(R.id.homeTeamSpinner)).getSelectedItem().toString();

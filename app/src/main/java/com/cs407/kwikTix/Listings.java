@@ -80,7 +80,7 @@ public class Listings extends Fragment {
     }
 
     TicketAdapter adapter;
-    ArrayList<Tickets> displayListings;
+    ArrayList<Tickets> displayListings = new ArrayList<Tickets>();
     SQLiteDatabase sqLiteDatabase;
     DBHelper dbHelper;
     List<Colleges> collegeList;
@@ -105,11 +105,13 @@ public class Listings extends Fragment {
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
 
-        //dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername());
-        //dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername());
-        // TODO: HARDCODED LISTINGS
-        displayListings = dbHelper.getListings(null,null, null, false);
+        ArrayList<Tickets> allTickets = dbHelper.getListings(null,null, null, false);
 
+        for (Tickets ticket: allTickets) {
+            if (!ticket.getUsername().equals(userLoggedIn)) {
+                displayListings.add(ticket);
+            }
+        }
         collegeList = dbHelper.getAllColleges();
 
         adapter = new TicketAdapter(v.getContext(), displayListings);

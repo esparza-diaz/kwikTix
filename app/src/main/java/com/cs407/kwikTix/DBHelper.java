@@ -20,7 +20,7 @@ public class DBHelper {
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS users "+
                 "(username TEXT PRIMARY KEY,password TEXT,email TEXT, phone TEXT, prefContactMethod TEXT, college TEXT, FOREIGN KEY(college) REFERENCES colleges(college))");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS listings "+
-                "(id INTEGER, title TEXT,date TEXT,price TEXT, college TEXT,username TEXT, FOREIGN KEY(college) REFERENCES colleges(college), FOREIGN KEY(username) REFERENCES users(username), PRIMARY KEY (username,id))");
+                "(id INTEGER, title TEXT,date DATETIME,price TEXT, college TEXT,username TEXT, FOREIGN KEY(college) REFERENCES colleges(college), FOREIGN KEY(username) REFERENCES users(username), PRIMARY KEY (username,id))");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS offers "+
                 "(title TEXT PRIMARY KEY,offerAmount TEXT,buyerUsername TEXT, FOREIGN KEY(title) REFERENCES colleges(listings))");
     }
@@ -351,30 +351,93 @@ public class DBHelper {
                 c.close();
             }
             return listings;
-        }
-        // TODO: IMPLEMENT sort by date
-        /*else if (college == null && sort_by.equals("date")){
-            //filter and sort
-            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college LIKE ? ORDER BY cast(price as numeric) ASC",
-                    new String[]{"%" + college + "%"});
-            int titleIndex = c.getColumnIndex("title");
-            int dateIndex = c.getColumnIndex("date");
-            int collegeIndex = c.getColumnIndex("college");
-            int priceIndex = c.getColumnIndex("price");
-            int usernameIndex = c.getColumnIndex("username");
-            c.moveToFirst();
-            while (!c.isAfterLast()) {
-                String title = c.getString(titleIndex);
-                String date = c.getString(dateIndex);
-                String loc = c.getString(collegeIndex);
-                String price = c.getString(priceIndex);
-                String user = c.getString(usernameIndex);
-                Tickets ticket = new Tickets(title, date, price, loc, user);
-                listings.add(ticket);
-                c.moveToNext();
+        }else if (college == null && sort_by.equals("date")) {
+            // sort by date only
+            if (desc) {
+                Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings ORDER BY date DESC", null);
+                int titleIndex = c.getColumnIndex("title");
+                int dateIndex = c.getColumnIndex("date");
+                int collegeIndex = c.getColumnIndex("college");
+                int priceIndex = c.getColumnIndex("price");
+                int usernameIndex = c.getColumnIndex("username");
+                c.moveToFirst();
+                while (!c.isAfterLast()) {
+                    String title = c.getString(titleIndex);
+                    String date = c.getString(dateIndex);
+                    String loc = c.getString(collegeIndex);
+                    String price = c.getString(priceIndex);
+                    String user = c.getString(usernameIndex);
+                    Tickets ticket = new Tickets(title, date, price, loc, user);
+                    listings.add(ticket);
+                    c.moveToNext();
+                }
+                c.close();
+            }else {
+                Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings ORDER BY date ASC", null);
+                int titleIndex = c.getColumnIndex("title");
+                int dateIndex = c.getColumnIndex("date");
+                int collegeIndex = c.getColumnIndex("college");
+                int priceIndex = c.getColumnIndex("price");
+                int usernameIndex = c.getColumnIndex("username");
+                c.moveToFirst();
+                while (!c.isAfterLast()) {
+                    String title = c.getString(titleIndex);
+                    String date = c.getString(dateIndex);
+                    String loc = c.getString(collegeIndex);
+                    String price = c.getString(priceIndex);
+                    String user = c.getString(usernameIndex);
+                    Tickets ticket = new Tickets(title, date, price, loc, user);
+                    listings.add(ticket);
+                    c.moveToNext();
+                }
+                c.close();
             }
-            c.close();
-        }*/
+            return listings;
+        }else if (college != null && sort_by.equals("date")) {
+            // sort_by date and filter by college
+            if (desc) {
+                Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college LIKE ? ORDER BY date DESC",
+                        new String[]{"%" + college + "%"});
+                int titleIndex = c.getColumnIndex("title");
+                int dateIndex = c.getColumnIndex("date");
+                int collegeIndex = c.getColumnIndex("college");
+                int priceIndex = c.getColumnIndex("price");
+                int usernameIndex = c.getColumnIndex("username");
+                c.moveToFirst();
+                while (!c.isAfterLast()) {
+                    String title = c.getString(titleIndex);
+                    String date = c.getString(dateIndex);
+                    String loc = c.getString(collegeIndex);
+                    String price = c.getString(priceIndex);
+                    String user = c.getString(usernameIndex);
+                    Tickets ticket = new Tickets(title, date, price, loc, user);
+                    listings.add(ticket);
+                    c.moveToNext();
+                }
+                c.close();
+            } else {
+                Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college LIKE ? ORDER BY date ASC",
+                        new String[]{"%" + college + "%"});
+                int titleIndex = c.getColumnIndex("title");
+                int dateIndex = c.getColumnIndex("date");
+                int collegeIndex = c.getColumnIndex("college");
+                int priceIndex = c.getColumnIndex("price");
+                int usernameIndex = c.getColumnIndex("username");
+                c.moveToFirst();
+                while (!c.isAfterLast()) {
+                    String title = c.getString(titleIndex);
+                    String date = c.getString(dateIndex);
+                    String loc = c.getString(collegeIndex);
+                    String price = c.getString(priceIndex);
+                    String user = c.getString(usernameIndex);
+                    Tickets ticket = new Tickets(title, date, price, loc, user);
+                    listings.add(ticket);
+                    c.moveToNext();
+                }
+                c.close();
+            }
+            return listings;
+        }
         return listings;
     }
 

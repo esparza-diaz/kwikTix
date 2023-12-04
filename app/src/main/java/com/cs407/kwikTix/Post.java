@@ -229,7 +229,7 @@ public class Post extends Fragment {
 
                 SQLiteDatabase sqLiteDatabase = view.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE,null);
                 DBHelper dbHelper = new DBHelper(sqLiteDatabase);
-                dbHelper.addTicket(gameTitle, dateTime,price, college, userLoggedIn);
+                dbHelper.addTicket(gameTitle, dateTime,price, college, userLoggedIn,"1");
 
                 Listings listingsFragment = (Listings) getParentFragmentManager().findFragmentByTag("showing Listings");
                 if (listingsFragment != null) {

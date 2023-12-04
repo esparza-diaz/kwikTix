@@ -99,8 +99,8 @@ public class Listings extends Fragment {
         View v =  inflater.inflate(R.layout.listings_fragment, container, false);
         ticketsListView = (ListView) v.findViewById(R.id.myListings);
 
-        Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test");
-        Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test");
+        //Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test");
+        //Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test");
         // Init DB
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
@@ -306,7 +306,9 @@ public class Listings extends Fragment {
             displayListings = dbHelper.getListings(null, college, sort_by, desc);
         }
         // Notify the adapter that the data has changed
-        Log.i("TEST", displayListings.toString());
+        if (displayListings.size() > 0) {
+            Log.i("TEST", displayListings.get(0).getId());
+        }
 
         if (displayListings.size() == 0){
             Toast.makeText(requireContext(),"No tickets found. Modify filters.", Toast.LENGTH_LONG).show();

@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Profile"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="32dp"
+        android:text="Profile"
         android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal" />
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:layout_marginBottom="8dp">
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/manageSettings"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="#AF0000"
-            android:layout_weight="1"
-            android:padding="8dp"
             android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="#AF0000"
+            android:padding="8dp"
             android:text="Manage Settings"
             android:textColor="#fff" />
 
@@ -40,10 +41,10 @@
             android:layout_width="1dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="#AF0000"
-            android:layout_weight="1"
-            android:padding="8dp"
             android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="#AF0000"
+            android:padding="8dp"
             android:text="Logout"
             android:textColor="#fff" />
     </LinearLayout>
@@ -51,8 +52,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
@@ -63,10 +63,10 @@
             android:id="@+id/clickableMyListings"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:clickable="true"
-            android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:orientation="horizontal"
             android:padding="24dp">
 
             <TextView

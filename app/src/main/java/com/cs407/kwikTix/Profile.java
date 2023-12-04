@@ -112,15 +112,13 @@ public class Profile extends Fragment {
 
         TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
         //ticketsListView.setAdapter(adapter);
-        return v;
 
-/*<<<<<<< HEAD
         LinearLayout myListings = v.findViewById(R.id.clickableMyListings);
         myListings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
                 FragmentManager fragmentManager = getParentFragmentManager();
-                Listings listingsFragment = new Listings();
+                MyListings listingsFragment = new MyListings();
 
                 Bundle bundle = new Bundle();
                 bundle.putString("username", userLoggedIn);
@@ -153,11 +151,10 @@ public class Profile extends Fragment {
             }
         });
 
-        sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
-        dbHelper = new DBHelper(sqLiteDatabase);
-        displayListings = dbHelper.getListings(userLoggedIn);
-=======*/
+//        sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
+//        dbHelper = new DBHelper(sqLiteDatabase);
+//        displayListings = dbHelper.getListings(userLoggedIn);
 
-
+        return v;
     }
 }

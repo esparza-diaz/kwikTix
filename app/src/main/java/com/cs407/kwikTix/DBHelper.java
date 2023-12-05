@@ -22,7 +22,7 @@ public class DBHelper {
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS listings "+
                 "(id INTEGER, title TEXT,date TEXT,price TEXT, college TEXT,username TEXT, FOREIGN KEY(college) REFERENCES colleges(college), FOREIGN KEY(username) REFERENCES users(username), PRIMARY KEY (username,id))");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS offers "+
-                "(title TEXT PRIMARY KEY,offerAmount TEXT,buyerUsername TEXT, FOREIGN KEY(title) REFERENCES colleges(listings))");
+                "(title TEXT PRIMARY KEY, offerAmount TEXT, buyerUsername TEXT, FOREIGN KEY(title) REFERENCES colleges(listings))");
     }
 
     /**

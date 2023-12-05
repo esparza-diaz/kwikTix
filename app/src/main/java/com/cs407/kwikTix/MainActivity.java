@@ -76,16 +76,6 @@ public class MainActivity extends AppCompatActivity {
             // Setup Notifications Channel
             requestPermission();
             NotificationHelper.getInstance().createNotificationChannel(getApplicationContext());
-
-            /* Code from Lab7
-                buttonSend.setOnClickListener(view -> {
-                    NotificationHelper.getInstance().appendNotificationItem(
-                            editTextSender.getText().toString(), editTextMessage.getText().toString()
-                    );
-                    NotificationHelper.getInstance().showNotification(getApplicationContext(), -1);
-                });
-
-             */
         }
     }
 
@@ -98,13 +88,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void requestPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            Log.d("BUILD VERSION SDK INT", "" + Build.VERSION.SDK_INT);
             return;
         }
         if (ContextCompat.checkSelfPermission(
                 getApplicationContext(), android.Manifest.permission.POST_NOTIFICATIONS) !=
                 PackageManager.PERMISSION_GRANTED) {
-            Log.d("BUILD VERSION SDK INT", "" + Build.VERSION.SDK_INT);
             requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
     }

@@ -102,8 +102,6 @@ public class Profile extends Fragment {
         manageSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
-                //TODO Implement user updating: below line updates sql database
-                // dbHelper.setUser(userLoggedIn, "new@gmail.com", "1233333412", "come@33me", "HOMESCHOLED");
                 Intent intent = new Intent(requireContext(), ManageSettings.class);
                 intent.putExtra("username", userLoggedIn);
                 startActivity(intent);
@@ -113,51 +111,6 @@ public class Profile extends Fragment {
         TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
         //ticketsListView.setAdapter(adapter);
         return v;
-
-/*<<<<<<< HEAD
-        LinearLayout myListings = v.findViewById(R.id.clickableMyListings);
-        myListings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view){
-                FragmentManager fragmentManager = getParentFragmentManager();
-                Listings listingsFragment = new Listings();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("username", userLoggedIn);
-                listingsFragment.setArguments(bundle);
-
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, listingsFragment)
-                        .setReorderingAllowed(true)
-                        .addToBackStack("showing Post")
-                        .commit();
-            }
-        });
-
-        LinearLayout myOffers = v.findViewById(R.id.clickableMyOffers);
-        myOffers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view){
-                FragmentManager fragmentManager = getParentFragmentManager();
-                Offers offersFragment = new Offers();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("username", userLoggedIn);
-                offersFragment.setArguments(bundle);
-
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, offersFragment)
-                        .setReorderingAllowed(true)
-                        .addToBackStack("showing Post")
-                        .commit();
-            }
-        });
-
-        sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
-        dbHelper = new DBHelper(sqLiteDatabase);
-        displayListings = dbHelper.getListings(userLoggedIn);
-=======*/
-
 
     }
 }

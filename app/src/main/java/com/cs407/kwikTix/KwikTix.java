@@ -1,6 +1,8 @@
 package com.cs407.kwikTix;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -32,7 +34,9 @@ public class KwikTix  extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        userLoggedIn = intent.getStringExtra("username");
+        SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+        userLoggedIn = sharedPreferences.getString("username", "");
+        Log.d("KwikTix User", userLoggedIn);
 
         // Specifies which fragment to go to
         String fragmentToStart = null;
@@ -55,6 +59,8 @@ public class KwikTix  extends AppCompatActivity {
         if (fragmentToStart != null) {
             if (fragmentToStart.equals("Profile")) {
                 Fragment profileFragment = new Profile();
+                profileFragment.setArguments(bundle);
+
                 // Begin the fragment transaction
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainerView, profileFragment)

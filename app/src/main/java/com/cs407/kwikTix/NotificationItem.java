@@ -15,11 +15,11 @@ public class NotificationItem {
         this.id = id;
     }
 
-    public String getbuyerUsername() {
+    public String getBuyerUsername() {
         return buyerUsername;
     }
 
-    public String getsellerUsername() {
+    public String getSellerUsername() {
         return sellerUsername;
     }
 

@@ -272,27 +272,31 @@ public class Listings extends Fragment {
                     sort_by = "price";
                     desc = false;
                     int color = Color.parseColor("#FF0000");
+                    refreshListings();
                     imageView.setColorFilter(color);
                 } else if(itemId == R.id.descendingPrice) {
                     sort_by = "price";
                     desc = true;
                     int color = Color.parseColor("#FF0000");
+                    refreshListings();
                     imageView.setColorFilter(color);
                 } else if(itemId == R.id.ascendingTime) {
                     sort_by = "date";
                     desc = false;
                     int color = Color.parseColor("#FF0000");
                     imageView.setColorFilter(color);
+                    refreshListings();
                 } else if (itemId == R.id.descendingTime) {
                     sort_by = "date";
                     desc = true;
                     int color = Color.parseColor("#FF0000");
                     imageView.setColorFilter(color);
+                    refreshListings();
                 } else if (itemId == R.id.noFilter) {
                     sort_by = null;
                     imageView.setColorFilter(null);
+                    refreshListings();
                 }
-                refreshListings();
                 return true;
             }
         });
@@ -315,7 +319,7 @@ public class Listings extends Fragment {
         }
 
         if (displayListings.size() == 0){
-            Toast.makeText(requireContext(),"No tickets found. Modify filters.", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireContext(),"No tickets found. Modify filters.", Toast.LENGTH_SHORT).show();
         }
 
         adapter.clear();

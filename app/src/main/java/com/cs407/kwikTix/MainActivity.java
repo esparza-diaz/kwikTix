@@ -45,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, KwikTix.class);
             String username = sharedPreferences.getString("username","");
             intent.putExtra("username", username);
+
+            // Setup Notifications Channel and requests notification permissions
+            requestPermission();
+
             startActivity(intent);
         }else {
             setContentView(R.layout.activity_main);
@@ -73,9 +77,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            // Setup Notifications Channel
+            // Setup Notifications Channel and requests notification permissions
             requestPermission();
-            NotificationHelper.getInstance().createNotificationChannel(getApplicationContext());
         }
     }
 
@@ -94,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 getApplicationContext(), android.Manifest.permission.POST_NOTIFICATIONS) !=
                 PackageManager.PERMISSION_GRANTED) {
             requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            NotificationHelper.getInstance().createNotificationChannel(getApplicationContext());
         }
     }
 

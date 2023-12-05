@@ -165,6 +165,7 @@ public class ManageSettings extends AppCompatActivity implements AdapterView.OnI
         intent.putExtra("username", username);
         intent.putExtra("fragment", "Profile");
         startActivity(intent);
+        finish();
     }
 
     @Override

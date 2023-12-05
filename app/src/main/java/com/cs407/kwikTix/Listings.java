@@ -3,6 +3,7 @@ package com.cs407.kwikTix;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -45,7 +46,7 @@ public class Listings extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String userLoggedIn;
+    private String userLoggedInUsername;
     private String mParam2;
 
     public static ArrayList<Listing> listings;
@@ -75,7 +76,10 @@ public class Listings extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userLoggedIn = getArguments().getString("username");
+            userLoggedInUsername = getArguments().getString("username");
+        } else {
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+            userLoggedInUsername = sharedPreferences.getString("username", "");
         }
     }
 
@@ -108,7 +112,7 @@ public class Listings extends Fragment {
         ArrayList<Tickets> allTickets = dbHelper.getListings(null,null, null, false);
 
         for (Tickets ticket: allTickets) {
-            if (!ticket.getUsername().equals(userLoggedIn) && ticket.getAvailable().equals("1")) {
+            if (!ticket.getUsername().equals(userLoggedInUsername) && ticket.getAvailable().equals("1")) {
                 displayListings.add(ticket);
             }
         }
@@ -128,7 +132,7 @@ public class Listings extends Fragment {
                 Bundle args = new Bundle();
                 args.putSerializable("selectedListing", selectedListing);
 
-                args.putString("userLoggedInUsername",userLoggedIn);
+                args.putString("userLoggedInUsername",userLoggedInUsername);
 
                 singleTicketFragment.setArguments(args);
 
@@ -315,7 +319,7 @@ public class Listings extends Fragment {
         }
 
         for (Tickets ticket: tix) {
-            if (!ticket.getUsername().equals(userLoggedIn) && ticket.getAvailable().equals("1")) {
+            if (!ticket.getUsername().equals(userLoggedInUsername) && ticket.getAvailable().equals("1")) {
                 displayListings.add(ticket);
             }
         }

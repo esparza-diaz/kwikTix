@@ -261,6 +261,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                 Toast.makeText(this, "Successfully Added: " + username + " ! Sign In", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         } catch (Exception e) {
             Toast.makeText(this, "Error Message", Toast.LENGTH_LONG).show();

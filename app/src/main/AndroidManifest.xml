@@ -18,10 +18,12 @@
         <receiver android:name=".AcceptReceiver"/>
         <activity
             android:name=".ManageSettings"
-            android:exported="true" />
+            android:exported="true"
+            android:noHistory="true"/>
         <activity
             android:name=".SignUpActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:noHistory="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

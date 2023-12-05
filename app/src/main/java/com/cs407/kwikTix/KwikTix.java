@@ -22,7 +22,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class KwikTix  extends AppCompatActivity {
 
     FragmentManager fragmentManager = getSupportFragmentManager();
-    private String userLoggedIn;
+    private String userLoggedInUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +32,12 @@ public class KwikTix  extends AppCompatActivity {
         // Gets Notifications corresponding to this user's ticket's sold, offers made on their tickets,
         // and the status of the offers that they made on others' tickets (accepted or rejected)
 
-
-        Intent intent = getIntent();
         SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
-        userLoggedIn = sharedPreferences.getString("username", "");
-        Log.d("KwikTix User", userLoggedIn);
+        userLoggedInUsername = sharedPreferences.getString("username", "");
+        Log.d("KwikTix User", userLoggedInUsername);
 
         // Specifies which fragment to go to
+        Intent intent = getIntent();
         String fragmentToStart = null;
         try {
             fragmentToStart = intent.getStringExtra("fragment");
@@ -50,7 +49,7 @@ public class KwikTix  extends AppCompatActivity {
 
         // Create an Intent to hold the username data
         Bundle bundle = new Bundle();
-        bundle.putString("username", userLoggedIn);
+        bundle.putString("username", userLoggedInUsername);
 
         // Set the data bundle to the fragment
         listingsFragment.setArguments(bundle);
@@ -98,7 +97,7 @@ public class KwikTix  extends AppCompatActivity {
 
                     if (selectedFragment != null) {
                         Bundle bundle = new Bundle();
-                        bundle.putString("username", userLoggedIn);
+                        bundle.putString("username", userLoggedInUsername);
                         selectedFragment.setArguments(bundle);
 
                         fragmentManager.beginTransaction()

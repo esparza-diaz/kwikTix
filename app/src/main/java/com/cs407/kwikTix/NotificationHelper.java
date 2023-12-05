@@ -242,6 +242,7 @@ public class NotificationHelper {
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
             != PackageManager.PERMISSION_GRANTED) {
+            Log.d("Notification", "Permission Not Granted");
             return;
         }
 
@@ -262,16 +263,16 @@ public class NotificationHelper {
         PendingIntent rejectPendingIntent =
                 PendingIntent.getBroadcast(context,
                         item.getId(),
-                        acceptIntent,
+                        rejectIntent,
                         PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Action acceptOfferAction = // TODO add accept and reject options
+        NotificationCompat.Action acceptOfferAction =
                 new NotificationCompat.Action.Builder(R.drawable.baseline_check_24,
                         "ACCEPT", acceptPendingIntent)
                         .build();
 
 
-        NotificationCompat.Action rejectOfferAction = // TODO add accept and reject options
+        NotificationCompat.Action rejectOfferAction =
                 new NotificationCompat.Action.Builder(R.drawable.baseline_do_not_disturb_24,
                         "REJECT", rejectPendingIntent)
                         .build();

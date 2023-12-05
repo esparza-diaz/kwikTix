@@ -108,7 +108,7 @@ public class Listings extends Fragment {
         ArrayList<Tickets> allTickets = dbHelper.getListings(null,null, null, false);
 
         for (Tickets ticket: allTickets) {
-            if (!ticket.getUsername().equals(userLoggedIn)) {
+            if (!ticket.getUsername().equals(userLoggedIn) && ticket.getAvailable().equals("1")) {
                 displayListings.add(ticket);
             }
         }
@@ -300,20 +300,24 @@ public class Listings extends Fragment {
     }
 
     public void refreshListings() {
-        if(college.equals("All Colleges")) {
-            displayListings = dbHelper.getListings(null, null, sort_by, desc);
-        } else {
-            displayListings = dbHelper.getListings(null, college, sort_by, desc);
-        }
-        // Notify the adapter that the data has changed
-        if (displayListings.size() > 0) {
-            Log.i("TEST", displayListings.get(0).getId());
+        ArrayList<Tickets> tix;
 
+        if(college.equals("All Colleges")) {
+            tix = dbHelper.getListings(null, null, sort_by, desc);
+        } else {
+            tix = dbHelper.getListings(null, college, sort_by, desc);
+        }
+
+        for (Tickets ticket: tix) {
+            if (!ticket.getUsername().equals(userLoggedIn) && ticket.getAvailable().equals("1")) {
+                displayListings.add(ticket);
+            }
         }
 
         if (displayListings.size() == 0){
             Toast.makeText(requireContext(),"No tickets found. Modify filters.", Toast.LENGTH_LONG).show();
         }
+
         adapter.clear();
         adapter.addAll(displayListings);
 

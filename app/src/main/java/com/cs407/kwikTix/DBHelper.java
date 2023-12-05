@@ -61,6 +61,20 @@ public class DBHelper {
     }
 
     /**
+     * Logic when ticket is bought
+     * @param listing
+     */
+    public void boughtTicket(Tickets listing){
+        createTable();
+        //update listing
+        sqLiteDatabase.execSQL("UPDATE listings SET available = ? WHERE id = ?",
+                new String[]{"0",listing.getId()});
+        //update offers
+        sqLiteDatabase.execSQL("UPDATE offers SET status = ? WHERE id = ?",
+                new String[]{"REJECTED",listing.getId()});
+    }
+
+    /**
      * Adds ticket to listings db
      * @param title
      * @param date

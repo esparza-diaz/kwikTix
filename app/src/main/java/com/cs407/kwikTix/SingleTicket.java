@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-//import pl.droidsonroids.gif.GifDrawable;
-//import pl.droidsonroids.gif.GifImageView;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -154,6 +154,7 @@ public class SingleTicket extends Fragment {
                 buy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        dbHelper.boughtTicket(selectedListing);
                         showCongratulationsPopup();
                     }
                 });
@@ -194,14 +195,14 @@ public class SingleTicket extends Fragment {
     private void showCongratulationsPopup() {
         View overlayView = LayoutInflater.from(requireContext()).inflate(R.layout.overlay_confetti, null);
 
-        //GifImageView confettiGif = overlayView.findViewById(R.id.confettiGif);
+        GifImageView confettiGif = overlayView.findViewById(R.id.confettiGif);
         try {
             InputStream inputStream = requireContext().getAssets().open("confetti.gif");
-            //confettiGif.setImageDrawable(new GifDrawable(inputStream));
+            confettiGif.setImageDrawable(new GifDrawable(inputStream));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        // TODO: update listing to reflect that it is bought
         View rootView = requireActivity().getWindow().getDecorView().getRootView();
 
         ((ViewGroup) rootView).addView(overlayView);

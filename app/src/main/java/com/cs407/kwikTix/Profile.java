@@ -102,8 +102,6 @@ public class Profile extends Fragment {
         manageSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
-                //TODO Implement user updating: below line updates sql database
-                // dbHelper.setUser(userLoggedIn, "new@gmail.com", "1233333412", "come@33me", "HOMESCHOLED");
                 Intent intent = new Intent(requireContext(), ManageSettings.class);
                 intent.putExtra("username", userLoggedIn);
                 startActivity(intent);
@@ -150,10 +148,6 @@ public class Profile extends Fragment {
                         .commit();
             }
         });
-
-//        sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
-//        dbHelper = new DBHelper(sqLiteDatabase);
-//        displayListings = dbHelper.getListings(userLoggedIn);
 
         return v;
     }

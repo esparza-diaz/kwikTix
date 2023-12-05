@@ -11,7 +11,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,8 +32,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageView;
+//import pl.droidsonroids.gif.GifDrawable;
+//import pl.droidsonroids.gif.GifImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,15 +48,17 @@ public class SingleTicket extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String userLoggedIn;
+    private SQLiteDatabase sqLiteDatabase;
+    private DBHelper dbHelper;
+    private Users seller;
+    private Users userLoggedIn; // buyer
+    private String userLoggedInUsername;
+    private String sellerUsername;
     private String mParam2;
 
     public SingleTicket() {
         // Required empty public constructor
     }
-
-    SQLiteDatabase sqLiteDatabase;
-    DBHelper dbHelper;
 
     /**
      * Use this factory method to create a new instance of
@@ -80,6 +81,9 @@ public class SingleTicket extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+        userLoggedInUsername = sharedPreferences.getString("username", "");
+        Log.d("In Single Ticket onCreate", userLoggedInUsername);
     }
 
     @Override
@@ -87,15 +91,26 @@ public class SingleTicket extends Fragment {
         View v = inflater.inflate(R.layout.fragment_single_ticket, container, false);
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
-        userLoggedIn = sharedPreferences.getString("username","");
-                // Retrieve the selectedListing from arguments
+
+
+
+        // Retrieve the selectedListing from arguments
         Bundle args = getArguments();
         if (args != null) {
             Tickets selectedListing = (Tickets) args.getSerializable("selectedListing");
             if (selectedListing != null) {
+                // Setting buyer and seller arguments to be used in notifications
+                userLoggedIn = dbHelper.getUser(userLoggedInUsername); // TODO maybe change  names for more clarity
+                if (userLoggedIn == null) {
+                    Log.d("userLoggedIn", "NULL");
+                } else {
+                    Log.d("userLoggedIn", "onCreateView: " + userLoggedIn.getUsername());
+                }
+                sellerUsername = selectedListing.getUsername().toString(); // TODO redundant toString?
+                seller = dbHelper.getUser(sellerUsername);
+
                 Log.i("TEST",selectedListing.getTitle());
-                Log.i("TEST",selectedListing.getUsername());
+                Log.i("TEST", sellerUsername);
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(selectedListing.getTitle());
@@ -120,7 +135,7 @@ public class SingleTicket extends Fragment {
                 ticketPriceTextView.setText("$" + selectedListing.getPrice().toString());
 
                 TextView sellerNameTextView = v.findViewById(R.id.sellerName);
-                sellerNameTextView.setText(selectedListing.getUsername().toString());
+                sellerNameTextView.setText(selectedListing.getUsername().toString()); // TODO redundant toString?
 
                 SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                 SimpleDateFormat outputFormat = new SimpleDateFormat("EEE MM/dd/yyyy 'at' hh:mm a", Locale.getDefault());
@@ -156,6 +171,17 @@ public class SingleTicket extends Fragment {
                     public void onClick(View view) {
                         dbHelper.boughtTicket(selectedListing);
                         showCongratulationsPopup();
+                        // TODO make notification when buy is clicked; also add strings to resources
+                        NotificationHelper notificationHelper = NotificationHelper.getInstance();
+                        notificationHelper.setNotificationContent(
+                                requireContext(),
+                                userLoggedIn,
+                                seller,
+                                selectedListing.getTitle(),
+                                -1,
+                                2,
+                                getContext().getString(R.string.SELLER_TICKET_PURCHASED));
+                        notificationHelper.showNotification(requireContext(), -1);
                     }
                 });
 
@@ -166,6 +192,17 @@ public class SingleTicket extends Fragment {
                     public void onClick(View view) {
                         // Inside the onClickListener for the counterOfferButton
                         showCounterOfferPopup(selectedListing, counterOfferAmount.getText().toString());
+
+                        NotificationHelper notificationHelper = NotificationHelper.getInstance();
+                        notificationHelper.setNotificationContent(
+                                requireContext(),
+                                userLoggedIn,
+                                seller,
+                                selectedListing.getTitle(),
+                                Integer.parseInt(counterOfferAmount.getText().toString()),
+                                0,
+                                "Accept or Reject");
+                        notificationHelper.showNotification(requireContext(), -1);
                     }
                 });
             }
@@ -195,14 +232,14 @@ public class SingleTicket extends Fragment {
     private void showCongratulationsPopup() {
         View overlayView = LayoutInflater.from(requireContext()).inflate(R.layout.overlay_confetti, null);
 
-        GifImageView confettiGif = overlayView.findViewById(R.id.confettiGif);
-        try {
-            InputStream inputStream = requireContext().getAssets().open("confetti.gif");
-            confettiGif.setImageDrawable(new GifDrawable(inputStream));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // TODO: update listing to reflect that it is bought
+//        GifImageView confettiGif = overlayView.findViewById(R.id.confettiGif);
+//        try {
+//            InputStream inputStream = requireContext().getAssets().open("confetti.gif");
+//            confettiGif.setImageDrawable(new GifDrawable(inputStream));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
         View rootView = requireActivity().getWindow().getDecorView().getRootView();
 
         ((ViewGroup) rootView).addView(overlayView);
@@ -243,10 +280,10 @@ public class SingleTicket extends Fragment {
         View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_counteroffer, null);
         String message = "";
         try {
-            dbHelper.addOffer(listing.getId(), offerAmount, userLoggedIn, "PENDING");
+            dbHelper.addOffer(listing.getId(), offerAmount, userLoggedInUsername, "PENDING");
             message = "We successfully sent a new CounterOffer to " + listing.getUsername() + " for $" + offerAmount;
         }catch(SQLiteConstraintException e){
-            dbHelper.updateOffer(listing.getId(), offerAmount, userLoggedIn);
+            dbHelper.updateOffer(listing.getId(), offerAmount, userLoggedInUsername);
             message = "We successfully sent your updated CounterOffer to " + listing.getUsername() + " for $" + offerAmount;
         }
 

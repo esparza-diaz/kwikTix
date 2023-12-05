@@ -39,10 +39,16 @@ public class ManageSettings extends AppCompatActivity implements AdapterView.OnI
 
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
+        Log.d("Username String Extra", username);
 
         sqLiteDatabase = getApplicationContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
         Users user = dbHelper.getUser(username);
+        if (user == null) {
+            Log.d("USER NULL", "USER NULL");
+        } else {
+            Log.d("DB and User", dbHelper.toString() + ", " + user.getUsername());
+        }
 
         emailInput = ((EditText) findViewById(R.id.editEmail));
         // Auto-populates user info
@@ -156,6 +162,7 @@ public class ManageSettings extends AppCompatActivity implements AdapterView.OnI
 
     public void onExitButtonClick(View view) {
         Intent intent = new Intent(getApplicationContext(), KwikTix.class);
+        intent.putExtra("username", username);
         intent.putExtra("fragment", "Profile");
         startActivity(intent);
     }

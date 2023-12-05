@@ -90,7 +90,7 @@ public class MyOffers extends Fragment {
         //Tickets t1 = dbHelper.getTicket("Iowa Game");
         //Tickets t2 = dbHelper.getTicket("Nebraska Game");
 
-        displayOffers = dbHelper.getMyOffers(userLoggedIn);
+        //displayOffers = dbHelper.getMyOffers(userLoggedIn);
        // dbHelper.addOffer(t1, userLoggedIn, 1, 40.00);
        // dbHelper.addOffer(t1, userLoggedIn, 2, 45.00);
        // dbHelper.addOffer(t2, userLoggedIn, 1, 60.00);
@@ -166,7 +166,7 @@ public class MyOffers extends Fragment {
 
     public void refreshOffers() {
         // TODO: Update the data from the database
-        displayOffers = dbHelper.getMyOffers(userLoggedIn);
+        //displayOffers = dbHelper.getMyOffers(userLoggedIn);
         // Notify the adapter that the data has changed
         adapter.notifyDataSetChanged();
     }

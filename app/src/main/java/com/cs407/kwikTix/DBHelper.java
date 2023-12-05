@@ -22,7 +22,7 @@ public class DBHelper {
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS listings "+
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT,date DATETIME,price TEXT, college TEXT,username TEXT, available TEXT, FOREIGN KEY(college) REFERENCES colleges(college), FOREIGN KEY(username) REFERENCES users(username))");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS offers "+
-                "(id INTEGER ,offerAmount TEXT,buyerUsername TEXT,PRIMARY KEY (id, buyerUsername),FOREIGN KEY (id) REFERENCES listings(id),FOREIGN KEY (buyerUsername) REFERENCES users(username))");
+                "(id INTEGER ,offerAmount TEXT,buyerUsername TEXT, status TEXT,PRIMARY KEY (id, buyerUsername),FOREIGN KEY (id) REFERENCES listings(id),FOREIGN KEY (buyerUsername) REFERENCES users(username))");
     }
 
     /**
@@ -81,23 +81,21 @@ public class DBHelper {
     }
 
     /**
-     * Adds ticket to listings db
-     * @param ticket
+     *
+     * @param id
+     * @param offerAmount
      * @param buyerUsername
-     * @param tempKey
+     * @param status
      */
-    public void addOffer(Tickets ticket, String buyerUsername, int tempKey, Double offer){
+    public void addOffer(String id, String offerAmount, String buyerUsername, String status){
         createTable();
-        String seller = ticket.getUsername();
-        String offerAmount= offer.toString();
-        String listings = ticket.getTitle();
         try {
-            sqLiteDatabase.execSQL("INSERT INTO offers (offerAmount, buyerUsername, seller, listings) VALUES (?,?,?,?,?)",
-                    new String[]{offerAmount,seller, buyerUsername, listings});
+            sqLiteDatabase.execSQL("INSERT INTO offers (id, offerAmount, buyerUsername, status) VALUES (?,?,?,?)",
+                    new String[]{id,offerAmount,buyerUsername,status});
             Log.i("Yay", "Offer created");
         } catch (SQLiteConstraintException e) {
             // Handle the exception (e.g., log it or show a message) TODO: Same title
-            Log.i("Info Offer(Primary Key)", "Same primary key for " + tempKey);
+            Log.i("Info Offer(Primary Key)", "Same primary key for ");
         }
     }
 
@@ -498,57 +496,49 @@ public class DBHelper {
         return listings;
     }
 
-    public ArrayList<Offer> getMyOffers(String buyerUsername){
-        Log.i("Yay", "Getting offers made by logged in user");
+    public ArrayList<Offer> getOffers(String username, String listingId){
         createTable();
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers", null);
-        int buyerIndex = c.getColumnIndex("buyerUsername");
-        int sellerIndex = c.getColumnIndex("seller");
-        int offerAmountIndex = c.getColumnIndex("offerAmount");
-        int titleIndex = c.getColumnIndex("title");
-        c.moveToFirst();
         ArrayList<Offer> offers = new ArrayList<>();
-        while(!c.isAfterLast()){
-            String title = c.getString(titleIndex);
-            String buyer = c.getString(buyerIndex);
-            String seller = c.getString(sellerIndex);
-            String offerAmount = c.getString(offerAmountIndex);
-           /* Tickets t = getTicket(title);
+        if (username != null) {
+            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers WHERE buyerUsername LIKE ?",
+                    new String[]{"%" + username + "%"});
+            int idIndex = c.getColumnIndex("id");
+            int offerAmtIndex = c.getColumnIndex("offerAmount");
+            int statusIndex = c.getColumnIndex("college");
+            c.moveToFirst();
+            while(!c.isAfterLast()){
+                String id = c.getString(idIndex);
+                String offerAmt = c.getString(offerAmtIndex);
+                String status = c.getString(statusIndex);
 
-            Offer off = new Offer(t, title, buyer, offerAmount, seller);
-            offers.add(off);
-            c.moveToNext();*/
+                Offer offer = new Offer(id,offerAmt,username,status);
+                offers.add(offer);
+                c.moveToNext();
+            }
+            c.close();
+            return offers;
+        } else {
+            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers WHERE id LIKE ?",
+                    new String[]{"%" + username + "%"});
+            int idIndex = c.getColumnIndex("id");
+            int offerAmtIndex = c.getColumnIndex("offerAmount");
+            int userIndex = c.getColumnIndex("buyerUsername");
+            int statusIndex = c.getColumnIndex("college");
+            c.moveToFirst();
+            while(!c.isAfterLast()){
+                String id = c.getString(idIndex);
+                String offerAmt = c.getString(offerAmtIndex);
+                String status = c.getString(statusIndex);
+                String buyer = c.getString(userIndex);
+
+                Offer offer = new Offer(id,offerAmt,buyer,status);
+                offers.add(offer);
+                c.moveToNext();
+            }
+            c.close();
+            return offers;
         }
-
-        c.close();
-        return offers;
     }
-
-    public ArrayList<Offer> getTicketOffers(Tickets t){
-        Log.i("Yay", "Getting offers on a particular ticket");
-        String title = t.getTitle();
-        createTable();
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers WHERE title LIKE ?",
-                new String[]{"%" + title + "%"});
-        int buyerIndex = c.getColumnIndex("buyerUsername");
-        int sellerIndex = c.getColumnIndex("seller");
-        int offerAmountIndex = c.getColumnIndex("offerAmount");
-        c.moveToFirst();
-        ArrayList<Offer> offers = new ArrayList<>();
-        while(!c.isAfterLast()){
-            String buyer = c.getString(buyerIndex);
-            String seller = c.getString(sellerIndex);
-            String offerAmount = c.getString(offerAmountIndex);
-
-            Offer off = new Offer(t, title, buyer, offerAmount, seller);
-            offers.add(off);
-            c.moveToNext();
-        }
-
-        c.close();
-        return offers;
-    }
-
 
     /**
      * Returns college information given the name of the college

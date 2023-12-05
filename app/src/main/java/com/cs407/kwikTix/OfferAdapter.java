@@ -41,7 +41,7 @@ public class OfferAdapter extends ArrayAdapter<Offer> {
 
 
         if (currentOffer != null) {
-            ticketName.setText(currentOffer.getTitle());
+            //ticketName.setText(currentOffer.getTitle());
             //labelGame.setText("Game: ");
             gameName.setText("Game"); //TODO: change to be a variable currentOffer.getTicket().getGame()
             //labelLocation.setText("Location: ");

@@ -69,7 +69,7 @@ public class SingleOffer extends Fragment {
             Offer selectedOffer = (Offer) args.getSerializable("selectedOffer");
             if (selectedOffer != null) {
                 // Update your UI with the selectedListing details
-                TextView ticketNameTextView = v.findViewById(R.id.ticketName);
+                /*TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(selectedOffer.getTitle());
 
                 TextView locationNameTextView = v.findViewById(R.id.gameLocation);
@@ -93,7 +93,7 @@ public class SingleOffer extends Fragment {
                 TextView offerStatusTextView = v.findViewById(R.id.offerStatus);
                 offerStatusTextView.setText("Waiting"); //TODO: change to a variable selectedOffer.getStatus()
 
-                EditText counterOfferAmount = v.findViewById(R.id.counterOfferAmount);
+                EditText counterOfferAmount = v.findViewById(R.id.counterOfferAmount);*/
 
                 // Handle Back button click
                 ImageButton backButton = v.findViewById(R.id.backButton);

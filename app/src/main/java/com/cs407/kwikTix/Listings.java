@@ -308,6 +308,7 @@ public class Listings extends Fragment {
         // Notify the adapter that the data has changed
         if (displayListings.size() > 0) {
             Log.i("TEST", displayListings.get(0).getId());
+
         }
 
         if (displayListings.size() == 0){

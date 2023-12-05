@@ -3,35 +3,33 @@ package com.cs407.kwikTix;
 import java.io.Serializable;
 
 public class Offer implements Serializable {
+    //"(id INTEGER ,offerAmount TEXT,buyerUsername TEXT,PRIMARY KEY (id, buyerUsername),FOREIGN KEY (id) REFERENCES listings(id),FOREIGN KEY (buyerUsername) REFERENCES users(username))");
+    private String id;
+    private String offerAmount;
     private String buyerUsername;
-    private String sellerUsername;
-    private String title;
-    private String price;
-    private Tickets ticket;
+    private String status;
 
-    public Offer(Tickets t, String title, String buyerUsername, String offerAmount, String seller) {
-        this.ticket = t;
-        this.title = title;
-        this.price = offerAmount;
+
+    public Offer(String id, String offerAmount, String buyerUsername, String status) {
+        this.id = id;
+        this.offerAmount = offerAmount;
         this.buyerUsername = buyerUsername;
-        this.sellerUsername = seller;
+        this.status = status;
     }
 
-    public Tickets getTicket() { return this.ticket; }
-
-    public String getTitle() {
-        return this.title;
+    public String getBuyerUsername() {
+        return buyerUsername;
     }
 
-    public String getPrice() {
-        return this.price;
+    public String getStatus() {
+        return status;
     }
 
-    public String getBuyer() {
-        return this.buyerUsername;
+    public String getOfferAmount() {
+        return offerAmount;
     }
 
-    public String getSeller() {
-        return this.sellerUsername;
+    public String getId() {
+        return id;
     }
 }

@@ -89,14 +89,14 @@ public class DBHelper {
      */
     public void addOffer(String id, String offerAmount, String buyerUsername, String status){
         createTable();
-        try {
-            sqLiteDatabase.execSQL("INSERT INTO offers (id, offerAmount, buyerUsername, status) VALUES (?,?,?,?)",
-                    new String[]{id,offerAmount,buyerUsername,status});
-            Log.i("Yay", "Offer created");
-        } catch (SQLiteConstraintException e) {
-            // Handle the exception (e.g., log it or show a message) TODO: Same title
-            Log.i("Info Offer(Primary Key)", "Same primary key for ");
-        }
+        sqLiteDatabase.execSQL("INSERT INTO offers (id, offerAmount, buyerUsername, status) VALUES (?,?,?,?)",
+                new String[]{id,offerAmount,buyerUsername,status});
+    }
+
+    public void updateOffer(String id, String offerAmount, String buyerUsername){
+        createTable();
+        sqLiteDatabase.execSQL("UPDATE offers SET offerAmount = ? WHERE id = ? AND buyerUsername = ?",
+                new String[]{offerAmount,id,buyerUsername});
     }
 
     /**
@@ -504,7 +504,7 @@ public class DBHelper {
                     new String[]{"%" + username + "%"});
             int idIndex = c.getColumnIndex("id");
             int offerAmtIndex = c.getColumnIndex("offerAmount");
-            int statusIndex = c.getColumnIndex("college");
+            int statusIndex = c.getColumnIndex("status");
             c.moveToFirst();
             while(!c.isAfterLast()){
                 String id = c.getString(idIndex);
@@ -519,11 +519,11 @@ public class DBHelper {
             return offers;
         } else {
             Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers WHERE id LIKE ?",
-                    new String[]{"%" + username + "%"});
+                    new String[]{"%" + listingId + "%"});
             int idIndex = c.getColumnIndex("id");
             int offerAmtIndex = c.getColumnIndex("offerAmount");
             int userIndex = c.getColumnIndex("buyerUsername");
-            int statusIndex = c.getColumnIndex("college");
+            int statusIndex = c.getColumnIndex("status");
             c.moveToFirst();
             while(!c.isAfterLast()){
                 String id = c.getString(idIndex);

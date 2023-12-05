@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         // login logic
         SharedPreferences sharedPreferences = getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
-        if (sharedPreferences.getString("username","") != ""){
+        if (!sharedPreferences.getString("username", "").equals("")){
             Intent intent = new Intent(MainActivity.this, KwikTix.class);
             String username = sharedPreferences.getString("username","");
             intent.putExtra("username", username);

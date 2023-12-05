@@ -2,6 +2,8 @@ package com.cs407.kwikTix;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -52,6 +56,9 @@ public class SingleTicket extends Fragment {
         // Required empty public constructor
     }
 
+    SQLiteDatabase sqLiteDatabase;
+    DBHelper dbHelper;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -73,18 +80,16 @@ public class SingleTicket extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            userLoggedIn = getArguments().getString("username");
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_single_ticket, container, false);
-        SQLiteDatabase sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
-        DBHelper dbHelper = new DBHelper(sqLiteDatabase);
-
-        // Retrieve the selectedListing from arguments
+        sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
+        dbHelper = new DBHelper(sqLiteDatabase);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+        userLoggedIn = sharedPreferences.getString("username","");
+                // Retrieve the selectedListing from arguments
         Bundle args = getArguments();
         if (args != null) {
             Tickets selectedListing = (Tickets) args.getSerializable("selectedListing");
@@ -159,7 +164,7 @@ public class SingleTicket extends Fragment {
                     @Override
                     public void onClick(View view) {
                         // Inside the onClickListener for the counterOfferButton
-                        showCounterOfferPopup(selectedListing.getUsername(), counterOfferAmount.getText().toString());
+                        showCounterOfferPopup(selectedListing, counterOfferAmount.getText().toString());
                     }
                 });
             }
@@ -228,16 +233,23 @@ public class SingleTicket extends Fragment {
                     .commit();
         }, 4500);
     }
-    private void showCounterOfferPopup(String username, String offerAmount) {
+    private void showCounterOfferPopup(Tickets listing, String offerAmount) {
         if (!isValidNumber(offerAmount)) {
             // Show an error message or handle the invalid input
             Toast.makeText(requireContext(), "Invalid offer amount", Toast.LENGTH_SHORT).show();
             return;
         }
         View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_counteroffer, null);
+        String message = "";
+        try {
+            dbHelper.addOffer(listing.getId(), offerAmount, userLoggedIn, "PENDING");
+            message = "We successfully sent a new CounterOffer to " + listing.getUsername() + " for $" + offerAmount;
+        }catch(SQLiteConstraintException e){
+            dbHelper.updateOffer(listing.getId(), offerAmount, userLoggedIn);
+            message = "We successfully sent your updated CounterOffer to " + listing.getUsername() + " for $" + offerAmount;
+        }
 
         // Replace placeholders with actual values
-        String message = "We successfully sent the CounterOffer to " + username + " for $" + offerAmount;
         ((TextView) popupView.findViewById(R.id.counterOfferMessage)).setText(message);
 
         PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);

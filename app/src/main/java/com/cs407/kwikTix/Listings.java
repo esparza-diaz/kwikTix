@@ -127,7 +127,7 @@ public class Listings extends Fragment {
                 SingleTicket singleTicketFragment = new SingleTicket();
                 Bundle args = new Bundle();
                 args.putSerializable("selectedListing", selectedListing);
-                // args.putString("username",userLoggedIn);
+                args.putString("username",userLoggedIn);
                 singleTicketFragment.setArguments(args);
 
                 // Replace Listings fragment with SingleTicketFragment

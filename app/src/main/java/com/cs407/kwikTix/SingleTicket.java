@@ -29,8 +29,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageView;
+//import pl.droidsonroids.gif.GifDrawable;
+//import pl.droidsonroids.gif.GifImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -189,10 +189,10 @@ public class SingleTicket extends Fragment {
     private void showCongratulationsPopup() {
         View overlayView = LayoutInflater.from(requireContext()).inflate(R.layout.overlay_confetti, null);
 
-        GifImageView confettiGif = overlayView.findViewById(R.id.confettiGif);
+        //GifImageView confettiGif = overlayView.findViewById(R.id.confettiGif);
         try {
             InputStream inputStream = requireContext().getAssets().open("confetti.gif");
-            confettiGif.setImageDrawable(new GifDrawable(inputStream));
+            //confettiGif.setImageDrawable(new GifDrawable(inputStream));
         } catch (IOException e) {
             e.printStackTrace();
         }

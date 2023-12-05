@@ -110,9 +110,6 @@ public class Profile extends Fragment {
             }
         });
 
-        TicketAdapter adapter = new TicketAdapter(v.getContext(), displayListings);
-        //ticketsListView.setAdapter(adapter);
-
         LinearLayout myListings = v.findViewById(R.id.clickableMyListings);
         myListings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +134,7 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View view){
                 FragmentManager fragmentManager = getParentFragmentManager();
-                Offers offersFragment = new Offers();
+                MyOffers offersFragment = new MyOffers();
 
                 Bundle bundle = new Bundle();
                 bundle.putString("username", userLoggedIn);
@@ -150,10 +147,6 @@ public class Profile extends Fragment {
                         .commit();
             }
         });
-
-//        sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
-//        dbHelper = new DBHelper(sqLiteDatabase);
-//        displayListings = dbHelper.getListings(userLoggedIn);
 
         return v;
     }

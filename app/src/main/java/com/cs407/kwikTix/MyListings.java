@@ -80,9 +80,6 @@ public class MyListings extends Fragment {
 
     ListView myticketsListView;
 
-    String sort_by = null;
-    boolean desc = false;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,11 +91,7 @@ public class MyListings extends Fragment {
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
 
-        ArrayList<Tickets> allTickets = dbHelper.getListings(userLoggedIn,null, null, false);
-
-        for (Tickets ticket: allTickets) {
-            displayListings.add(ticket);
-        }
+        displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
 
         adapter = new ListingAdapter(v.getContext(), displayListings);
         myticketsListView.setAdapter(adapter);

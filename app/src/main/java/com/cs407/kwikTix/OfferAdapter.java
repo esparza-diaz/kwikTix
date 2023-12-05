@@ -1,6 +1,7 @@
 package com.cs407.kwikTix;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,10 @@ public class OfferAdapter extends ArrayAdapter<Offer> {
 
         Offer currentOffer = getItem(position);
 
+        SQLiteDatabase sqLiteDatabase = convertView.getContext().openOrCreateDatabase("KwikTix", Context.MODE_PRIVATE, null);
+        DBHelper dbHelper = new DBHelper(sqLiteDatabase);
+        Tickets ticket = dbHelper.getTicket(currentOffer.getId());
+
         TextView ticketName = convertView.findViewById(R.id.ticketName);
         //TextView labelGame = convertView.findViewById(R.id.labelGame);
         TextView gameName = convertView.findViewById(R.id.gameName);
@@ -39,13 +44,21 @@ public class OfferAdapter extends ArrayAdapter<Offer> {
         //TextView labelStatus = convertView.findViewById(R.id.labelStatus);
         TextView offerStatus = convertView.findViewById(R.id.offerStatus);
 
+        String offerStatusLabel="";
+        if(currentOffer.getStatus()=="1"){
+            offerStatusLabel="Accepted";
+        }
+        else if(currentOffer.getStatus()=="0"){
+            offerStatusLabel="Rejected";
+        }
+
 
         if (currentOffer != null) {
             //ticketName.setText(currentOffer.getTitle());
             //labelGame.setText("Game: ");
-            gameName.setText("Game"); //TODO: change to be a variable currentOffer.getTicket().getGame()
+            gameName.setText(ticket.getTitle());
             //labelLocation.setText("Location: ");
-            //gameLocation.setText("Location"); //TODO: change to be a variable currentOffer.getTicket().getLocation()
+            //gameLocation.setText("Location");
             //labelListingPrice.setText("Listing Price: ");
             //listingPrice.setText(currentOffer.getTicket().getPrice());
             //labelSeller.setText("Seller: ");
@@ -55,7 +68,7 @@ public class OfferAdapter extends ArrayAdapter<Offer> {
             //labelOfferedPrice.setText("Offered Price: ");
             //offeredPrice.setText(currentOffer.getPrice());
             //labelStatus.setText("Status: ");
-            offerStatus.setText("Waiting"); //TODO: change to be a variable
+            offerStatus.setText(offerStatusLabel);
         }
 
         return convertView;

@@ -39,13 +39,21 @@ public class ListingAdapter extends ArrayAdapter<Tickets> {
         //TextView labelStatus = convertView.findViewById(R.id.labelStatus);
         TextView offerStatus = convertView.findViewById(R.id.offerStatus);
 
+        String ticketAvailability="";
+        if(currentListing.getAvailable()=="1"){
+            ticketAvailability="Available";
+        }
+        else if(currentListing.getAvailable()=="0"){
+            ticketAvailability="Purchased";
+            //TODO figure out what labels we want for different statuses
+        }
 
         if (currentListing != null) {
             ticketName.setText(currentListing.getTitle());
             //labelGame.setText("Game: ");
-            //gameName.setText(currentListing.getTitle()); //TODO: change to be a variable currentOffer.getTicket().getGame()
+            //gameName.setText(currentListing.getTitle());
             //labelLocation.setText("Location: ");
-            //gameLocation.setText(currentListing.getCollege()); //TODO: change to be a variable currentOffer.getTicket().getLocation()
+            //gameLocation.setText(currentListing.getCollege());
             //labelListingPrice.setText("Listing Price: ");
             //listingPrice.setText(currentListing.getPrice().toString());
             //labelSeller.setText("Seller: ");
@@ -55,7 +63,7 @@ public class ListingAdapter extends ArrayAdapter<Tickets> {
             //labelOfferedPrice.setText("Offered Price: ");
             //offeredPrice.setText(currentOffer.getPrice());
             //labelStatus.setText("Status: ");
-            offerStatus.setText("Listed"); //TODO: change to be a variable
+            offerStatus.setText(ticketAvailability);
         }
 
         return convertView;

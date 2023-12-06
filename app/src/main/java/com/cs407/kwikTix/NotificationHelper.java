@@ -272,7 +272,7 @@ public class NotificationHelper {
                         .build();
 
 
-        NotificationCompat.Action rejectOfferAction =
+        NotificationCompat.Action rejectOfferAction =git
                 new NotificationCompat.Action.Builder(R.drawable.baseline_do_not_disturb_24,
                         "REJECT", rejectPendingIntent)
                         .build();

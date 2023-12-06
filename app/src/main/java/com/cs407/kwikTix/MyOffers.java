@@ -1,6 +1,7 @@
 package com.cs407.kwikTix;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,9 +60,6 @@ public class MyOffers extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            userLoggedIn = getArguments().getString("buyerUsername");
-        }
     }
 
     OfferAdapter adapter;
@@ -78,8 +76,10 @@ public class MyOffers extends Fragment {
         myOffersListView = (ListView) v.findViewById(R.id.myOffers);
 
         // Init DB
-        sqLiteDatabase = v.getContext().openOrCreateDatabase("KwikTix", Context.MODE_PRIVATE, null);
+        sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+        userLoggedIn = sharedPreferences.getString("username","");
 
         //filter offers by username, not by ticket id
         displayOffers = dbHelper.getOffers(userLoggedIn, null);

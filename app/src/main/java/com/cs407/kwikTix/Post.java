@@ -199,7 +199,7 @@ public class Post extends Fragment {
                     return;
                 }
                 String gameTitle = homeTeam + " vs " + awayTeam;
-                String price = ((EditText) v.findViewById(R.id.priceEditText)).getText().toString().replaceAll("[^0-9.]", "");;
+                String price = ((EditText) v.findViewById(R.id.priceEditText)).getText().toString().replaceAll("[^0-9.]", "");
                 String college = ((Spinner) v.findViewById(R.id.homeTeamSpinner)).getSelectedItem().toString();
                 String date = ((EditText) v.findViewById(R.id.dateTimeEditText)).getText().toString();
                 String time = ((EditText) v.findViewById(R.id.timeEditText)).getText().toString();

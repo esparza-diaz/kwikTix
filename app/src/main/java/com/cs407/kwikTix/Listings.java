@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -89,6 +90,7 @@ public class Listings extends Fragment {
     String college = "All Colleges";
     String sort_by = null;
     boolean desc = false;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,6 +98,7 @@ public class Listings extends Fragment {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.listings_fragment, container, false);
         ticketsListView = (ListView) v.findViewById(R.id.myListings);
+        swipeRefreshLayout = v.findViewById(R.id.swipeRefresh);
 
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
@@ -161,6 +164,15 @@ public class Listings extends Fragment {
                 Tickets selectedListing = displayListings.get(position);
                 showQuickViewPopup(view, selectedListing);
                 return true;
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Handle the refresh action (reload data)
+                refreshListings();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 

@@ -245,13 +245,6 @@
                 android:textColor="#fff"
                 android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginBottom="8dp"
-                android:text="$"
-                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/OfferAmount"

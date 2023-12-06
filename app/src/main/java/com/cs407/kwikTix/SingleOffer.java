@@ -6,12 +6,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -22,6 +25,7 @@ import androidx.fragment.app.FragmentManager;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -76,11 +80,33 @@ public class SingleOffer extends Fragment {
         }
     }
 
+    private TextWatcher priceTextWatcher;
+
+    private EditText counterOfferAmount;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_single_offer, container, false);
         SQLiteDatabase sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
+
+        counterOfferAmount = v.findViewById(R.id.OfferAmount);
+        priceTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+                // No action needed before text changes
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                // No action needed when text is changing
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                formatPriceInput(editable);
+            }
+        };
+        counterOfferAmount.addTextChangedListener(priceTextWatcher);
 
         // Retrieve the selectedListing from arguments
         Bundle args = getArguments();
@@ -157,10 +183,30 @@ public class SingleOffer extends Fragment {
                         Toast.makeText(requireContext(), "Revoking Offer as: " + userLoggedIn, Toast.LENGTH_SHORT).show();
                     }
                 });
+
+
             }
         }
 
         return v;
+    }
+
+    private void formatPriceInput(Editable editable) {
+        String input = editable.toString();
+        Log.i("TEST", "formatiing");
+
+        // Remove previous formatting
+        String cleanString = input.replaceAll("[^0-9]", "");
+
+        // Format the input as currency
+        if (!cleanString.isEmpty()) {
+            double parsed = Double.parseDouble(cleanString);
+            String formatted = DecimalFormat.getCurrencyInstance().format((parsed / 100));
+            counterOfferAmount.removeTextChangedListener(priceTextWatcher);
+            counterOfferAmount.setText(formatted);
+            counterOfferAmount.setSelection(formatted.length());
+            counterOfferAmount.addTextChangedListener(priceTextWatcher);
+        }
     }
 
 }

@@ -164,10 +164,19 @@ public class NotificationHelper {
 
 
     public void setNotificationContent(Context context, Users buyer, Users seller, String ticketTitle,
-                                       String offerAmount, String offerStatus, String notificationType) {
+                                       String offerAmount, String offerStatus, String notificationType,
+                                       String offerId, String listingId) {
 
         if (!areStringsSet) {
             setResourceStrings(context);
+        }
+
+        if (offerId == null) {
+            offerId = "";
+        }
+
+        if (listingId == null) {
+            listingId = "";
         }
 
         Log.d("notificationType", notificationType);
@@ -236,7 +245,9 @@ public class NotificationHelper {
                 seller.getUsername(),
                 notificationType,
                 notificationContent,
-                notificationItems.size());
+                notificationItems.size(),
+                offerId,
+                listingId) ;
 
         notificationItems.add(item); // TODO add notification in addNotification method?
     }
@@ -248,6 +259,8 @@ public class NotificationHelper {
         } else {
             item = notificationItems.get(id);
         }
+        String offerId = item.getOfferId();
+        String listingId = item.getListingId();
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
             != PackageManager.PERMISSION_GRANTED) {
@@ -258,7 +271,8 @@ public class NotificationHelper {
 
 
         Intent acceptIntent = new Intent(context, AcceptReceiver.class);
-        acceptIntent.putExtra("id", item.getId());
+        acceptIntent.putExtra("offerId", offerId);
+        acceptIntent.putExtra("listingId", listingId);
 
         PendingIntent acceptPendingIntent =
                 PendingIntent.getBroadcast(context,
@@ -267,7 +281,9 @@ public class NotificationHelper {
                         PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent rejectIntent = new Intent(context, RejectReceiver.class);
-        acceptIntent.putExtra("id", item.getId());
+        rejectIntent.putExtra("offerId", offerId);
+        rejectIntent.putExtra("listingId", listingId);
+
 
         PendingIntent rejectPendingIntent =
                 PendingIntent.getBroadcast(context,

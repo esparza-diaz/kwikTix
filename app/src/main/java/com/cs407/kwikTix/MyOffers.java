@@ -36,6 +36,9 @@ public class MyOffers extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String userLoggedIn;
+
+    public static ArrayList<Offer> offers;
+
     public MyOffers() {
     }
 
@@ -66,6 +69,7 @@ public class MyOffers extends Fragment {
     DBHelper dbHelper;
 
     ListView myOffersListView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,7 +82,6 @@ public class MyOffers extends Fragment {
         dbHelper = new DBHelper(sqLiteDatabase);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
         userLoggedIn = sharedPreferences.getString("username","");
-
         //filter offers by username, not by ticket id
         displayOffers = dbHelper.getOffers(userLoggedIn, null);
 
@@ -95,7 +98,7 @@ public class MyOffers extends Fragment {
                 SingleOffer singleOfferFragment = new SingleOffer();
                 Bundle args = new Bundle();
                 args.putSerializable("selectedOffer", selectedOffer);
-                args.putString("buyerUsername",userLoggedIn);
+                //args.putString("buyerUsername",userLoggedIn);
                 singleOfferFragment.setArguments(args);
 
                 // Replace Listings fragment with SingleTicketFragment

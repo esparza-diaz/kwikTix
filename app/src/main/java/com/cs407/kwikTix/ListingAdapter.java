@@ -1,6 +1,7 @@
 package com.cs407.kwikTix;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,19 +25,6 @@ public class ListingAdapter extends ArrayAdapter<Tickets> {
         Tickets currentListing = getItem(position);
 
         TextView ticketName = convertView.findViewById(R.id.ticketName);
-        //TextView labelGame = convertView.findViewById(R.id.labelGame);
-        //TextView gameName = convertView.findViewById(R.id.gameName);
-        //TextView labelLocation = convertView.findViewById(R.id.labelLocation);
-        //TextView gameLocation = convertView.findViewById(R.id.gameLocation);
-        //TextView labelListingPrice = convertView.findViewById(R.id.labelListingPrice);
-        //TextView listingPrice = convertView.findViewById(R.id.listingPrice);
-        //TextView labelSeller = convertView.findViewById(R.id.labelSeller);
-        //TextView sellerName = convertView.findViewById(R.id.sellerName);
-        //TextView labelDateTime = convertView.findViewById(R.id.labelDateTime);
-        //TextView dateTime = convertView.findViewById(R.id.dateTime);
-        //TextView labelOfferedPrice = convertView.findViewById(R.id.labelOfferedPrice);
-        //TextView offeredPrice = convertView.findViewById(R.id.offeredPrice);
-        //TextView labelStatus = convertView.findViewById(R.id.labelStatus);
         TextView offerStatus = convertView.findViewById(R.id.offerStatus);
 
         String ticketAvailability="";
@@ -50,19 +38,6 @@ public class ListingAdapter extends ArrayAdapter<Tickets> {
 
         if (currentListing != null) {
             ticketName.setText(currentListing.getTitle());
-            //labelGame.setText("Game: ");
-            //gameName.setText(currentListing.getTitle());
-            //labelLocation.setText("Location: ");
-            //gameLocation.setText(currentListing.getCollege());
-            //labelListingPrice.setText("Listing Price: ");
-            //listingPrice.setText(currentListing.getPrice().toString());
-            //labelSeller.setText("Seller: ");
-            //sellerName.setText(currentOffer.getSeller());
-            //labelDateTime.setText("Date/Time: ");
-            //dateTime.setText(currentListing.getDate());
-            //labelOfferedPrice.setText("Offered Price: ");
-            //offeredPrice.setText(currentOffer.getPrice());
-            //labelStatus.setText("Status: ");
             offerStatus.setText(ticketAvailability);
         }
 

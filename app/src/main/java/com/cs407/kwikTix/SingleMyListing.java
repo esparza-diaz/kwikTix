@@ -94,27 +94,14 @@ public class SingleMyListing extends Fragment {
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(selectedListing.getTitle());
 
-
                 TextView locationNameTextView = v.findViewById(R.id.gameLocation);
                 locationNameTextView.setText(selectedListing.getCollege()); // Set the college name
-
-
-                // Set an OnClickListener to open Google Maps
-                locationNameTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //openGoogleMapsForLocation(dbHelper.getCollege(selectedListing.getCollege()));
-                    }
-                });
 
                 TextView gameNameTextView = v.findViewById(R.id.gameName);
                 gameNameTextView.setText(selectedListing.getTitle());
 
                 TextView ticketPriceTextView = v.findViewById(R.id.ticketPrice);
                 ticketPriceTextView.setText("$" + selectedListing.getPrice().toString());
-
-//                TextView sellerNameTextView = v.findViewById(R.id.sellerName);
-//                sellerNameTextView.setText(selectedListing.getUsername().toString());
 
                 SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                 SimpleDateFormat outputFormat = new SimpleDateFormat("EEE MM/dd/yyyy 'at' hh:mm a", Locale.getDefault());
@@ -169,89 +156,26 @@ public class SingleMyListing extends Fragment {
                     ticketBoughtLayout.setVisibility(View.GONE);
                 }
 
-//                Button buy = v.findViewById(R.id.buyNowButton);
-//                buy.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        showCongratulationsPopup();
-//                    }
-//                });
+                Button seeOffers = v.findViewById(R.id.seeOffersButton);
+                seeOffers.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view){
+                        FragmentManager fragmentManager = getParentFragmentManager();
+                        TicketOffers offersFragment = new TicketOffers();
 
-//                Button counter = v.findViewById(R.id.counterOfferButton);
-//                TextView counterOfferAmount = v.findViewById(R.id.counterOfferAmount);
-//                counter.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        // Inside the onClickListener for the counterOfferButton
-//                        showCounterOfferPopup(selectedListing.getUsername(), counterOfferAmount.getText().toString());
-//                    }
-//                });
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("selectedListing", selectedListing);
+                        offersFragment.setArguments(bundle);
+
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainerView, offersFragment)
+                                .addToBackStack("showing Post")
+                                .commit();
+                    }
+                });
             }
         }
 
         return v;
     }
-
-    private void openGoogleMapsForLocation(Colleges college) {
-        // Get college information from the database
-
-        if (college != null) {
-            // Open Google Maps with the location of the college
-            double latitude = Double.parseDouble(college.getLatitude());
-            double longitude = Double.parseDouble(college.getLongitude());
-            String uri = String.format("geo:%f,%f?q=%f,%f", latitude, longitude, latitude, longitude);
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            intent.setPackage("com.google.android.apps.maps");
-            startActivity(intent);
-        } else {
-            // Handle the case where college information is not available
-            Toast.makeText(requireContext(), "College information not available", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    private void showCounterOfferPopup(String username, String offerAmount) {
-        if (!isValidNumber(offerAmount)) {
-            // Show an error message or handle the invalid input
-            Toast.makeText(requireContext(), "Invalid offer amount", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_counteroffer, null);
-
-        // Replace placeholders with actual values
-        String message = "We successfully sent the CounterOffer to " + username + " for $" + offerAmount;
-        ((TextView) popupView.findViewById(R.id.counterOfferMessage)).setText(message);
-
-        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        popupWindow.setTouchable(true);
-        popupWindow.setFocusable(true);
-
-        // Show the popup at the center of the screen
-        View rootView = requireActivity().getWindow().getDecorView().getRootView();
-        popupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
-
-        // Dismiss the popup after a certain delay
-        new Handler().postDelayed(() -> {
-            if (popupWindow.isShowing()) {
-                popupWindow.dismiss();
-            }
-        }, 5000); // Adjust the delay (in milliseconds) as needed
-    }
-
-    private boolean isValidNumber(String input) {
-        try {
-            double parsed = Double.parseDouble(input);
-            return parsed >= 0; // You can add more specific validation as needed
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-
-
-
-
-
-
-
 }

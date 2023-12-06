@@ -6,16 +6,18 @@ public class Tickets implements Serializable {
     private String title;
     private String date;
     private String college;
-    private String username;
+    private String seller;
+    private String buyer;
     private String price;
     private String id;
     private String available;
 
-    public Tickets(String title, String id, String date, String price, String college, String username, String available) {
+    public Tickets(String title, String id, String date, String price, String college, String seller, String buyer, String available) {
         this.title = title;
         this.date = date;
         this.college = college;
-        this.username = username;
+        this.seller = seller;
+        this.buyer = buyer;
         this.price = price;
         this.id = id;
         this.available = available;
@@ -34,9 +36,10 @@ public class Tickets implements Serializable {
         return college;
     }
 
-    public String getUsername() {
-        return username;
+    public String getSeller() {
+        return seller;
     }
+    public String getBuyer() { return buyer; }
 
     public String getPrice() {
         return price;

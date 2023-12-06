@@ -20,7 +20,7 @@ public class DBHelper {
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS users "+
                 "(username TEXT PRIMARY KEY,password TEXT,email TEXT, phone TEXT, prefContactMethod TEXT, college TEXT, FOREIGN KEY(college) REFERENCES colleges(college))");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS listings "+
-                "(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT,date DATETIME,price TEXT, college TEXT,username TEXT, available TEXT, FOREIGN KEY(college) REFERENCES colleges(college), FOREIGN KEY(username) REFERENCES users(username))");
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT,date DATETIME,price TEXT, college TEXT,seller TEXT,buyer TEXT,available TEXT, FOREIGN KEY(college) REFERENCES colleges(college), FOREIGN KEY(seller) REFERENCES users(username))");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS offers "+
                 "(id INTEGER ,offerAmount TEXT,buyerUsername TEXT, status TEXT,PRIMARY KEY (id, buyerUsername),FOREIGN KEY (id) REFERENCES listings(id),FOREIGN KEY (buyerUsername) REFERENCES users(username))");
 
@@ -65,11 +65,13 @@ public class DBHelper {
      * Logic when ticket is bought
      * @param listing
      */
-    public void boughtTicket(Tickets listing){
+    public void boughtTicket(Tickets listing, String buyer){
         createTable();
         //update listing
         sqLiteDatabase.execSQL("UPDATE listings SET available = ? WHERE id = ?",
                 new String[]{"0",listing.getId()});
+        sqLiteDatabase.execSQL("UPDATE listings SET buyer = ? WHERE id = ?",
+                new String[]{buyer,listing.getId()});
         //update offers
         sqLiteDatabase.execSQL("UPDATE offers SET status = ? WHERE id = ?",
                 new String[]{"REJECTED",listing.getId()});
@@ -80,14 +82,14 @@ public class DBHelper {
      * @param title
      * @param date
      * @param college
-     * @param username
+     * @param seller
      */
-    public void addTicket(String title,String date,String price,String college, String username, String available){
+    public void addTicket(String title,String date,String price,String college, String seller, String available){
         createTable();
         //title TEXT,date DATETIME,price TEXT, college TEXT,username TEXT, available INTEGER
         try {
-            sqLiteDatabase.execSQL("INSERT INTO listings (title, date, price, college, username, available) VALUES (?,?,?,?,?,?)",
-                    new String[]{title,date,price,college,username,available});
+            sqLiteDatabase.execSQL("INSERT INTO listings (title, date, price, college, seller, available) VALUES (?,?,?,?,?,?)",
+                    new String[]{title,date,price,college,seller,available});
             Log.i("Yay", "Ticket created");
         } catch (SQLiteConstraintException e) {
             // Handle the exception (e.g., log it or show a message) TODO: Same title
@@ -196,7 +198,8 @@ public class DBHelper {
         int dateIndex = c.getColumnIndex("date");
         int priceIndex = c.getColumnIndex("price");
         int collegeIndex = c.getColumnIndex("college");
-        int usernameIndex = c.getColumnIndex("username");
+        int sellerIndex = c.getColumnIndex("seller");
+        int buyerIndex = c.getColumnIndex("buyer");
         int availableIndex = c.getColumnIndex("available");
 
         c.moveToFirst();
@@ -205,10 +208,11 @@ public class DBHelper {
         String date = c.getString(dateIndex);
         String price = c.getString(priceIndex);
         String college = c.getString(collegeIndex);
-        String username = c.getString(usernameIndex);
+        String seller = c.getString(sellerIndex);
+        String buyer = c.getString(buyerIndex);
         String available = c.getString(availableIndex);
 
-        Tickets ticket = new Tickets(title,id,date,price,college,username,available);
+        Tickets ticket = new Tickets(title,id,date,price,college,seller,buyer,available);
         c.close();
 
         return ticket;
@@ -216,20 +220,21 @@ public class DBHelper {
 
     /**
      * Gets listings for a specific user
-     * @param username
+     * @param seller
      * @return
      */
-    public ArrayList<Tickets> getListings(String username, String college, String sort_by, boolean desc){
+    public ArrayList<Tickets> getListings(String seller, String college, String sort_by, boolean desc){
         createTable();
         ArrayList<Tickets> listings = new ArrayList<>();
-        if (username == null && college == null && sort_by == null){
+        if (seller == null && college == null && sort_by == null){
             //returns all listings
             Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings", null);
             int titleIndex = c.getColumnIndex("title");
             int listingId = c.getColumnIndex("id");
             int dateIndex = c.getColumnIndex("date");
             int collegeIndex = c.getColumnIndex("college");
-            int usernameIndex = c.getColumnIndex("username");
+            int sellerIndex = c.getColumnIndex("seller");
+            int buyerIndex = c.getColumnIndex("buyer");
             int priceIndex = c.getColumnIndex("price");
             int availableIndex = c.getColumnIndex("available");
             c.moveToFirst();
@@ -238,25 +243,27 @@ public class DBHelper {
                 String title = c.getString(titleIndex);
                 String date = c.getString(dateIndex);
                 String loc = c.getString(collegeIndex);
-                String user = c.getString(usernameIndex);
+                String user = c.getString(sellerIndex);
                 String price = c.getString(priceIndex);
                 String available = c.getString(availableIndex);
+                String buyer = c.getString(buyerIndex);
 
-                Tickets ticket = new Tickets(title,id,date,price,loc,user,available);
+                Tickets ticket = new Tickets(title,id,date,price,loc,user,buyer,available);
                 listings.add(ticket);
                 c.moveToNext();
             }
             c.close();
             return listings;
-        }else if (username != null){
+        }else if (seller != null){
             //returns listings for username
-            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE username LIKE ?",
-                    new String[]{"%" + username + "%"});
+            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE seller LIKE ?",
+                    new String[]{"%" + seller + "%"});
             int titleIndex = c.getColumnIndex("title");
             int listingId = c.getColumnIndex("id");
             int dateIndex = c.getColumnIndex("date");
             int collegeIndex = c.getColumnIndex("college");
-            int usernameIndex = c.getColumnIndex("username");
+            int sellerIndex = c.getColumnIndex("seller");
+            int buyerIndex = c.getColumnIndex("buyer");
             int priceIndex = c.getColumnIndex("price");
             int availableIndex = c.getColumnIndex("available");
             c.moveToFirst();
@@ -265,11 +272,12 @@ public class DBHelper {
                 String title = c.getString(titleIndex);
                 String date = c.getString(dateIndex);
                 String loc = c.getString(collegeIndex);
-                String user = c.getString(usernameIndex);
+                String user = c.getString(sellerIndex);
                 String price = c.getString(priceIndex);
                 String available = c.getString(availableIndex);
+                String buyer = c.getString(buyerIndex);
 
-                Tickets ticket = new Tickets(title,id,date,price,loc,user,available);
+                Tickets ticket = new Tickets(title,id,date,price,loc,user,buyer,available);
                 listings.add(ticket);
                 c.moveToNext();
             }
@@ -283,7 +291,8 @@ public class DBHelper {
             int listingId = c.getColumnIndex("id");
             int dateIndex = c.getColumnIndex("date");
             int collegeIndex = c.getColumnIndex("college");
-            int usernameIndex = c.getColumnIndex("username");
+            int sellerIndex = c.getColumnIndex("seller");
+            int buyerIndex = c.getColumnIndex("buyer");
             int priceIndex = c.getColumnIndex("price");
             int availableIndex = c.getColumnIndex("available");
             c.moveToFirst();
@@ -292,11 +301,12 @@ public class DBHelper {
                 String title = c.getString(titleIndex);
                 String date = c.getString(dateIndex);
                 String loc = c.getString(collegeIndex);
-                String user = c.getString(usernameIndex);
+                String user = c.getString(sellerIndex);
                 String price = c.getString(priceIndex);
                 String available = c.getString(availableIndex);
+                String buyer = c.getString(buyerIndex);
 
-                Tickets ticket = new Tickets(title,id,date,price,loc,user,available);
+                Tickets ticket = new Tickets(title,id,date,price,loc,user,buyer,available);
                 listings.add(ticket);
                 c.moveToNext();
             }
@@ -310,7 +320,8 @@ public class DBHelper {
                 int listingId = c.getColumnIndex("id");
                 int dateIndex = c.getColumnIndex("date");
                 int collegeIndex = c.getColumnIndex("college");
-                int usernameIndex = c.getColumnIndex("username");
+                int sellerIndex = c.getColumnIndex("seller");
+                int buyerIndex = c.getColumnIndex("buyer");
                 int priceIndex = c.getColumnIndex("price");
                 int availableIndex = c.getColumnIndex("available");
                 c.moveToFirst();
@@ -319,11 +330,12 @@ public class DBHelper {
                     String title = c.getString(titleIndex);
                     String date = c.getString(dateIndex);
                     String loc = c.getString(collegeIndex);
-                    String user = c.getString(usernameIndex);
+                    String user = c.getString(sellerIndex);
                     String price = c.getString(priceIndex);
                     String available = c.getString(availableIndex);
+                    String buyer = c.getString(buyerIndex);
 
-                    Tickets ticket = new Tickets(title,id,date,price,loc,user,available);
+                    Tickets ticket = new Tickets(title,id,date,price,loc,user,buyer,available);
                     listings.add(ticket);
                     c.moveToNext();
                 }
@@ -334,7 +346,8 @@ public class DBHelper {
                 int listingId = c.getColumnIndex("id");
                 int dateIndex = c.getColumnIndex("date");
                 int collegeIndex = c.getColumnIndex("college");
-                int usernameIndex = c.getColumnIndex("username");
+                int sellerIndex = c.getColumnIndex("seller");
+                int buyerIndex = c.getColumnIndex("buyer");
                 int priceIndex = c.getColumnIndex("price");
                 int availableIndex = c.getColumnIndex("available");
                 c.moveToFirst();
@@ -343,11 +356,12 @@ public class DBHelper {
                     String title = c.getString(titleIndex);
                     String date = c.getString(dateIndex);
                     String loc = c.getString(collegeIndex);
-                    String user = c.getString(usernameIndex);
+                    String user = c.getString(sellerIndex);
                     String price = c.getString(priceIndex);
                     String available = c.getString(availableIndex);
+                    String buyer = c.getString(buyerIndex);
 
-                    Tickets ticket = new Tickets(title,id,date,price,loc,user,available);
+                    Tickets ticket = new Tickets(title,id,date,price,loc,user,buyer,available);
                     listings.add(ticket);
                     c.moveToNext();
                 }
@@ -363,7 +377,8 @@ public class DBHelper {
                 int listingId = c.getColumnIndex("id");
                 int dateIndex = c.getColumnIndex("date");
                 int collegeIndex = c.getColumnIndex("college");
-                int usernameIndex = c.getColumnIndex("username");
+                int sellerIndex = c.getColumnIndex("seller");
+                int buyerIndex = c.getColumnIndex("buyer");
                 int priceIndex = c.getColumnIndex("price");
                 int availableIndex = c.getColumnIndex("available");
                 c.moveToFirst();
@@ -372,11 +387,12 @@ public class DBHelper {
                     String title = c.getString(titleIndex);
                     String date = c.getString(dateIndex);
                     String loc = c.getString(collegeIndex);
-                    String user = c.getString(usernameIndex);
+                    String user = c.getString(sellerIndex);
                     String price = c.getString(priceIndex);
                     String available = c.getString(availableIndex);
+                    String buyer = c.getString(buyerIndex);
 
-                    Tickets ticket = new Tickets(title,id,date,price,loc,user,available);
+                    Tickets ticket = new Tickets(title,id,date,price,loc,user,buyer,available);
                     listings.add(ticket);
                     c.moveToNext();
                 }
@@ -388,7 +404,8 @@ public class DBHelper {
                 int listingId = c.getColumnIndex("id");
                 int dateIndex = c.getColumnIndex("date");
                 int collegeIndex = c.getColumnIndex("college");
-                int usernameIndex = c.getColumnIndex("username");
+                int sellerIndex = c.getColumnIndex("seller");
+                int buyerIndex = c.getColumnIndex("buyer");
                 int priceIndex = c.getColumnIndex("price");
                 int availableIndex = c.getColumnIndex("available");
                 c.moveToFirst();
@@ -397,11 +414,12 @@ public class DBHelper {
                     String title = c.getString(titleIndex);
                     String date = c.getString(dateIndex);
                     String loc = c.getString(collegeIndex);
-                    String user = c.getString(usernameIndex);
+                    String user = c.getString(sellerIndex);
                     String price = c.getString(priceIndex);
                     String available = c.getString(availableIndex);
+                    String buyer = c.getString(buyerIndex);
 
-                    Tickets ticket = new Tickets(title,id,date,price,loc,user,available);
+                    Tickets ticket = new Tickets(title,id,date,price,loc,user,buyer,available);
                     listings.add(ticket);
                     c.moveToNext();
                 }
@@ -416,7 +434,8 @@ public class DBHelper {
                 int listingId = c.getColumnIndex("id");
                 int dateIndex = c.getColumnIndex("date");
                 int collegeIndex = c.getColumnIndex("college");
-                int usernameIndex = c.getColumnIndex("username");
+                int sellerIndex = c.getColumnIndex("seller");
+                int buyerIndex = c.getColumnIndex("buyer");
                 int priceIndex = c.getColumnIndex("price");
                 int availableIndex = c.getColumnIndex("available");
                 c.moveToFirst();
@@ -425,11 +444,12 @@ public class DBHelper {
                     String title = c.getString(titleIndex);
                     String date = c.getString(dateIndex);
                     String loc = c.getString(collegeIndex);
-                    String user = c.getString(usernameIndex);
+                    String user = c.getString(sellerIndex);
                     String price = c.getString(priceIndex);
                     String available = c.getString(availableIndex);
+                    String buyer = c.getString(buyerIndex);
 
-                    Tickets ticket = new Tickets(title,id,date,price,loc,user,available);
+                    Tickets ticket = new Tickets(title,id,date,price,loc,user,buyer,available);
                     listings.add(ticket);
                     c.moveToNext();
                 }
@@ -440,7 +460,8 @@ public class DBHelper {
                 int listingId = c.getColumnIndex("id");
                 int dateIndex = c.getColumnIndex("date");
                 int collegeIndex = c.getColumnIndex("college");
-                int usernameIndex = c.getColumnIndex("username");
+                int sellerIndex = c.getColumnIndex("seller");
+                int buyerIndex = c.getColumnIndex("buyer");
                 int priceIndex = c.getColumnIndex("price");
                 int availableIndex = c.getColumnIndex("available");
                 c.moveToFirst();
@@ -449,11 +470,12 @@ public class DBHelper {
                     String title = c.getString(titleIndex);
                     String date = c.getString(dateIndex);
                     String loc = c.getString(collegeIndex);
-                    String user = c.getString(usernameIndex);
+                    String user = c.getString(sellerIndex);
                     String price = c.getString(priceIndex);
                     String available = c.getString(availableIndex);
+                    String buyer = c.getString(buyerIndex);
 
-                    Tickets ticket = new Tickets(title,id,date,price,loc,user,available);
+                    Tickets ticket = new Tickets(title,id,date,price,loc,user,buyer,available);
                     listings.add(ticket);
                     c.moveToNext();
                 }
@@ -469,7 +491,8 @@ public class DBHelper {
                 int listingId = c.getColumnIndex("id");
                 int dateIndex = c.getColumnIndex("date");
                 int collegeIndex = c.getColumnIndex("college");
-                int usernameIndex = c.getColumnIndex("username");
+                int sellerIndex = c.getColumnIndex("seller");
+                int buyerIndex = c.getColumnIndex("buyer");
                 int priceIndex = c.getColumnIndex("price");
                 int availableIndex = c.getColumnIndex("available");
                 c.moveToFirst();
@@ -478,11 +501,12 @@ public class DBHelper {
                     String title = c.getString(titleIndex);
                     String date = c.getString(dateIndex);
                     String loc = c.getString(collegeIndex);
-                    String user = c.getString(usernameIndex);
+                    String user = c.getString(sellerIndex);
                     String price = c.getString(priceIndex);
                     String available = c.getString(availableIndex);
+                    String buyer = c.getString(buyerIndex);
 
-                    Tickets ticket = new Tickets(title,id,date,price,loc,user,available);
+                    Tickets ticket = new Tickets(title,id,date,price,loc,user,buyer,available);
                     listings.add(ticket);
                     c.moveToNext();
                 }
@@ -494,7 +518,8 @@ public class DBHelper {
                 int listingId = c.getColumnIndex("id");
                 int dateIndex = c.getColumnIndex("date");
                 int collegeIndex = c.getColumnIndex("college");
-                int usernameIndex = c.getColumnIndex("username");
+                int sellerIndex = c.getColumnIndex("seller");
+                int buyerIndex = c.getColumnIndex("buyer");
                 int priceIndex = c.getColumnIndex("price");
                 int availableIndex = c.getColumnIndex("available");
                 c.moveToFirst();
@@ -503,11 +528,12 @@ public class DBHelper {
                     String title = c.getString(titleIndex);
                     String date = c.getString(dateIndex);
                     String loc = c.getString(collegeIndex);
-                    String user = c.getString(usernameIndex);
+                    String user = c.getString(sellerIndex);
                     String price = c.getString(priceIndex);
                     String available = c.getString(availableIndex);
+                    String buyer = c.getString(buyerIndex);
 
-                    Tickets ticket = new Tickets(title,id,date,price,loc,user,available);
+                    Tickets ticket = new Tickets(title,id,date,price,loc,user,buyer,available);
                     listings.add(ticket);
                     c.moveToNext();
                 }

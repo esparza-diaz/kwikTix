@@ -93,7 +93,8 @@ public class SingleTicket extends Fragment {
         dbHelper = new DBHelper(sqLiteDatabase);
 
 
-
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+        userLoggedInUsername = sharedPreferences.getString("username","");
         // Retrieve the selectedListing from arguments
         Bundle args = getArguments();
         if (args != null) {
@@ -106,11 +107,22 @@ public class SingleTicket extends Fragment {
                 } else {
                     Log.d("userLoggedIn", "onCreateView: " + userLoggedIn.getUsername());
                 }
-                sellerUsername = selectedListing.getUsername().toString(); // TODO redundant toString?
+                sellerUsername = selectedListing.getSeller().toString(); // TODO redundant toString?
                 seller = dbHelper.getUser(sellerUsername);
 
                 Log.i("TEST",selectedListing.getTitle());
                 Log.i("TEST", sellerUsername);
+                Log.i("TEST",selectedListing.getSeller());
+                // update offer notice if previously offered.
+                ArrayList<Offer> offers = dbHelper.getOffers(null,selectedListing.getId());
+                for (Offer offer : offers){
+                    if (offer.getBuyerUsername().equals(userLoggedIn)){
+                        TextView notice = v.findViewById(R.id.offerNotice);
+                        notice.setText("You previously submitted an offer for $" + offer.getOfferAmount());
+
+                    }
+                }
+
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(selectedListing.getTitle());
@@ -135,7 +147,8 @@ public class SingleTicket extends Fragment {
                 ticketPriceTextView.setText("$" + selectedListing.getPrice().toString());
 
                 TextView sellerNameTextView = v.findViewById(R.id.sellerName);
-                sellerNameTextView.setText(selectedListing.getUsername().toString()); // TODO redundant toString?
+                sellerNameTextView.setText(selectedListing.getSeller().toString()); // TODO redundant toString?
+                sellerNameTextView.setText(selectedListing.getSeller().toString());
 
                 SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                 SimpleDateFormat outputFormat = new SimpleDateFormat("EEE MM/dd/yyyy 'at' hh:mm a", Locale.getDefault());
@@ -169,7 +182,7 @@ public class SingleTicket extends Fragment {
                 buy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dbHelper.boughtTicket(selectedListing);
+                        dbHelper.boughtTicket(selectedListing, userLoggedInUsername);
                         showCongratulationsPopup();
                         // TODO make notification when buy is clicked; also add strings to resources
                         NotificationHelper notificationHelper = NotificationHelper.getInstance();
@@ -281,10 +294,10 @@ public class SingleTicket extends Fragment {
         String message = "";
         try {
             dbHelper.addOffer(listing.getId(), offerAmount, userLoggedInUsername, "PENDING");
-            message = "We successfully sent a new CounterOffer to " + listing.getUsername() + " for $" + offerAmount;
+            message = "We successfully sent a new CounterOffer to " + listing.getSeller() + " for $" + offerAmount;
         }catch(SQLiteConstraintException e){
             dbHelper.updateOffer(listing.getId(), offerAmount, userLoggedInUsername);
-            message = "We successfully sent your updated CounterOffer to " + listing.getUsername() + " for $" + offerAmount;
+            message = "We successfully sent your updated CounterOffer to " + listing.getSeller() + " for $" + offerAmount;
         }
 
         // Replace placeholders with actual values
@@ -304,6 +317,9 @@ public class SingleTicket extends Fragment {
                 popupWindow.dismiss();
             }
         }, 5000); // Adjust the delay (in milliseconds) as needed
+
+        FragmentManager fragmentManager = getParentFragmentManager();
+        fragmentManager.popBackStack();
     }
 
     private boolean isValidNumber(String input) {

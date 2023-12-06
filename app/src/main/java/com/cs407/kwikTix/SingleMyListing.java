@@ -94,7 +94,6 @@ public class SingleMyListing extends Fragment {
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(selectedListing.getTitle());
 
-
                 TextView locationNameTextView = v.findViewById(R.id.gameLocation);
                 locationNameTextView.setText(selectedListing.getCollege()); // Set the college name
 
@@ -165,12 +164,11 @@ public class SingleMyListing extends Fragment {
                         TicketOffers offersFragment = new TicketOffers();
 
                         Bundle bundle = new Bundle();
-                        bundle.putString("username", userLoggedIn);
+                        bundle.putSerializable("selectedListing", selectedListing);
                         offersFragment.setArguments(bundle);
 
                         fragmentManager.beginTransaction()
                                 .replace(R.id.fragmentContainerView, offersFragment)
-                                .setReorderingAllowed(true)
                                 .addToBackStack("showing Post")
                                 .commit();
                     }

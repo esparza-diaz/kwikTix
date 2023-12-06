@@ -29,46 +29,14 @@ public class OfferAdapter extends ArrayAdapter<Offer> {
         Tickets ticket = dbHelper.getTicket(currentOffer.getId());
 
         TextView ticketName = convertView.findViewById(R.id.ticketName);
-        //TextView labelGame = convertView.findViewById(R.id.labelGame);
         TextView gameName = convertView.findViewById(R.id.gameName);
-        //TextView labelLocation = convertView.findViewById(R.id.labelLocation);
-        //TextView gameLocation = convertView.findViewById(R.id.gameLocation);
-        //TextView labelListingPrice = convertView.findViewById(R.id.labelListingPrice);
-        //TextView listingPrice = convertView.findViewById(R.id.listingPrice);
-        //TextView labelSeller = convertView.findViewById(R.id.labelSeller);
-        //TextView sellerName = convertView.findViewById(R.id.sellerName);
-        //TextView labelDateTime = convertView.findViewById(R.id.labelDateTime);
-        //TextView dateTime = convertView.findViewById(R.id.dateTime);
-        //TextView labelOfferedPrice = convertView.findViewById(R.id.labelOfferedPrice);
-        //TextView offeredPrice = convertView.findViewById(R.id.offeredPrice);
-        //TextView labelStatus = convertView.findViewById(R.id.labelStatus);
         TextView offerStatus = convertView.findViewById(R.id.offerStatus);
-
-        String offerStatusLabel="";
-        if(currentOffer.getStatus()=="1"){
-            offerStatusLabel="Accepted";
-        }
-        else if(currentOffer.getStatus()=="0"){
-            offerStatusLabel="Rejected";
-        }
 
 
         if (currentOffer != null) {
-            //ticketName.setText(currentOffer.getTitle());
-            //labelGame.setText("Game: ");
+            ticketName.setText(ticket.getTitle());
             gameName.setText(ticket.getTitle());
-            //labelLocation.setText("Location: ");
-            //gameLocation.setText("Location");
-            //labelListingPrice.setText("Listing Price: ");
-            //listingPrice.setText(currentOffer.getTicket().getPrice());
-            //labelSeller.setText("Seller: ");
-            //sellerName.setText(currentOffer.getSeller());
-            //labelDateTime.setText("Date/Time: ");
-            //dateTime.setText(currentOffer.getTicket().getDate());
-            //labelOfferedPrice.setText("Offered Price: ");
-            //offeredPrice.setText(currentOffer.getPrice());
-            //labelStatus.setText("Status: ");
-            offerStatus.setText(offerStatusLabel);
+            offerStatus.setText(currentOffer.getStatus());
         }
 
         return convertView;

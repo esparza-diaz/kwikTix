@@ -85,7 +85,7 @@ public class SingleOffer extends Fragment {
         // Retrieve the selectedListing from arguments
         Bundle args = getArguments();
         if (args != null) {
-            Offer selectedOffer = (Offer) args.getSerializable("selectedListing");
+            Offer selectedOffer = (Offer) args.getSerializable("selectedOffer");
             if (selectedOffer != null) {
                 //retrieve ticket that the offer is associated with
                 Tickets ticket = dbHelper.getTicket(selectedOffer.getId());

@@ -62,8 +62,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Game: "
-                android:textStyle="bold"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/gameName"
@@ -117,8 +117,6 @@
                 android:textSize="22sp" />
 
         </LinearLayout>
-
-        <!-- Seller -->
 
         <!-- Date/Time -->
         <LinearLayout

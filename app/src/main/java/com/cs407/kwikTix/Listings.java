@@ -3,6 +3,7 @@ package com.cs407.kwikTix;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -74,9 +75,6 @@ public class Listings extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            userLoggedIn = getArguments().getString("username");
-        }
     }
 
     TicketAdapter adapter;
@@ -99,11 +97,10 @@ public class Listings extends Fragment {
         View v =  inflater.inflate(R.layout.listings_fragment, container, false);
         ticketsListView = (ListView) v.findViewById(R.id.myListings);
 
-        //Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test");
-        //Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test");
-        // Init DB
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+        userLoggedIn = sharedPreferences.getString("username","");
 
         ArrayList<Tickets> allTickets = dbHelper.getListings(null,null, null, false);
 

@@ -231,13 +231,18 @@ public class Post extends Fragment {
                 DBHelper dbHelper = new DBHelper(sqLiteDatabase);
                 dbHelper.addTicket(gameTitle, dateTime,price, college, userLoggedIn,"1");
 
-                Listings listingsFragment = (Listings) getParentFragmentManager().findFragmentByTag("showing Listings");
-                if (listingsFragment != null) {
-                    listingsFragment.refreshListings();
-                }
+            //    Listings listingsFragment = (Listings) getParentFragmentManager().findFragmentByTag("showing Listings");
+             //   if (listingsFragment != null) {
+              //      listingsFragment.refreshListings();
+               // }
+
+                Listings listingsFragment = new Listings();
+                Bundle bundle = new Bundle();
+                bundle.putString("username", userLoggedIn);
+                listingsFragment.setArguments(bundle);
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, Listings.class, null)
+                        .replace(R.id.fragmentContainerView, listingsFragment)
                         .setReorderingAllowed(true)
                         .addToBackStack("showing Listings")
                         .commit();

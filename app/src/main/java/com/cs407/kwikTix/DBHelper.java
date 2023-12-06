@@ -184,29 +184,36 @@ public class DBHelper {
                 new String[]{content,date,title,username});
     }
 
-<<<<<<< HEAD
+*/
+//"(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT,date DATETIME,price TEXT, college TEXT,username TEXT, available TEXT)
     public Tickets getTicket(String key){
         createTable();
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE title LIKE ?",
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE id LIKE ?",
                 new String[]{"%" + key + "%"});
+
+        int idIndex = c.getColumnIndex("id");
+        int titleIndex = c.getColumnIndex("title");
         int dateIndex = c.getColumnIndex("date");
-        int collegeIndex = c.getColumnIndex("college");
         int priceIndex = c.getColumnIndex("price");
+        int collegeIndex = c.getColumnIndex("college");
         int usernameIndex = c.getColumnIndex("username");
+        int availableIndex = c.getColumnIndex("available");
+
         c.moveToFirst();
+        String id = c.getString(idIndex);
+        String title = c.getString(titleIndex);
         String date = c.getString(dateIndex);
-        String college = c.getString(collegeIndex);
         String price = c.getString(priceIndex);
-        String username=c.getString(usernameIndex);
-        Tickets t = new Tickets(key,date,price,college,username);
+        String college = c.getString(collegeIndex);
+        String username = c.getString(usernameIndex);
+        String available = c.getString(availableIndex);
 
+        Tickets ticket = new Tickets(title,id,date,price,college,username,available);
         c.close();
-        return t;
-    }
-=======
 
- */
-// String strSQL = "UPDATE myTable SET Column1 = someValue WHERE columnId = "+ someValue;
+        return ticket;
+    }
+
     /**
      * Gets listings for a specific user
      * @param username

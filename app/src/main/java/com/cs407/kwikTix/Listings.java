@@ -103,14 +103,13 @@ public class Listings extends Fragment {
         View v =  inflater.inflate(R.layout.listings_fragment, container, false);
         ticketsListView = (ListView) v.findViewById(R.id.myListings);
 
-        //Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test");
-        //Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test");
-        // Init DB
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+        userLoggedInUsername = sharedPreferences.getString("username","");
 
         ArrayList<Tickets> allTickets = dbHelper.getListings(null,null, null, false);
-
+        displayListings.clear();
         for (Tickets ticket: allTickets) {
             if (!ticket.getUsername().equals(userLoggedInUsername) && ticket.getAvailable().equals("1")) {
                 displayListings.add(ticket);
@@ -312,11 +311,13 @@ public class Listings extends Fragment {
     public void refreshListings() {
         ArrayList<Tickets> tix;
 
-        if(college.equals("All Colleges")) {
+        if (college.equals("All Colleges")) {
             tix = dbHelper.getListings(null, null, sort_by, desc);
         } else {
             tix = dbHelper.getListings(null, college, sort_by, desc);
         }
+
+        displayListings.clear();
 
         for (Tickets ticket: tix) {
             if (!ticket.getUsername().equals(userLoggedInUsername) && ticket.getAvailable().equals("1")) {
@@ -329,7 +330,7 @@ public class Listings extends Fragment {
         }
 
         adapter.clear();
-        adapter.addAll(displayListings);
+        adapter.addAll(tix);
 
         // Notify the adapter that the data has changed
         adapter.notifyDataSetChanged();

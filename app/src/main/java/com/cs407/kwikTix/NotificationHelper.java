@@ -196,17 +196,15 @@ public class NotificationHelper {
 
         // Sets notification content based on notification type
         if (notificationType.equals(BUYER_OFFER_UPDATE)) {
-            setNotificationType(notificationType);
+            setNotificationType("Offer Update: " + ticketTitle);
 
             switch (offerStatus) {
                 case "REJECTED":
-                    notificationContent = "REJECTED: Your offer for the "
-                            + ticketTitle + " ticket has been rejected.";
+                    notificationContent = "REJECTED: Your offer has been rejected.";
                     break;
                 case "ACCEPTED":
-                    notificationContent = "ACCEPTED: Your offer for the "
-                            + ticketTitle + " ticket has been accepted. \n"
-                            + "Please contact " + seller.getUsername() + " at -- " + sellerContactInfo;
+                    notificationContent = "ACCEPTED: For purchasing, please contact "
+                            + seller.getUsername() + " at -- " + sellerContactInfo;
                     break;
                 default:
                     break;
@@ -216,27 +214,24 @@ public class NotificationHelper {
         // Sets notification content based on notification type
         if (notificationType.equals(SELLER_TICKET_PURCHASED)) {
             Log.d("notificationType (if equals SELLER_TICKET_PURCHASED", notificationType);
-            setNotificationType(notificationType);
+            setNotificationType("PURCHASED: " + ticketTitle);
             String testNotificationType = getNotificationType();
             Log.d("after getNotifcation", "WOOP");
 
-            notificationContent = "PURCHASED: Your " + ticketTitle + " ticket has been purchased"
-                    + " by " + buyer + "\n Please contact " + buyer + " at -- " + buyerContactInfo;
+            notificationContent = "Please contact " + buyer + " at -- " + buyerContactInfo;
         }
 
         // Sets notification content based on notification type
         if (notificationType.equals(SELLER_ACCEPT_REJECT)) {
-            setNotificationType(notificationType);
+            setNotificationType(notificationType + ": " + ticketTitle);
 
-            notificationContent = "OFFER: " + buyer.getUsername() + " wants to buy your " + ticketTitle
-                    + " ticket for -- $" + offerAmount + ".";
+            notificationContent = buyer.getUsername() + "is offering $" + offerAmount + ".";
         }
 
         if (notificationType.equals(BUYER_PURCHASED_TICKET)) {
-            setNotificationType(BUYER_PURCHASED_TICKET);
+            setNotificationType("SUCCESSFUL PURCHASE: " + ticketTitle);
 
-            notificationContent = "PURCHASED: You purchased " + ticketTitle + " from"
-                    + seller.getUsername() + ". \n Please contact " + seller.getUsername() + " at -- " + sellerContactInfo;
+            notificationContent = "Please contact " + seller.getUsername() + " at -- " + sellerContactInfo;
         }
 
         // Adds notification to list
@@ -256,6 +251,7 @@ public class NotificationHelper {
         NotificationItem item;
         if (id == -1) {
             item = notificationItems.get(notificationItems.size() -1);
+            Log.d("notificationItems.size()", Integer.toString(notificationItems.size()));
         } else {
             item = notificationItems.get(id);
         }
@@ -311,6 +307,7 @@ public class NotificationHelper {
                 .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                 .setContentTitle(item.getNotificationType())
                 .setContentText(item.getContent())
+                .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         if (item.getNotificationType().equals(SELLER_ACCEPT_REJECT)) {

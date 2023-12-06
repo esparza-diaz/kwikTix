@@ -103,7 +103,7 @@ public class Listings extends Fragment {
         userLoggedIn = sharedPreferences.getString("username","");
 
         ArrayList<Tickets> allTickets = dbHelper.getListings(null,null, null, false);
-
+        displayListings.clear();
         for (Tickets ticket: allTickets) {
             if (!ticket.getUsername().equals(userLoggedIn) && ticket.getAvailable().equals("1")) {
                 displayListings.add(ticket);
@@ -303,11 +303,13 @@ public class Listings extends Fragment {
     public void refreshListings() {
         ArrayList<Tickets> tix;
 
-        if(college.equals("All Colleges")) {
+        if (college.equals("All Colleges")) {
             tix = dbHelper.getListings(null, null, sort_by, desc);
         } else {
             tix = dbHelper.getListings(null, college, sort_by, desc);
         }
+
+        displayListings.clear();
 
         for (Tickets ticket: tix) {
             if (!ticket.getUsername().equals(userLoggedIn) && ticket.getAvailable().equals("1")) {
@@ -320,7 +322,7 @@ public class Listings extends Fragment {
         }
 
         adapter.clear();
-        adapter.addAll(displayListings);
+        adapter.addAll(tix);
 
         // Notify the adapter that the data has changed
         adapter.notifyDataSetChanged();

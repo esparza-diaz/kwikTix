@@ -40,10 +40,10 @@ public class ListingAdapter extends ArrayAdapter<Tickets> {
         TextView offerStatus = convertView.findViewById(R.id.offerStatus);
 
         String ticketAvailability="";
-        if(currentListing.getAvailable()=="1"){
+        if(currentListing.getAvailable().equals("1")){
             ticketAvailability="Available";
         }
-        else if(currentListing.getAvailable()=="0"){
+        else if(currentListing.getAvailable().equals("0")){
             ticketAvailability="Purchased";
             //TODO figure out what labels we want for different statuses
         }

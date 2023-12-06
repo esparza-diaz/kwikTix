@@ -105,7 +105,13 @@ public class SingleOffer extends Fragment {
                 ticketPriceTextView.setText("$" + ticket.getPrice().toString());
 
                 TextView sellerNameTextView = v.findViewById(R.id.sellerName);
-                sellerNameTextView.setText(ticket.getUsername());
+                sellerNameTextView.setText(ticket.getSeller());
+
+                TextView offeredPriceTextView = v.findViewById(R.id.offeredPrice);
+                offeredPriceTextView.setText(selectedOffer.getOfferAmount());
+
+                TextView offerStatusTextView = v.findViewById(R.id.offerStatus);
+                offerStatusTextView.setText(selectedOffer.getStatus());
 
                 SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                 SimpleDateFormat outputFormat = new SimpleDateFormat("EEE MM/dd/yyyy 'at' hh:mm a", Locale.getDefault());

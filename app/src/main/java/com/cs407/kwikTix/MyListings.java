@@ -2,6 +2,7 @@ package com.cs407.kwikTix;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.Uri;
@@ -68,9 +69,6 @@ public class MyListings extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            userLoggedIn = getArguments().getString("username");
-        }
     }
 
     ListingAdapter adapter;
@@ -85,12 +83,13 @@ public class MyListings extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_profile_listing, container, false);
-        myticketsListView = (ListView) v.findViewById(R.id.myListings);
 
-        // Init DB
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+        userLoggedIn = sharedPreferences.getString("username","");
 
+        myticketsListView = (ListView) v.findViewById(R.id.myListings);
         displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
 
         adapter = new ListingAdapter(v.getContext(), displayListings);

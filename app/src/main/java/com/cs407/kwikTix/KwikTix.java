@@ -52,14 +52,14 @@ public class KwikTix  extends AppCompatActivity {
                 // Adds offers to list of offers in need of a response
                 if (offer.getStatus().equals("PENDING")) {
                     offersToRespondTo.add(offer);
-                    Log.d("Offer to Respond to: ", ticket.getUsername()
+                    Log.d("Offer to Respond to: ", ticket.getBuyer()
                             + " -- " + offer.getId() + " -- " + offer.getBuyerUsername());
                 }
 
                 // Adds offers (purchased tickets) to purchased offers
                 if (ticket.getAvailable().equals("0")) {
                     purchasedOffers.add(offer);
-                    Log.d("Purchased ticket: ", ticket.getUsername()
+                    Log.d("Purchased ticket: ", ticket.getBuyer()
                             + " -- " + offer.getId() + " -- " + offer.getBuyerUsername());
                 }
             }
@@ -115,7 +115,7 @@ public class KwikTix  extends AppCompatActivity {
 
         buyer = dbHelper.getUser(userLoggedInUsername);
         for (Offer offer : userOffers) {
-            seller = dbHelper.getUser(dbHelper.getTicket(offer.getId()).getUsername());
+            seller = dbHelper.getUser(dbHelper.getTicket(offer.getId()).getSeller());
             String offerStatus = offer.getStatus();
             String offerAmount = offer.getOfferAmount();
             String offerId = offer.getId();

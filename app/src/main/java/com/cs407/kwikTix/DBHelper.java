@@ -79,7 +79,7 @@ public class DBHelper {
     /**
      * Declines offer given the key
      */
-    public void declineOffer(Offer offer){
+    public void acceptOffer(Offer offer){
         createTable();
         Tickets ticket = getTicket(offer.getId());
         String buyer = offer.getBuyerUsername();
@@ -99,14 +99,12 @@ public class DBHelper {
     /**
      * Accept offer
      */
-    public void acceptOffer(Offer offer){
-        // update listing price to reflect accepted price
-        String sellPrice = offer.getOfferAmount();
-        String id = offer.getId();
-        sqLiteDatabase.execSQL("UPDATE listings SET price = ? WHERE id = ?",
-                new String[]{sellPrice,id});
-        // update listing status
+    public void declineOffer(Offer offer){
+        // set offer status to REJECTED
+        sqLiteDatabase.execSQL("UPDATE offers SET status = ? WHERE id = ? AND buyerUsername = ?",
+                new String[]{"REJECTED",offer.getId(), offer.getBuyerUsername()});
     }
+
     /**
      * Adds ticket to listings db
      * @param title

@@ -1,13 +1,17 @@
 package com.cs407.kwikTix;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -24,16 +28,11 @@ public class TicketOffers extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private static final String ARG_PARAM3 = "param3";
 
     // TODO: Rename and change types of parameters
-    private String sellerUsername;
     private String userLoggedIn;
-    private String offerAmount;
 
-    public static ArrayList<Offer> t1offers;
-    public static ArrayList<Offer> t2offers;
+    private static Tickets ticket;
 
     public TicketOffers() {
     }
@@ -43,16 +42,14 @@ public class TicketOffers extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment Listings.
      */
     // TODO: Rename and change types and number of parameters
-    public static TicketOffers newInstance(Tickets t, String param1, String param2, String param3) {
+    public static TicketOffers newInstance(Tickets t, String param1) {
         TicketOffers fragment = new TicketOffers();
+        ticket=t;
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,67 +57,50 @@ public class TicketOffers extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            sellerUsername = getArguments().getString("sellerUsername");
-            userLoggedIn = getArguments().getString("buyerUsername");
-            offerAmount = getArguments().getString("offerAmount");
-        }
     }
 
-    TicketAdapter adapter;
-    ArrayList<Tickets> displayOffers;
+    TicketOfferAdapter adapter;
+    ArrayList<Offer> displayTicketOffers = new ArrayList<Offer>();
     SQLiteDatabase sqLiteDatabase;
     DBHelper dbHelper;
+    ListView ticketOffersListView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.offers_fragment_placeholder, container, false);
-        ListView ticketsListView = (ListView) v.findViewById(R.id.myOffers);
-
-        //Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test");
-        //Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test");
-        //Tickets t1 = new Tickets("Iowa Game", "Jan 1st 8:00pm", "50.00", "Texas", "test", "40.00");
-        //Tickets t2 = new Tickets("Nebraska Game", "Jan 2st 8:00pm", "75.00", "Texas", "test", "60.00");
+        View v =  inflater.inflate(R.layout.fragment_profile_ticket_offers, container, false);
+        ticketOffersListView = (ListView) v.findViewById(R.id.ticketOffers);
 
         // Init DB
-        sqLiteDatabase = v.getContext().openOrCreateDatabase("kwikTix", Context.MODE_PRIVATE, null);
+        sqLiteDatabase = v.getContext().openOrCreateDatabase("KwikTix", Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+        userLoggedIn = sharedPreferences.getString("username","");
 
-       // dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername());
-        //dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername());
-        // TODO: figure out how to add the offer amount(s) associated with tickets
-        //dbHelper.addTicket(t1.getTitle(), t1.getDate(), t1.getPrice(), t1.getCollege(), t1.getUsername(), t1.getOfferAmount());
-        //dbHelper.addTicket(t2.getTitle(), t2.getDate(), t2.getPrice(), t2.getCollege(), t2.getUsername(), t2.getOfferAmount());
+        //filter offers by username, not by ticket id
+        //TODO: make sure we are able to get the ticket ID
+        displayTicketOffers = dbHelper.getOffers(null,ticket.getId());
 
-        // TODO: HARDCODED LISTINGS
-        //displayOffers = dbHelper.getOffers();
-        //dbHelper.addOffer(t1, userLoggedIn, 1, 40.00);
-        //dbHelper.addOffer(t2, userLoggedIn, 2, 60.00);
-//      t1Offers = dbHelper.getOffers(t1, userLoggedIn);
-//      t2Offers = dbHelper.getOffers(t2, userLoggedIn);
-        TicketAdapter adapter = new TicketAdapter(v.getContext(), displayOffers);
-        ticketsListView.setAdapter(adapter);
+        adapter.setUsername(userLoggedIn);
+        adapter = new TicketOfferAdapter(v.getContext(), displayTicketOffers);
+        ticketOffersListView.setAdapter(adapter);
 
         FragmentManager fragmentManager = getParentFragmentManager();
-        ticketsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ticketOffersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Tickets selectedOffer = displayOffers.get(i);
+                Offer selectedOffer = displayTicketOffers.get(i);
+                //TODO: add methods for onClick of buttons to accept or reject offers
+                //not sure if these methods will go inside or outside this onItemClick method
+            }
+        });
 
-                // Create a new instance of SingleTicketFragment and pass the selectedListing
-                SingleTicket singleTicketFragment = new SingleTicket();
-                Bundle args = new Bundle();
-                args.putSerializable("selectedOffer", selectedOffer);
-                args.putString("username",userLoggedIn);
-                singleTicketFragment.setArguments(args);
-
-                // Replace Listings fragment with SingleTicketFragment
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, singleTicketFragment)
-                        .setReorderingAllowed(true)
-                        .addToBackStack("showing Single Offer")
-                        .commit();
+        // Handle Back button click
+        ImageButton backButton = v.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentManager.popBackStack();
             }
         });
 
@@ -129,8 +109,14 @@ public class TicketOffers extends Fragment {
 
 
     public void refreshOffers() {
-        // TODO: Update the data from the database
-        //displayOffers = dbHelper.getOffers();
+        // Notify the adapter that the data has changed
+        Log.i("TEST", displayTicketOffers.toString());
+
+        if (displayTicketOffers.size() == 0){
+            Toast.makeText(requireContext(),"No offers found", Toast.LENGTH_LONG).show();
+        }
+        adapter.clear();
+        adapter.addAll(displayTicketOffers);
 
         // Notify the adapter that the data has changed
         adapter.notifyDataSetChanged();

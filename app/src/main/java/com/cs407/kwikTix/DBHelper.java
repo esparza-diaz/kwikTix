@@ -77,6 +77,35 @@ public class DBHelper {
     }
 
     /**
+     * Declines offer given the key
+     */
+    public void acceptOffer(Offer offer){
+        createTable();
+        Tickets ticket = getTicket(offer.getId());
+        String buyer = offer.getBuyerUsername();
+        String id = offer.getId();
+        String amt = offer.getOfferAmount();
+        boughtTicket(ticket,buyer);
+
+        // update price to reflect offer price
+        sqLiteDatabase.execSQL("UPDATE listings SET price = ? WHERE id = ?",
+                new String[]{amt,id});
+
+        // set the accepted offer
+        sqLiteDatabase.execSQL("UPDATE offers SET status = ? WHERE id = ? AND buyerUsername = ?",
+                new String[]{"ACCEPTED",id,buyer});
+    }
+
+    /**
+     * Accept offer
+     */
+    public void declineOffer(Offer offer){
+        // set offer status to REJECTED
+        sqLiteDatabase.execSQL("UPDATE offers SET status = ? WHERE id = ? AND buyerUsername = ?",
+                new String[]{"REJECTED",offer.getId(), offer.getBuyerUsername()});
+    }
+
+    /**
      * Adds ticket to listings db
      * @param title
      * @param date
@@ -111,7 +140,8 @@ public class DBHelper {
 
     public void updateOffer(String id, String offerAmount, String buyerUsername){
         createTable();
-        sqLiteDatabase.execSQL("UPDATE offers SET offerAmount = ? WHERE id = ? AND buyerUsername = ?",
+        // update amount and set status back to pending
+        sqLiteDatabase.execSQL("UPDATE offers SET offerAmount = ?, status = 'PENDING' WHERE id = ? AND buyerUsername = ?",
                 new String[]{offerAmount,id,buyerUsername});
     }
 

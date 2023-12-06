@@ -7,7 +7,8 @@
     <string name="ACCEPTED">ACCEPTED</string>
     <string name="REJECTED">REJECTED</string>
     <string name="BUYER_OFFER_UPDATE">Buyer Offer Update</string>
-    <string name="SELLER_TICKET_PURCHASED">Ticket Purchased</string>
+    <string name="BUYER_PURCHASED_TICKET">Buyer Purchased Ticket</string>
+    <string name="SELLER_TICKET_PURCHASED">Seller Ticket Purchased</string>
     <string name="CHANNEL_DESCRIPTION">Displays ticket interactions for users.</string>
     <string name="sql_db">KwikTix</string>
     <string-array name="contact_methods_array">

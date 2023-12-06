@@ -36,6 +36,7 @@ public class NotificationHelper {
     public static final String ACCEPTED = "ACCEPTED";
     public static final String REJECTED = "REJECTED";
     public static String BUYER_OFFER_UPDATE = null;
+    public static String BUYER_PURCHASED_TICKET = null;
     public static String SELLER_TICKET_PURCHASED = null;
     final ArrayList<NotificationItem> notificationItems = new ArrayList<>();
     //    private Users buyer;
@@ -123,8 +124,10 @@ public class NotificationHelper {
         SELLER_ACCEPT_REJECT = context.getString(R.string.SELLER_ACCEPT_REJECT);
         BUYER_OFFER_UPDATE = context.getString(R.string.BUYER_OFFER_UPDATE);
         SELLER_TICKET_PURCHASED = context.getString(R.string.SELLER_TICKET_PURCHASED);
+        BUYER_PURCHASED_TICKET = context.getString(R.string.BUYER_PURCHASED_TICKET);
         areStringsSet = true;
     }
+
 
     public void createNotificationChannel(Context context) { // TODO fix repeated channel creation after. Executes whenever main activity launches.
         if (!areStringsSet) {
@@ -161,7 +164,7 @@ public class NotificationHelper {
 
 
     public void setNotificationContent(Context context, Users buyer, Users seller, String ticketTitle,
-                                       int offerAmount, int offerStatus, String notificationType) {
+                                       String offerAmount, String offerStatus, String notificationType) {
 
         if (!areStringsSet) {
             setResourceStrings(context);
@@ -187,11 +190,11 @@ public class NotificationHelper {
             setNotificationType(notificationType);
 
             switch (offerStatus) {
-                case 1:
+                case "REJECTED":
                     notificationContent = "REJECTED: Your offer for the "
                             + ticketTitle + " ticket has been rejected.";
                     break;
-                case 2:
+                case "ACCEPTED":
                     notificationContent = "ACCEPTED: Your offer for the "
                             + ticketTitle + " ticket has been accepted. \n"
                             + "Please contact " + seller.getUsername() + " at -- " + sellerContactInfo;
@@ -220,6 +223,13 @@ public class NotificationHelper {
                     + " ticket for -- $" + offerAmount + ".";
         }
 
+        if (notificationType.equals(BUYER_PURCHASED_TICKET)) {
+            setNotificationType(BUYER_PURCHASED_TICKET);
+
+            notificationContent = "PURCHASED: You purchased " + ticketTitle + " from"
+                    + seller.getUsername() + ". \n Please contact " + seller.getUsername() + " at -- " + sellerContactInfo;
+        }
+
         // Adds notification to list
         NotificationItem item = new NotificationItem(
                 buyer.getUsername(),
@@ -232,7 +242,6 @@ public class NotificationHelper {
     }
 
     public void showNotification(Context context, int id) {
-//        Log.d("showNotification: notificationType", getNotificationType());
         NotificationItem item;
         if (id == -1) {
             item = notificationItems.get(notificationItems.size() -1);

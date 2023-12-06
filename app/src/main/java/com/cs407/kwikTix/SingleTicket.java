@@ -178,10 +178,11 @@ public class SingleTicket extends Fragment {
                                 userLoggedIn,
                                 seller,
                                 selectedListing.getTitle(),
-                                -1,
-                                2,
-                                getContext().getString(R.string.SELLER_TICKET_PURCHASED));
-                        notificationHelper.showNotification(requireContext(), -1);
+                                null,
+                                "ACCEPTED",
+                                getContext().getString(R.string.BUYER_PURCHASED_TICKET));
+                        notificationHelper.showNotification(
+                                requireContext(), -1);
                     }
                 });
 
@@ -192,17 +193,6 @@ public class SingleTicket extends Fragment {
                     public void onClick(View view) {
                         // Inside the onClickListener for the counterOfferButton
                         showCounterOfferPopup(selectedListing, counterOfferAmount.getText().toString());
-
-                        NotificationHelper notificationHelper = NotificationHelper.getInstance();
-                        notificationHelper.setNotificationContent(
-                                requireContext(),
-                                userLoggedIn,
-                                seller,
-                                selectedListing.getTitle(),
-                                Integer.parseInt(counterOfferAmount.getText().toString()),
-                                0,
-                                "Accept or Reject");
-                        notificationHelper.showNotification(requireContext(), -1);
                     }
                 });
             }

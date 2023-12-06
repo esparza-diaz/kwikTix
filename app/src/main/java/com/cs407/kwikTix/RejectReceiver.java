@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class RejectReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -16,8 +19,22 @@ public class RejectReceiver extends BroadcastReceiver {
 
         String rejectedOfferId = intent.getStringExtra("offerId");
         String listingId = intent.getStringExtra("listingId");
+        String buyerUsername = intent.getStringExtra("buyerUsername");
         Log.d("rejectedOfferId", rejectedOfferId);
         Log.d("listingId", listingId);
+        Log.d("buyerUsername", buyerUsername);
+
+
+        ArrayList<Offer> offers = dbHelper.getOffers(buyerUsername, listingId);
+        Offer offer;
+        if (offers.size() != 0) {
+            offer = offers.get(0);
+            Log.d("Reject Offer Info", offer.getBuyerUsername());
+            dbHelper.declineOffer(offer);
+        } else {
+            Log.d("Reject Offer Info", "didn't find offer");
+
+        }
 
         Toast.makeText(context, context.getString(R.string.REJECTED),
                 Toast.LENGTH_LONG).show();

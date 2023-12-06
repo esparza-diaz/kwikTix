@@ -259,8 +259,10 @@ public class NotificationHelper {
         } else {
             item = notificationItems.get(id);
         }
+
         String offerId = item.getOfferId();
         String listingId = item.getListingId();
+        String buyerUsername = item.getBuyerUsername();
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
             != PackageManager.PERMISSION_GRANTED) {
@@ -273,6 +275,7 @@ public class NotificationHelper {
         Intent acceptIntent = new Intent(context, AcceptReceiver.class);
         acceptIntent.putExtra("offerId", offerId);
         acceptIntent.putExtra("listingId", listingId);
+        acceptIntent.putExtra("buyerUsername", buyerUsername);
 
         PendingIntent acceptPendingIntent =
                 PendingIntent.getBroadcast(context,
@@ -283,6 +286,7 @@ public class NotificationHelper {
         Intent rejectIntent = new Intent(context, RejectReceiver.class);
         rejectIntent.putExtra("offerId", offerId);
         rejectIntent.putExtra("listingId", listingId);
+        rejectIntent.putExtra("buyerUsername", buyerUsername);
 
 
         PendingIntent rejectPendingIntent =

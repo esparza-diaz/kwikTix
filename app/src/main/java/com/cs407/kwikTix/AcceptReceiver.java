@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class AcceptReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -16,9 +18,21 @@ public class AcceptReceiver extends BroadcastReceiver {
 
         String acceptedOfferId = intent.getStringExtra("offerId");
         String listingId = intent.getStringExtra("listingId");
+        String buyerUsername = intent.getStringExtra("buyerUsername");
         Log.d("acceptedOfferId", acceptedOfferId);
         Log.d("listingId", listingId);
+        Log.d("buyerUsername", buyerUsername);
 
+        ArrayList<Offer> offers = dbHelper.getOffers(buyerUsername, listingId);
+        Offer offer;
+        if (offers.size() != 0) {
+            offer = offers.get(0);
+            Log.d("Accept Offer Info", offer.getBuyerUsername());
+            dbHelper.acceptOffer(offer);
+        } else {
+            Log.d("Accept Offer Info", "didn't find offer");
+
+        }
 
         Toast.makeText(context, context.getString(R.string.ACCEPTED),
                 Toast.LENGTH_LONG).show();

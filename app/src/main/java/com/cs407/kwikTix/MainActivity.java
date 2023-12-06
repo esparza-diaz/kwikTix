@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE,null);
         dbHelper = new DBHelper(sqLiteDatabase);
         colleges = new ArrayList<>();
+        //hardcoding for testing
+        dbHelper.addUser("test","test","test@gmail.com","4144293949","E-Mail","Wisconsin");
+        dbHelper.addUser("test2","test","test@gmail.com","4144293949","Phone","Wisconsin");
         // creates colleges db from college.csv
         try {
             InputStream inputStream = getAssets().open("colleges.csv");

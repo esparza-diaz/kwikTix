@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,7 +89,7 @@ public class SingleMyListing extends Fragment {
             Tickets selectedListing = (Tickets) args.getSerializable("selectedListing");
             if (selectedListing != null) {
                 Log.i("TEST",selectedListing.getTitle());
-                Log.i("TEST",selectedListing.getUsername());
+                Log.i("TEST",selectedListing.getSeller());
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(selectedListing.getTitle());
@@ -142,6 +143,31 @@ public class SingleMyListing extends Fragment {
                         fragmentManager.popBackStack();
                     }
                 });
+
+                LinearLayout ticketNotBoughtLayout = v.findViewById(R.id.ticketNotBought);
+                LinearLayout ticketBoughtLayout = v.findViewById(R.id.ticketBought);
+
+                // if ticket bought
+                if (selectedListing.getAvailable().equals("0")){
+                    ticketNotBoughtLayout.setVisibility(View.GONE);
+                    ticketBoughtLayout.setVisibility(View.VISIBLE);
+                    TextView finalPriceTextView = v.findViewById(R.id.finalPrice);
+                    TextView buyerTextView = v.findViewById(R.id.buyerUsername);
+                    TextView contactTextView = v.findViewById(R.id.buyerInfo);
+
+                    finalPriceTextView.setText(selectedListing.getPrice());
+                    buyerTextView.setText(selectedListing.getBuyer());
+                    Users user = dbHelper.getUser(selectedListing.getBuyer());
+                    if (user.getPrefContactMethod().equals("Phone")){
+                        contactTextView.setText(user.getPhone());
+                    }else{
+                        contactTextView.setText(user.getEmail());
+                    }
+
+                }else{
+                    ticketNotBoughtLayout.setVisibility(View.VISIBLE);
+                    ticketBoughtLayout.setVisibility(View.GONE);
+                }
 
 //                Button buy = v.findViewById(R.id.buyNowButton);
 //                buy.setOnClickListener(new View.OnClickListener() {

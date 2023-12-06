@@ -105,7 +105,7 @@ public class Listings extends Fragment {
         ArrayList<Tickets> allTickets = dbHelper.getListings(null,null, null, false);
         displayListings.clear();
         for (Tickets ticket: allTickets) {
-            if (!ticket.getUsername().equals(userLoggedIn) && ticket.getAvailable().equals("1")) {
+            if (!ticket.getSeller().equals(userLoggedIn) && ticket.getAvailable().equals("1")) {
                 displayListings.add(ticket);
             }
         }
@@ -302,6 +302,7 @@ public class Listings extends Fragment {
 
     public void refreshListings() {
         ArrayList<Tickets> tix;
+        ArrayList<Tickets> tix2 = new ArrayList<>();
 
         if (college.equals("All Colleges")) {
             tix = dbHelper.getListings(null, null, sort_by, desc);
@@ -309,20 +310,18 @@ public class Listings extends Fragment {
             tix = dbHelper.getListings(null, college, sort_by, desc);
         }
 
-        displayListings.clear();
-
         for (Tickets ticket: tix) {
-            if (!ticket.getUsername().equals(userLoggedIn) && ticket.getAvailable().equals("1")) {
-                displayListings.add(ticket);
+            if (!ticket.getSeller().equals(userLoggedIn) && ticket.getAvailable().equals("1")) {
+                tix2.add(ticket);
             }
         }
 
-        if (displayListings.size() == 0){
+        if (tix2.size() == 0){
             Toast.makeText(requireContext(),"No tickets found. Modify filters.", Toast.LENGTH_SHORT).show();
         }
 
         adapter.clear();
-        adapter.addAll(tix);
+        adapter.addAll(tix2);
 
         // Notify the adapter that the data has changed
         adapter.notifyDataSetChanged();

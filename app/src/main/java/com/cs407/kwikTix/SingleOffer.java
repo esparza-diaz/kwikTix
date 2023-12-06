@@ -105,7 +105,7 @@ public class SingleOffer extends Fragment {
                 ticketPriceTextView.setText("$" + ticket.getPrice().toString());
 
                 TextView sellerNameTextView = v.findViewById(R.id.sellerName);
-                sellerNameTextView.setText(ticket.getUsername());
+                sellerNameTextView.setText(ticket.getSeller());
 
                 TextView offeredPriceTextView = v.findViewById(R.id.offeredPrice);
                 offeredPriceTextView.setText(selectedOffer.getOfferAmount());

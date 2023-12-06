@@ -231,6 +231,7 @@ public class Post extends Fragment {
                 DBHelper dbHelper = new DBHelper(sqLiteDatabase);
                 dbHelper.addTicket(gameTitle, dateTime,price, college, userLoggedIn,"1");
 
+                Toast.makeText(requireContext(), "Successfully added " + gameTitle + " for $" + price, Toast.LENGTH_SHORT).show();
                 Listings listingsFragment = (Listings) getParentFragmentManager().findFragmentByTag("showing Listings");
                 if (listingsFragment != null) {
                     listingsFragment.refreshListings();

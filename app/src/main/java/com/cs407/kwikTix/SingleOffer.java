@@ -1,21 +1,38 @@
 package com.cs407.kwikTix;
 
+import android.content.Context;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+//import pl.droidsonroids.gif.GifDrawable;
+//import pl.droidsonroids.gif.GifImageView;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SingleOffer#newInstance} factory method to
+ * Use the {@link SingleMyListing#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class SingleOffer extends Fragment {
@@ -55,46 +72,59 @@ public class SingleOffer extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userLoggedIn = getArguments().getString("buyerUsername");
+            userLoggedIn = getArguments().getString("username");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_single_offer, container, false);
+        SQLiteDatabase sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
+        DBHelper dbHelper = new DBHelper(sqLiteDatabase);
 
         // Retrieve the selectedListing from arguments
         Bundle args = getArguments();
         if (args != null) {
-            Offer selectedOffer = (Offer) args.getSerializable("selectedOffer");
+            Offer selectedOffer = (Offer) args.getSerializable("selectedListing");
             if (selectedOffer != null) {
+                //retrieve ticket that the offer is associated with
+                Tickets ticket = dbHelper.getTicket(selectedOffer.getId());
+                Log.i("TEST",ticket.getTitle());
+                Log.i("TEST",selectedOffer.getBuyerUsername());
                 // Update your UI with the selectedListing details
-                /*TextView ticketNameTextView = v.findViewById(R.id.ticketName);
-                ticketNameTextView.setText(selectedOffer.getTitle());
+                TextView ticketNameTextView = v.findViewById(R.id.ticketName);
+                ticketNameTextView.setText(ticket.getTitle());
 
                 TextView locationNameTextView = v.findViewById(R.id.gameLocation);
-                locationNameTextView.setText(selectedOffer.getTicket().getCollege());
+                locationNameTextView.setText(ticket.getCollege()); // Set the college name
 
                 TextView gameNameTextView = v.findViewById(R.id.gameName);
-                gameNameTextView.setText(selectedOffer.getTitle());
+                gameNameTextView.setText(ticket.getTitle());
 
                 TextView ticketPriceTextView = v.findViewById(R.id.ticketPrice);
-                ticketPriceTextView.setText(selectedOffer.getTicket().getPrice());
+                ticketPriceTextView.setText("$" + ticket.getPrice().toString());
 
                 TextView sellerNameTextView = v.findViewById(R.id.sellerName);
-                sellerNameTextView.setText(selectedOffer.getSeller());
+                sellerNameTextView.setText(ticket.getUsername());
 
+                SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+                SimpleDateFormat outputFormat = new SimpleDateFormat("EEE MM/dd/yyyy 'at' hh:mm a", Locale.getDefault());
                 TextView dateTimeTextView = v.findViewById(R.id.dateTime);
-                dateTimeTextView.setText(selectedOffer.getTicket().getDate());
+                String dateString = ticket.getDate();
+                try {
+                    // Parse the input string into a Date object
+                    Date date = inputFormat.parse(dateString);
 
-                TextView offeredPriceTextView = v.findViewById(R.id.offeredPrice);
-                offeredPriceTextView.setText(selectedOffer.getPrice());
+                    // Format the Date object into the desired output format
+                    String formattedDate = outputFormat.format(date);
 
-                TextView offerStatusTextView = v.findViewById(R.id.offerStatus);
-                offerStatusTextView.setText("Waiting"); //TODO: change to a variable selectedOffer.getStatus()
-
-                EditText counterOfferAmount = v.findViewById(R.id.counterOfferAmount);*/
-
+                    // Set the formatted date to your TextView
+                    dateTimeTextView.setText(formattedDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    dateTimeTextView.setText(dateString);
+                    // Handle parsing exception
+                }
                 // Handle Back button click
                 ImageButton backButton = v.findViewById(R.id.backButton);
                 backButton.setOnClickListener(new View.OnClickListener() {
@@ -126,4 +156,5 @@ public class SingleOffer extends Fragment {
 
         return v;
     }
+
 }

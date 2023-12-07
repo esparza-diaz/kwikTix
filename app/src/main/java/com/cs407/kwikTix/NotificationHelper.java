@@ -269,6 +269,14 @@ public class NotificationHelper {
         }
 
 
+        Intent notificationIntent = new Intent(context, StandardNotificationReceiver.class);
+        notificationIntent.putExtra("notificationId", item.getId());
+
+        PendingIntent notificationPendingIntent =
+                PendingIntent.getBroadcast(context,
+                        item.getId(),
+                        notificationIntent,
+                        PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent acceptIntent = new Intent(context, AcceptReceiver.class);
         acceptIntent.putExtra("notificationId", item.getId());
@@ -295,6 +303,11 @@ public class NotificationHelper {
                         rejectIntent,
                         PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
+        NotificationCompat.Action acknowledgeNotificationAction =
+                new NotificationCompat.Action.Builder(R.drawable.baseline_person_24,
+                        "OK", notificationPendingIntent)
+                        .build();
+
         NotificationCompat.Action acceptOfferAction =
                 new NotificationCompat.Action.Builder(R.drawable.baseline_check_24,
                         "ACCEPT", acceptPendingIntent)
@@ -317,6 +330,8 @@ public class NotificationHelper {
         if (item.getNotificationType().equals(SELLER_ACCEPT_REJECT + ": " + ticketTitle)) {
                     notificationsBuilder.addAction(acceptOfferAction);
                     notificationsBuilder.addAction(rejectOfferAction);
+        } else {
+            notificationsBuilder.addAction(acknowledgeNotificationAction);
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

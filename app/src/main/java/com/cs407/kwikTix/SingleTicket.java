@@ -87,7 +87,6 @@ public class SingleTicket extends Fragment {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
         userLoggedInUsername = sharedPreferences.getString("username", "");
-        Log.d("In Single Ticket onCreate", userLoggedInUsername);
     }
 
     private TextWatcher priceTextWatcher;
@@ -99,7 +98,6 @@ public class SingleTicket extends Fragment {
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
 
-
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
         userLoggedInUsername = sharedPreferences.getString("username","");
         // Retrieve the selectedListing from arguments
@@ -108,12 +106,7 @@ public class SingleTicket extends Fragment {
             Tickets selectedListing = (Tickets) args.getSerializable("selectedListing");
             if (selectedListing != null) {
                 // Setting buyer and seller arguments to be used in notifications
-                userLoggedIn = dbHelper.getUser(userLoggedInUsername); // TODO maybe change  names for more clarity
-                if (userLoggedIn == null) {
-                    Log.d("userLoggedIn", "NULL");
-                } else {
-                    Log.d("userLoggedIn", "onCreateView: " + userLoggedIn.getUsername());
-                }
+                userLoggedIn = dbHelper.getUser(userLoggedInUsername);
                 sellerUsername = selectedListing.getSeller().toString(); // TODO redundant toString?
                 seller = dbHelper.getUser(sellerUsername);
 
@@ -191,7 +184,8 @@ public class SingleTicket extends Fragment {
                     public void onClick(View view) {
                         dbHelper.boughtTicket(selectedListing, userLoggedInUsername);
                         showCongratulationsPopup();
-                        // TODO make notification when buy is clicked; also add strings to resources
+
+                        // Notify User
                         NotificationHelper notificationHelper = NotificationHelper.getInstance();
                         notificationHelper.setNotificationContent(
                                 requireContext(),

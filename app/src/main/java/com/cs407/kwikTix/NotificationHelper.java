@@ -3,18 +3,10 @@ package com.cs407.kwikTix;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import androidx.core.app.RemoteInput;
-
-import android.app.RemoteAction;
 import android.content.Context;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.drawable.Icon;
-import android.os.Bundle;
-import android.util.Log;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -39,85 +31,18 @@ public class NotificationHelper {
     public static String BUYER_PURCHASED_TICKET = null;
     public static String SELLER_TICKET_PURCHASED = null;
     final ArrayList<NotificationItem> notificationItems = new ArrayList<>();
-    //    private Users buyer;
-//    private Users seller;
     public static String notificationType =null;
     public static String notificationContent = null;
     public static String ticketTitle = null;
     public static String buyerContactInfo = null;
     public static String sellerContactInfo = null;
-    public static int offerAmount = -1;
-    public static int notificationId = 0;
-    public static int offerStatus = -1; // TODO figure out how to set offer status based on offers db
-
-    public static String getNotificationType() {
-        if (notificationType != null) {
-            Log.d("getNotificationType", notificationType);
-        } else {
-            Log.d("getNotificationType", "NULL");
-        }
-        return notificationType;
-    }
 
     public static void setNotificationType(String notificationType) {
-        Log.d("setNotificationType", notificationType);
         NotificationHelper.notificationType = notificationType;
-    }
-
-    public static String getNotificationContent() {
-        return notificationContent;
-    }
-
-    public static void setNotificationContent(String notificationContent) {
-        NotificationHelper.notificationContent = notificationContent;
-    }
-
-    public static String getTicketTitle() {
-        return ticketTitle;
     }
 
     public static void setTicketTitle(String ticketTitle) {
         NotificationHelper.ticketTitle = ticketTitle;
-    }
-
-    public static String getBuyerContactInfo() {
-        return buyerContactInfo;
-    }
-
-    public static void setBuyerContactInfo(String buyerContactInfo) {
-        NotificationHelper.buyerContactInfo = buyerContactInfo;
-    }
-
-    public static String getSellerContactInfo() {
-        return sellerContactInfo;
-    }
-
-    public static void setSellerContactInfo(String sellerContactInfo) {
-        NotificationHelper.sellerContactInfo = sellerContactInfo;
-    }
-
-    public static int getOfferAmount() {
-        return offerAmount;
-    }
-
-    public static void setOfferAmount(int offerAmount) {
-        NotificationHelper.offerAmount = offerAmount;
-    }
-
-    public static int getNotificationId() {
-        return notificationId;
-    }
-
-    public static void setNotificationId(int notificationId) {
-        NotificationHelper.notificationId = notificationId;
-    }
-
-    public static int getOfferStatus() {
-        return offerStatus;
-    }
-
-    public static void setOfferStatus(int offerStatus) {
-        NotificationHelper.offerStatus = offerStatus;
     }
 
     public static void setResourceStrings(Context context){
@@ -131,7 +56,6 @@ public class NotificationHelper {
 
     public void createNotificationChannel(Context context) { // TODO fix repeated channel creation after. Executes whenever main activity launches.
         if (!areStringsSet) {
-            Log.d("String Set?", "Strings not set");
             setResourceStrings(context);
         }
 
@@ -143,22 +67,6 @@ public class NotificationHelper {
         channel.setDescription(description);
 
         NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-        if (notificationManager == null) {
-            Log.d("Notification Manager", "NULL");
-        } else {
-            Log.d("Notification manager", notificationManager.toString());
-        }
-        if (name == null) {
-            Log.d("Name", "NULL");
-        } else {
-            Log.d("Name", name.toString());
-        }
-        if (channel == null) {
-            Log.d("Notification Channel", "NULL");
-        } else {
-            Log.d("channel", channel.toString());
-        }
-        Log.d("Before creation", "eek");
         notificationManager.createNotificationChannel(channel);
     }
 
@@ -181,7 +89,6 @@ public class NotificationHelper {
 
         setTicketTitle(ticketTitle);
 
-        Log.d("notificationType", notificationType);
         // Sets seller contact info
         if (seller.getPrefContactMethod().equals("E-Mail")) {
             sellerContactInfo = seller.getEmail();
@@ -201,10 +108,10 @@ public class NotificationHelper {
             setNotificationType("Offer Update: " + ticketTitle);
 
             switch (offerStatus) {
-                case "REJECTED":
+                case REJECTED:
                     notificationContent = "REJECTED: Your offer has been rejected.";
                     break;
-                case "ACCEPTED":
+                case ACCEPTED:
                     notificationContent = "ACCEPTED: For purchasing, please contact "
                             + seller.getUsername() + " at -- " + sellerContactInfo;
                     break;
@@ -215,10 +122,7 @@ public class NotificationHelper {
 
         // Sets notification content based on notification type
         if (notificationType.equals(SELLER_TICKET_PURCHASED)) {
-            Log.d("notificationType (if equals SELLER_TICKET_PURCHASED", notificationType);
             setNotificationType("PURCHASED: " + ticketTitle);
-            String testNotificationType = getNotificationType();
-            Log.d("after getNotifcation", "WOOP");
 
             notificationContent = "Please contact " + buyer.getUsername() + " at -- " + buyerContactInfo;
         }
@@ -253,7 +157,6 @@ public class NotificationHelper {
         NotificationItem item;
         if (id == -1) {
             item = notificationItems.get(notificationItems.size() -1);
-            Log.d("notificationItems.size()", Integer.toString(notificationItems.size()));
         } else {
             item = notificationItems.get(id);
         }
@@ -264,7 +167,6 @@ public class NotificationHelper {
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
             != PackageManager.PERMISSION_GRANTED) {
-            Log.d("Notification", "Permission Not Granted");
             return;
         }
 
@@ -336,10 +238,6 @@ public class NotificationHelper {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(item.getId(), notificationsBuilder.build());
-
-    }
-
-    public void addNotifications() {
 
     }
 }

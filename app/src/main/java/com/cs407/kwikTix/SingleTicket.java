@@ -195,7 +195,7 @@ public class SingleTicket extends Fragment {
                                 "ACCEPTED",
                                 getContext().getString(R.string.BUYER_PURCHASED_TICKET),
                                 null,
-                                null);
+                                selectedListing.getId());
                         notificationHelper.showNotification(
                                 requireContext(), -1);
                     }

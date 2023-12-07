@@ -16,11 +16,13 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class KwikTix  extends AppCompatActivity {
@@ -48,6 +50,8 @@ public class KwikTix  extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("wereNotificationsPosted: " + userLoggedInUsername, "yes");
             editor.commit();
+
+        } else {
         }
         wereNotificationsPosted = sharedPreferences.getString("wereNotificationsPosted: " + userLoggedInUsername, "");
         Log.d("posted Notes", wereNotificationsPosted);
@@ -128,16 +132,117 @@ public class KwikTix  extends AppCompatActivity {
             };
 
 
-    private void postUserNotifications(String userLoggedInUsername) {
-        Users seller;
+    private void postRespondToOfferNotifications(Users seller, NotificationHelper notificationHelper, ArrayList<Offer> pendingOffers, ArrayList<Tickets> ticketsWithPendingOffers, DBHelper dbHelper, Context context) {
+        // Creates notifications to enable user (seller) to respond to offers
         Users buyer;
+        Offer pendingOffer;
+        Tickets ticket;
+        for (int i = 0; i < pendingOffers.size(); i++) {
+            pendingOffer = pendingOffers.get(i);
+            ticket = ticketsWithPendingOffers.get(i);
+            buyer = dbHelper.getUser(pendingOffer.getBuyerUsername());
+            String offerStatus = pendingOffer.getStatus();
+            String offerAmount = pendingOffer.getOfferAmount();
+            String offerId = pendingOffer.getId();
+            String ticketTitle = ticket.getTitle();
+            String listingId = ticket.getId(); // TODO make sure listingId is ticketId
+
+            Log.d("Offer", offerId + ": Status = " + offerStatus); // TODO THIS WORKS!!
+            Log.d("Offer Ticket", "Seller: " + seller.getUsername() + " Buyer: " + buyer.getUsername()
+                    + "Ticket Title: " + ticket);
+            if (offerStatus.equals("PENDING")) { // TODO possibly redundant checking of status
+                notificationHelper.setNotificationContent(
+                        context,
+                        buyer,
+                        seller,
+                        ticketTitle,
+                        offerAmount,
+                        offerStatus,
+                        context.getString(R.string.SELLER_ACCEPT_REJECT),
+                        offerId,
+                        listingId);
+                notificationHelper.showNotification(context, -1);// TODO THIS WORKS!!
+            }
+        }
+    }
+
+    private void postPurchasedTicketsNotifications(Users seller, NotificationHelper notificationHelper, ArrayList<Offer> purchasedOffers, ArrayList<Tickets> purchasedTickets, DBHelper dbHelper, Context context) {
+        // Creates notifications alerting user that their ticket(s) has/have been purchased
+        Users buyer;
+        Offer purchasedOffer;
+        Tickets purchasedTicket;
+        for (int i = 0; i < purchasedOffers.size(); i++) {
+            purchasedOffer = purchasedOffers.get(i);
+            purchasedTicket = purchasedTickets.get(i);
+            buyer = dbHelper.getUser(purchasedOffer.getBuyerUsername());
+            String offerStatus = purchasedOffer.getStatus();
+            String offerAmount = purchasedOffer.getOfferAmount();
+            String offerId = purchasedOffer.getId();
+            String ticketTitle = purchasedTicket.getTitle();
+            String listingId = purchasedTicket.getId();
+
+            Log.d("Purchased Offer: " + offerId, "Seller: " + seller.getUsername() + " Buyer: " + buyer.getUsername()
+                    + " Ticket Title: " + ticketTitle);
+            if (offerStatus.equals("0")) { // TODO possibly redundant checking of status
+                notificationHelper.setNotificationContent(
+                        context,
+                        buyer,
+                        seller,
+                        ticketTitle,
+                        offerAmount,
+                        offerStatus,
+                        context.getString(R.string.SELLER_TICKET_PURCHASED),
+                        offerId,
+                        listingId);
+                notificationHelper.showNotification(context, -1);
+            }
+        }
+    }
+
+    private void postOfferUpdateNotifications(Users seller, NotificationHelper notificationHelper, DBHelper dbHelper, Context context) {
+        // Post notifications for user offers that have gotten responses
+        Users buyer;
+        ArrayList<Offer> userOffers = dbHelper.getOffers(userLoggedInUsername, null);
+
+        if (userOffers.size() != 0) {
+            Log.d("User Offers", "User Offers made offers");
+            buyer = dbHelper.getUser(userLoggedInUsername);
+            for (Offer offer : userOffers) {
+                seller = dbHelper.getUser(dbHelper.getTicket(offer.getId()).getSeller());
+                String offerStatus = offer.getStatus();
+                String offerAmount = offer.getOfferAmount();
+                String offerId = offer.getId();
+                String ticketTitle = dbHelper.getTicket(offer.getId()).getTitle();
+
+                Log.d("Offer", offer.getId() + ": Status = " + offerStatus);
+                Log.d("Offer", "Seller: " + seller.getUsername() + " Buyer: " + buyer.getUsername());
+                if (offerStatus.equals("ACCEPTED") || offerStatus.equals("REJECTED")) {
+                    notificationHelper.setNotificationContent(
+                            context,
+                            buyer,
+                            seller,
+                            ticketTitle,
+                            offerAmount,
+                            offerStatus,
+                            context.getString(R.string.BUYER_OFFER_UPDATE),
+                            offerId,
+                            "");
+                    notificationHelper.showNotification(context, -1);
+                }
+            }
+        } else {
+            Log.d("User Offers", "User has not made offers");
+        }
+    }
+    private void postUserNotifications(String userLoggedInUsername) {
         Context context = getApplicationContext();
         NotificationHelper notificationHelper = NotificationHelper.getInstance();
         SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
         ArrayList<Tickets> myListedTickets = dbHelper.getListings(userLoggedInUsername, null, null, false);
         ArrayList<Offer> tempOffersList;
-
+        Users seller = dbHelper.getUser(userLoggedInUsername);
+//        Users buyer;
 
         // Only gets notifications for listings if user has actually listed tickets
         if (myListedTickets.size() != 0) {
@@ -173,103 +278,110 @@ public class KwikTix  extends AppCompatActivity {
                     }
                 }
             }
+            postRespondToOfferNotifications(seller, notificationHelper, offersToRespondTo, ticketsWithPendingOffers, dbHelper, context);
+            postPurchasedTicketsNotifications(seller, notificationHelper, purchasedOffers, purchasedTickets, dbHelper, context);
+            postOfferUpdateNotifications(seller, notificationHelper, dbHelper, context);
 
-            // Creates notifications to enable user (seller) to respond to offers
-            seller = dbHelper.getUser(userLoggedInUsername);
-            Offer pendingOffer;
-            Tickets ticket;
-            for (int i = 0; i < offersToRespondTo.size(); i++) {
-                pendingOffer = offersToRespondTo.get(i);
-                ticket = ticketsWithPendingOffers.get(i);
-                buyer = dbHelper.getUser(pendingOffer.getBuyerUsername());
-                String offerStatus = pendingOffer.getStatus();
-                String offerAmount = pendingOffer.getOfferAmount();
-                String offerId = pendingOffer.getId();
-                String ticketTitle = ticket.getTitle();
-                String listingId = ticket.getId(); // TODO make sure listingId is ticketId
+            // TODO figure out how to not show the same notifications again
 
-                Log.d("Offer", offerId + ": Status = " + offerStatus); // TODO THIS WORKS!!
-                Log.d("Offer Ticket", "Seller: " + seller.getUsername() + " Buyer: " + buyer.getUsername()
-                        + "Ticket Title: " + ticket);
-                if (offerStatus.equals("PENDING")) { // TODO possibly redundant checking of status
-                    notificationHelper.setNotificationContent(
-                            context,
-                            buyer,
-                            seller,
-                            ticketTitle,
-                            offerAmount,
-                            offerStatus,
-                            context.getString(R.string.SELLER_ACCEPT_REJECT),
-                            offerId,
-                            listingId);
-                    notificationHelper.showNotification(context, -1);// TODO THIS WORKS!!
-                }
-            }
+//            // Creates notifications to enable user (seller) to respond to offers
+//            seller = dbHelper.getUser(userLoggedInUsername);
+//            Offer pendingOffer;
+//            Tickets ticket;
+//            for (int i = 0; i < offersToRespondTo.size(); i++) {
+//                pendingOffer = offersToRespondTo.get(i);
+//                ticket = ticketsWithPendingOffers.get(i);
+//                buyer = dbHelper.getUser(pendingOffer.getBuyerUsername());
+//                String offerStatus = pendingOffer.getStatus();
+//                String offerAmount = pendingOffer.getOfferAmount();
+//                String offerId = pendingOffer.getId();
+//                String ticketTitle = ticket.getTitle();
+//                String listingId = ticket.getId(); // TODO make sure listingId is ticketId
+//
+//                Log.d("Offer", offerId + ": Status = " + offerStatus); // TODO THIS WORKS!!
+//                Log.d("Offer Ticket", "Seller: " + seller.getUsername() + " Buyer: " + buyer.getUsername()
+//                        + "Ticket Title: " + ticket);
+//                if (offerStatus.equals("PENDING")) { // TODO possibly redundant checking of status
+//                    notificationHelper.setNotificationContent(
+//                            context,
+//                            buyer,
+//                            seller,
+//                            ticketTitle,
+//                            offerAmount,
+//                            offerStatus,
+//                            context.getString(R.string.SELLER_ACCEPT_REJECT),
+//                            offerId,
+//                            listingId);
+//                    notificationHelper.showNotification(context, -1);// TODO THIS WORKS!!
+//                }
+//            }
 
-            // Creates notifications alerting user that their ticket(s) has/have been purchased
-            Offer purchasedOffer;
-            Tickets purchasedTicket;
-            for (int i = 0; i < purchasedOffers.size(); i++) {
-                purchasedOffer = purchasedOffers.get(i);
-                purchasedTicket = purchasedTickets.get(i);
-                buyer = dbHelper.getUser(purchasedOffer.getBuyerUsername());
-                String offerStatus = purchasedOffer.getStatus();
-                String offerAmount = purchasedOffer.getOfferAmount();
-                String offerId = purchasedOffer.getId();
-                String ticketTitle = purchasedTicket.getTitle();
-                String listingId = purchasedTicket.getId();
-
-                Log.d("Purchased Offer: " + offerId, "Seller: " + seller.getUsername() + " Buyer: " + buyer.getUsername()
-                        + " Ticket Title: " + ticketTitle);
-                if (offerStatus.equals("0")) { // TODO possibly redundant checking of status
-                    notificationHelper.setNotificationContent(
-                            context,
-                            buyer,
-                            seller,
-                            ticketTitle,
-                            offerAmount,
-                            offerStatus,
-                            context.getString(R.string.SELLER_TICKET_PURCHASED),
-                            offerId,
-                            listingId);
-                    notificationHelper.showNotification(context, -1);
-                }
-            }
+//            // Creates notifications alerting user that their ticket(s) has/have been purchased
+//            seller = dbHelper.getUser(userLoggedInUsername);
+//            Offer purchasedOffer;
+//            Tickets purchasedTicket;
+//            for (int i = 0; i < purchasedOffers.size(); i++) {
+//                purchasedOffer = purchasedOffers.get(i);
+//                purchasedTicket = purchasedTickets.get(i);
+//                buyer = dbHelper.getUser(purchasedOffer.getBuyerUsername());
+//                String offerStatus = purchasedOffer.getStatus();
+//                String offerAmount = purchasedOffer.getOfferAmount();
+//                String offerId = purchasedOffer.getId();
+//                String ticketTitle = purchasedTicket.getTitle();
+//                String listingId = purchasedTicket.getId();
+//
+//                Log.d("Purchased Offer: " + offerId, "Seller: " + seller.getUsername() + " Buyer: " + buyer.getUsername()
+//                        + " Ticket Title: " + ticketTitle);
+//                if (offerStatus.equals("0")) { // TODO possibly redundant checking of status
+//                    notificationHelper.setNotificationContent(
+//                            context,
+//                            buyer,
+//                            seller,
+//                            ticketTitle,
+//                            offerAmount,
+//                            offerStatus,
+//                            context.getString(R.string.SELLER_TICKET_PURCHASED),
+//                            offerId,
+//                            listingId);
+//                    notificationHelper.showNotification(context, -1);
+//                }
+//            }
         } else {
             Log.d("User Listings Notification", "No listings from user");
         }
 
-        // Post notifications for user offers that have gotten responses
-        ArrayList<Offer> userOffers = dbHelper.getOffers(userLoggedInUsername, null);
-
-        if (userOffers.size() != 0) {
-            Log.d("User Offers", "User Offers made offers");
-            buyer = dbHelper.getUser(userLoggedInUsername);
-            for (Offer offer : userOffers) {
-                seller = dbHelper.getUser(dbHelper.getTicket(offer.getId()).getSeller());
-                String offerStatus = offer.getStatus();
-                String offerAmount = offer.getOfferAmount();
-                String offerId = offer.getId();
-                String ticketTitle = dbHelper.getTicket(offer.getId()).getTitle();
-
-                Log.d("Offer", offer.getId() + ": Status = " + offerStatus);
-                Log.d("Offer", "Seller: " + seller.getUsername() + " Buyer: " + buyer.getUsername());
-                if (offerStatus.equals("ACCEPTED") || offerStatus.equals("REJECTED")) {
-                    notificationHelper.setNotificationContent(
-                            context,
-                            buyer,
-                            seller,
-                            ticketTitle,
-                            offerAmount,
-                            offerStatus,
-                            context.getString(R.string.BUYER_OFFER_UPDATE),
-                            offerId,
-                            "");
-                    notificationHelper.showNotification(context, -1);
-                }
-            }
-        } else {
-            Log.d("User Offers", "User has not made offers");
-        }
+//        // Post notifications for user offers that have gotten responses
+//        ArrayList<Offer> userOffers = dbHelper.getOffers(userLoggedInUsername, null);
+//
+//        if (userOffers.size() != 0) {
+//            Log.d("User Offers", "User Offers made offers");
+//            buyer = dbHelper.getUser(userLoggedInUsername);
+//            for (Offer offer : userOffers) {
+//                seller = dbHelper.getUser(dbHelper.getTicket(offer.getId()).getSeller());
+//                String offerStatus = offer.getStatus();
+//                String offerAmount = offer.getOfferAmount();
+//                String offerId = offer.getId();
+//                String ticketTitle = dbHelper.getTicket(offer.getId()).getTitle();
+//
+//                Log.d("Offer", offer.getId() + ": Status = " + offerStatus);
+//                Log.d("Offer", "Seller: " + seller.getUsername() + " Buyer: " + buyer.getUsername());
+//                if (offerStatus.equals("ACCEPTED") || offerStatus.equals("REJECTED")) {
+//                    notificationHelper.setNotificationContent(
+//                            context,
+//                            buyer,
+//                            seller,
+//                            ticketTitle,
+//                            offerAmount,
+//                            offerStatus,
+//                            context.getString(R.string.BUYER_OFFER_UPDATE),
+//                            offerId,
+//                            "");
+//                    notificationHelper.showNotification(context, -1);
+//                }
+//            }
+//        } else {
+//            Log.d("User Offers", "User has not made offers");
+//        }
     }
+
 }

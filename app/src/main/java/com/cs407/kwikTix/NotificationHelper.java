@@ -238,7 +238,7 @@ public class NotificationHelper {
         NotificationItem item = new NotificationItem(
                 buyer.getUsername(),
                 seller.getUsername(),
-                notificationType,
+                NotificationHelper.notificationType,
                 notificationContent,
                 notificationItems.size(),
                 offerId,
@@ -269,6 +269,7 @@ public class NotificationHelper {
 
 
         Intent acceptIntent = new Intent(context, AcceptReceiver.class);
+        acceptIntent.putExtra("notificationId", item.getId());
         acceptIntent.putExtra("offerId", offerId);
         acceptIntent.putExtra("listingId", listingId);
         acceptIntent.putExtra("buyerUsername", buyerUsername);
@@ -280,6 +281,7 @@ public class NotificationHelper {
                         PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent rejectIntent = new Intent(context, RejectReceiver.class);
+        rejectIntent.putExtra("notificationId", item.getId());
         rejectIntent.putExtra("offerId", offerId);
         rejectIntent.putExtra("listingId", listingId);
         rejectIntent.putExtra("buyerUsername", buyerUsername);
@@ -307,8 +309,8 @@ public class NotificationHelper {
                 .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                 .setContentTitle(item.getNotificationType())
                 .setContentText(item.getContent())
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
 
         if (item.getNotificationType().equals(SELLER_ACCEPT_REJECT)) {
                     notificationsBuilder.addAction(acceptOfferAction);

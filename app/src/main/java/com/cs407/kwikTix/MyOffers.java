@@ -83,6 +83,7 @@ public class MyOffers extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
         userLoggedIn = sharedPreferences.getString("username","");
         //filter offers by username, not by ticket id
+        displayOffers.clear();
         displayOffers = dbHelper.getOffers(userLoggedIn, null);
 
         adapter = new OfferAdapter(v.getContext(), displayOffers);

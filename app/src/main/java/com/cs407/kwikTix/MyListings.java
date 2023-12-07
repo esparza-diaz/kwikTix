@@ -89,7 +89,7 @@ public class MyListings extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
         userLoggedIn = sharedPreferences.getString("username","");
 
-
+        displayListings.clear();
         displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
 
         adapter = new ListingAdapter(v.getContext(), displayListings);

@@ -173,6 +173,21 @@ public class SingleMyListing extends Fragment {
                                 .commit();
                     }
                 });
+
+                Button revokeListing = v.findViewById(R.id.revokeListingButton);
+                revokeListing.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view){
+                        try {
+                            dbHelper.deleteListing(selectedListing.getId());
+                            Toast.makeText(getContext(),"Successfully Revoked Listing",Toast.LENGTH_SHORT).show();
+                            FragmentManager fragmentManager = getParentFragmentManager();
+                            fragmentManager.popBackStack();
+                        }catch (Exception e){
+                            Toast.makeText(getContext(),"Error Revoking Listing",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         }
 

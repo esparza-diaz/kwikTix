@@ -180,7 +180,14 @@ public class SingleOffer extends Fragment {
                 revokeOffer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(requireContext(), "Revoking Offer as: " + userLoggedIn, Toast.LENGTH_SHORT).show();
+                        try{
+                            dbHelper.deleteOffer(selectedOffer.getId());
+                            Toast.makeText(requireContext(), "Successfully Revoked Offer", Toast.LENGTH_SHORT).show();
+                            FragmentManager fragmentManager = getParentFragmentManager();
+                            fragmentManager.popBackStack();
+                        }catch (Exception e) {
+                            Toast.makeText(requireContext(), "Error Revoking Offer", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 

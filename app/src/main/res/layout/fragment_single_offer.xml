@@ -3,17 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <!-- Ticket Name -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="32dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
         android:orientation="horizontal">
 
         <ImageButton
@@ -26,7 +23,7 @@
             android:src="@drawable/baseline_arrow_back_24" />
 
         <TextView
-            android:id="@+id/pageLabel"
+            android:id="@+id/textView"
             android:text="My Offers"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -40,25 +37,20 @@
         android:id="@+id/ticketName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ticket Name"
+        android:text=""
         android:textSize="30sp"
         android:textStyle="bold"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp" />
 
     <!-- Ticket Details -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:background="#e0e0e0"
         android:orientation="vertical"
+        android:background="#e0e0e0"
         android:padding="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp">
+        android:layout_marginBottom="16dp">
 
         <!-- Game -->
         <LinearLayout
@@ -77,7 +69,7 @@
                 android:id="@+id/gameName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Iowa Game"
+                android:text=""
                 android:textSize="22sp" />
 
         </LinearLayout>
@@ -99,7 +91,7 @@
                 android:id="@+id/gameLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Wisconsin"
+                android:text=""
                 android:textSize="22sp" />
 
         </LinearLayout>
@@ -113,7 +105,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Listing Price: "
+                android:text="Listed Price: "
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -121,7 +113,7 @@
                 android:id="@+id/ticketPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="50.00"
+                android:text=""
                 android:textSize="22sp" />
 
         </LinearLayout>
@@ -143,7 +135,7 @@
                 android:id="@+id/sellerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ticket Seller"
+                android:text=""
                 android:textSize="22sp" />
 
         </LinearLayout>
@@ -165,7 +157,7 @@
                 android:id="@+id/dateTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date/Time of Game"
+                android:text=""
                 android:textSize="22sp" />
 
         </LinearLayout>
@@ -175,8 +167,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginBottom="24dp"
         android:background="#e0e0e0"
         android:orientation="vertical"
@@ -198,7 +188,7 @@
                 android:id="@+id/offeredPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="50.00"
+                android:text=""
                 android:textSize="22sp" />
 
         </LinearLayout>
@@ -219,7 +209,7 @@
                 android:id="@+id/offerStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Waiting"
+                android:text=""
                 android:textSize="22sp" />
             <!-- Statuses: -->
             <!-- Waiting, Pending, Accepted, Declined -->
@@ -232,8 +222,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp">
 
         <LinearLayout
@@ -257,13 +245,6 @@
                 android:textColor="#fff"
                 android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginBottom="8dp"
-                android:text="$"
-                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/OfferAmount"

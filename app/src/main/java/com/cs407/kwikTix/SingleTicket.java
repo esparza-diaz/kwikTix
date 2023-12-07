@@ -12,12 +12,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
@@ -26,6 +29,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -86,6 +90,9 @@ public class SingleTicket extends Fragment {
         Log.d("In Single Ticket onCreate", userLoggedInUsername);
     }
 
+    private TextWatcher priceTextWatcher;
+
+    private EditText counterOfferAmount;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_single_ticket, container, false);
@@ -202,12 +209,31 @@ public class SingleTicket extends Fragment {
                 });
 
                 Button counter = v.findViewById(R.id.counterOfferButton);
-                TextView counterOfferAmount = v.findViewById(R.id.counterOfferAmount);
+                counterOfferAmount = v.findViewById(R.id.counterOfferAmount);
+
+                // Add TextWatcher to format the price input
+                priceTextWatcher = new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+                        // No action needed before text changes
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                        // No action needed when text is changing
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        formatPriceInput(editable);
+                    }
+                };
+                counterOfferAmount.addTextChangedListener(priceTextWatcher);
                 counter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         // Inside the onClickListener for the counterOfferButton
-                        showCounterOfferPopup(selectedListing, counterOfferAmount.getText().toString());
+                        showCounterOfferPopup(selectedListing, counterOfferAmount.getText().toString().replaceAll("[^0-9.]", ""));
                     }
                 });
             }
@@ -277,11 +303,7 @@ public class SingleTicket extends Fragment {
         }, 4500);
     }
     private void showCounterOfferPopup(Tickets listing, String offerAmount) {
-        if (!isValidNumber(offerAmount)) {
-            // Show an error message or handle the invalid input
-            Toast.makeText(requireContext(), "Invalid offer amount", Toast.LENGTH_SHORT).show();
-            return;
-        }
+
         View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_counteroffer, null);
         String message = "";
         try {
@@ -314,16 +336,22 @@ public class SingleTicket extends Fragment {
         fragmentManager.popBackStack();
     }
 
-    private boolean isValidNumber(String input) {
-        try {
-            double parsed = Double.parseDouble(input);
-            return parsed >= 0; // You can add more specific validation as needed
-        } catch (NumberFormatException e) {
-            return false;
+    private void formatPriceInput(Editable editable) {
+        String input = editable.toString();
+
+        // Remove previous formatting
+        String cleanString = input.replaceAll("[^0-9]", "");
+
+        // Format the input as currency
+        if (!cleanString.isEmpty()) {
+            double parsed = Double.parseDouble(cleanString);
+            String formatted = DecimalFormat.getCurrencyInstance().format((parsed / 100));
+            counterOfferAmount.removeTextChangedListener(priceTextWatcher);
+            counterOfferAmount.setText(formatted);
+            counterOfferAmount.setSelection(formatted.length());
+            counterOfferAmount.addTextChangedListener(priceTextWatcher);
         }
     }
-
-
 
 
 

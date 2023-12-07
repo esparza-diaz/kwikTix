@@ -45,8 +45,6 @@ public class MyListings extends Fragment {
     // TODO: Rename and change types of parameters
     private String userLoggedIn;
 
-    public static ArrayList<Listing> listings;
-
     public MyListings() {
     }
 
@@ -83,13 +81,15 @@ public class MyListings extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_profile_listing, container, false);
+        myticketsListView = (ListView) v.findViewById(R.id.myListings);
 
+        // Init DB
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
         userLoggedIn = sharedPreferences.getString("username","");
 
-        myticketsListView = (ListView) v.findViewById(R.id.myListings);
+        displayListings.clear();
         displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
 
         adapter = new ListingAdapter(v.getContext(), displayListings);
@@ -105,7 +105,7 @@ public class MyListings extends Fragment {
                 SingleMyListing singleListingFragment = new SingleMyListing();
                 Bundle args = new Bundle();
                 args.putSerializable("selectedListing", selectedListing);
-                // args.putString("username",userLoggedIn);
+                //args.putString("username",userLoggedIn);
                 singleListingFragment.setArguments(args);
 
                 // Replace Listings fragment with SingleTicketFragment

@@ -78,6 +78,24 @@ public class DBHelper {
     }
 
     /**
+     * Delete Listing
+     */
+    public void deleteListing(String key){
+        createTable();
+        sqLiteDatabase.execSQL("DELETE FROM listings WHERE id = ?",
+                new String[]{key});
+
+        // delete offers
+        deleteOffer(key);
+    }
+
+    public void deleteOffer(String key){
+        createTable();
+        sqLiteDatabase.execSQL("DELETE FROM offers WHERE id = ?",
+                new String[]{key});
+    }
+
+    /**
      * Declines offer given the key
      */
     public void acceptOffer(Offer offer){
@@ -170,8 +188,8 @@ public class DBHelper {
      */
     public Users getUser(String username) {
         createTable();
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM users WHERE username LIKE ?",
-                new String[]{"%" + username + "%"});
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM users WHERE username = ?",
+                new String[]{username});
         Users user = null;
         if (c.moveToFirst()) {
             int passwordIndex = c.getColumnIndex("password");
@@ -220,8 +238,8 @@ public class DBHelper {
 //"(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT,date DATETIME,price TEXT, college TEXT,username TEXT, available TEXT)
     public Tickets getTicket(String key){
         createTable();
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE id LIKE ?",
-                new String[]{"%" + key + "%"});
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE id = ?",
+                new String[]{key});
 
         int idIndex = c.getColumnIndex("id");
         int titleIndex = c.getColumnIndex("title");
@@ -286,8 +304,8 @@ public class DBHelper {
             return listings;
         }else if (seller != null){
             //returns listings for username
-            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE seller LIKE ?",
-                    new String[]{"%" + seller + "%"});
+            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE seller = ?",
+                    new String[]{seller});
             int titleIndex = c.getColumnIndex("title");
             int listingId = c.getColumnIndex("id");
             int dateIndex = c.getColumnIndex("date");
@@ -315,8 +333,8 @@ public class DBHelper {
             return listings;
         }else if (college != null && sort_by == null) {
             // filter by only college
-            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college LIKE ?",
-                    new String[]{"%" + college + "%"});
+            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college = ?",
+                    new String[]{college});
             int titleIndex = c.getColumnIndex("title");
             int listingId = c.getColumnIndex("id");
             int dateIndex = c.getColumnIndex("date");
@@ -401,8 +419,8 @@ public class DBHelper {
         } else if (college != null && sort_by.equals("price")) {
             // sort_by price and filter by college
             if (desc) {
-                Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college LIKE ? ORDER BY cast(price as numeric) DESC",
-                        new String[]{"%" + college + "%"});
+                Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college = ? ORDER BY cast(price as numeric) DESC",
+                        new String[]{college});
                 int titleIndex = c.getColumnIndex("title");
                 int listingId = c.getColumnIndex("id");
                 int dateIndex = c.getColumnIndex("date");
@@ -428,8 +446,8 @@ public class DBHelper {
                 }
                 c.close();
             } else {
-                Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college LIKE ? ORDER BY cast(price as numeric) ASC",
-                        new String[]{"%" + college + "%"});
+                Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college = ? ORDER BY cast(price as numeric) ASC",
+                        new String[]{college});
                 int titleIndex = c.getColumnIndex("title");
                 int listingId = c.getColumnIndex("id");
                 int dateIndex = c.getColumnIndex("date");
@@ -515,8 +533,8 @@ public class DBHelper {
         }else if (college != null && sort_by.equals("date")) {
             // sort_by date and filter by college
             if (desc) {
-                Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college LIKE ? ORDER BY date DESC",
-                        new String[]{"%" + college + "%"});
+                Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college = ? ORDER BY date DESC",
+                        new String[]{college});
                 int titleIndex = c.getColumnIndex("title");
                 int listingId = c.getColumnIndex("id");
                 int dateIndex = c.getColumnIndex("date");
@@ -542,8 +560,8 @@ public class DBHelper {
                 }
                 c.close();
             } else {
-                Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college LIKE ? ORDER BY date ASC",
-                        new String[]{"%" + college + "%"});
+                Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM listings WHERE college = ? ORDER BY date ASC",
+                        new String[]{college});
                 int titleIndex = c.getColumnIndex("title");
                 int listingId = c.getColumnIndex("id");
                 int dateIndex = c.getColumnIndex("date");
@@ -578,8 +596,8 @@ public class DBHelper {
         createTable();
         ArrayList<Offer> offers = new ArrayList<>();
         if (username != null) {
-            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers WHERE buyerUsername LIKE ?",
-                    new String[]{"%" + username + "%"});
+            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers WHERE buyerUsername = ?",
+                    new String[]{username});
             int idIndex = c.getColumnIndex("id");
             int offerAmtIndex = c.getColumnIndex("offerAmount");
             int statusIndex = c.getColumnIndex("status");
@@ -596,8 +614,8 @@ public class DBHelper {
             c.close();
             return offers;
         } else {
-            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers WHERE id LIKE ?",
-                    new String[]{"%" + listingId + "%"});
+            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers WHERE id = ?",
+                    new String[]{listingId});
             int idIndex = c.getColumnIndex("id");
             int offerAmtIndex = c.getColumnIndex("offerAmount");
             int userIndex = c.getColumnIndex("buyerUsername");
@@ -625,8 +643,8 @@ public class DBHelper {
      */
     public Colleges getCollege(String name){
         createTable();
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM colleges WHERE college LIKE ?",
-                new String[]{"%" + name + "%"});
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM colleges WHERE college = ?",
+                new String[]{name});
         int latIndex = c.getColumnIndex("latitude");
         int lonIndex = c.getColumnIndex("longitude");
         c.moveToFirst();

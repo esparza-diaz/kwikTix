@@ -282,7 +282,7 @@ public class KwikTix  extends AppCompatActivity {
             postPurchasedTicketsNotifications(seller, notificationHelper, purchasedOffers, purchasedTickets, dbHelper, context);
             postOfferUpdateNotifications(seller, notificationHelper, dbHelper, context);
 
-            // TODO figure out how to not show the same notifications again
+            // TODO figure out how to not show the same notifications againg
 
 //            // Creates notifications to enable user (seller) to respond to offers
 //            seller = dbHelper.getUser(userLoggedInUsername);

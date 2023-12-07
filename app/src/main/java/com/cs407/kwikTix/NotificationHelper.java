@@ -227,7 +227,7 @@ public class NotificationHelper {
         if (notificationType.equals(SELLER_ACCEPT_REJECT)) {
             setNotificationType(notificationType + ": " + ticketTitle);
 
-            notificationContent = buyer.getUsername() + "is offering $" + offerAmount + ".";
+            notificationContent = buyer.getUsername() + " is offering $" + offerAmount + ".";
         }
 
         if (notificationType.equals(BUYER_PURCHASED_TICKET)) {

@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.core.app.NotificationManagerCompat;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -16,7 +18,9 @@ public class RejectReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase(context.getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
 
+        int notificationId = intent.getIntExtra("notificationId", -1);
         String rejectedOfferId = intent.getStringExtra("offerId");
         String listingId = intent.getStringExtra("listingId");
         String buyerUsername = intent.getStringExtra("buyerUsername");
@@ -35,6 +39,9 @@ public class RejectReceiver extends BroadcastReceiver {
             Log.d("Reject Offer Info", "didn't find offer");
 
         }
+
+        // Cancel notification
+        notificationManagerCompat.cancel(notificationId);
 
         Toast.makeText(context, context.getString(R.string.REJECTED),
                 Toast.LENGTH_LONG).show();

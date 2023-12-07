@@ -179,6 +179,8 @@ public class NotificationHelper {
             listingId = "";
         }
 
+        setTicketTitle(ticketTitle);
+
         Log.d("notificationType", notificationType);
         // Sets seller contact info
         if (seller.getPrefContactMethod().equals("E-Mail")) {
@@ -218,7 +220,7 @@ public class NotificationHelper {
             String testNotificationType = getNotificationType();
             Log.d("after getNotifcation", "WOOP");
 
-            notificationContent = "Please contact " + buyer + " at -- " + buyerContactInfo;
+            notificationContent = "Please contact " + buyer.getUsername() + " at -- " + buyerContactInfo;
         }
 
         // Sets notification content based on notification type
@@ -312,7 +314,7 @@ public class NotificationHelper {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
 
-        if (item.getNotificationType().equals(SELLER_ACCEPT_REJECT)) {
+        if (item.getNotificationType().equals(SELLER_ACCEPT_REJECT + ": " + ticketTitle)) {
                     notificationsBuilder.addAction(acceptOfferAction);
                     notificationsBuilder.addAction(rejectOfferAction);
         }

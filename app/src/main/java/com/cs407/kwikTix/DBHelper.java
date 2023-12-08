@@ -636,6 +636,35 @@ public class DBHelper {
         }
     }
 
+    public ArrayList<Purchase> getPurchases(String username){
+        createTable();
+        ArrayList<Purchase> purchases = new ArrayList<>();
+        if (username != null) {
+            Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers WHERE buyerUsername = ?",
+                    new String[]{username});
+            int idIndex = c.getColumnIndex("id");
+            int offerAmtIndex = c.getColumnIndex("offerAmount");
+            int statusIndex = c.getColumnIndex("status");
+            c.moveToFirst();
+            while(!c.isAfterLast()){
+                String id = c.getString(idIndex);
+                Tickets ticket = getTicket(id);
+                if(ticket.getAvailable()=="0"){
+                    String offerAmt = c.getString(offerAmtIndex);
+                    String status = c.getString(statusIndex);
+                    Offer offer = new Offer(id,offerAmt,username,status);
+                    //now we have a Tickets item and an Offer item
+                    //create a Purchase item
+                    Purchase purchase = new Purchase(ticket, offer);
+                    purchases.add(purchase);
+                }
+                c.moveToNext();
+            }
+            c.close();
+            return purchases;
+        } else { return null; }
+    }
+
     /**
      * Returns college information given the name of the college
      * @param name - name of college

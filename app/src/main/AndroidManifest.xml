@@ -14,15 +14,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KwikTix"
         tools:targetApi="31">
+        <receiver android:name=".RejectReceiver"/>
+        <receiver android:name=".AcceptReceiver"/>
+        <receiver android:name=".StandardNotificationReceiver"/>
         <activity
             android:name=".ManageSettings"
-            android:exported="false" />
+            android:exported="true"
+            android:noHistory="true"/>
         <activity
             android:name=".SignUpActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:noHistory="true"/>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

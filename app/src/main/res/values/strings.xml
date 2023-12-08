@@ -2,10 +2,18 @@
     <string name="app_name">kwikTix</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="CHANNEL_ID">Offers Channel</string>
+    <string name="SELLER_ACCEPT_REJECT">ACCEPT or REJECT</string>
+    <string name="ACCEPTED">ACCEPTED</string>
+    <string name="REJECTED">REJECTED</string>
+    <string name="BUYER_OFFER_UPDATE">Buyer Offer Update</string>
+    <string name="BUYER_PURCHASED_TICKET">Buyer Purchased Ticket</string>
+    <string name="SELLER_TICKET_PURCHASED">Seller Ticket Purchased</string>
+    <string name="CHANNEL_DESCRIPTION">Displays ticket interactions for users.</string>
+    <string name="sql_db">KwikTix</string>
     <string-array name="contact_methods_array">
         <item>Preferred Contact Method</item>
         <item>E-Mail</item>
         <item>Phone</item>
     </string-array>
-    <string name="sql_db">KwikTix</string>
 </resources>

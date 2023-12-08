@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -86,6 +87,8 @@ public class Profile extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(requireContext());
+                notificationManager.cancelAll();
                 //clear sharedPreference
                 SharedPreferences sharedPreferences = requireContext().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -102,8 +105,6 @@ public class Profile extends Fragment {
         manageSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
-                //TODO Implement user updating: below line updates sql database
-                // dbHelper.setUser(userLoggedIn, "new@gmail.com", "1233333412", "come@33me", "HOMESCHOLED");
                 Intent intent = new Intent(requireContext(), ManageSettings.class);
                 intent.putExtra("username", userLoggedIn);
                 startActivity(intent);

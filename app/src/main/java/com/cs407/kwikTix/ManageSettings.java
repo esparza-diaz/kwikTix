@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 public class ManageSettings extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     DBHelper dbHelper;
 
-    // TODO might need different context
     SQLiteDatabase sqLiteDatabase;
     String username;
     String email;
@@ -86,8 +85,6 @@ public class ManageSettings extends AppCompatActivity implements AdapterView.OnI
 
         if (!validEmail) {
             return false;
-        } else {
-            Log.d("UserValidation", "valid email");
         }
 
         return true;
@@ -105,10 +102,7 @@ public class ManageSettings extends AppCompatActivity implements AdapterView.OnI
         boolean validPhone = matcher.find();
 
         if (!validPhone) {
-            Log.d("UserValidation", "Phone regex didn't match");
             return false;
-        } else {
-            Log.d("UserValidation", "valid phone");
         }
 
         return true;
@@ -131,21 +125,17 @@ public class ManageSettings extends AppCompatActivity implements AdapterView.OnI
         phone = phoneInput.getText().toString();
 
         if (!emailInputValidation(email)) {
-            Log.d("UserValidation", "Email Error");
             emailInput.setError("Invalid Email!");
             return;
         }
         if (!phoneInputValidation(phone)) {
-            Log.d("UserValidation", "Phone: Error");
             phoneInput.setError("Invalid Phone Number!");
             return;
         } else {
             phone = phone.substring(phone.length()-13).replace(" ", "").replace(")", "");
             phone = phone.replace("-", "");
-            Log.d("UserValidation", "Update phone: " + phone);
         }
         if (!prefContactMethodInputValidation(prefContactMethod)) {
-            Log.d("UserValidation", "PCM Error");
             return;
         }
 
@@ -156,15 +146,16 @@ public class ManageSettings extends AppCompatActivity implements AdapterView.OnI
 
     public void onExitButtonClick(View view) {
         Intent intent = new Intent(getApplicationContext(), KwikTix.class);
+        intent.putExtra("username", username);
         intent.putExtra("fragment", "Profile");
         startActivity(intent);
+        finish();
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         if (parent == prefContactMethodSpinner) {
             prefContactMethod = parent.getItemAtPosition(pos).toString();
-            Log.i("PREF CONTACT - Selected", prefContactMethod);
         }
     }
 

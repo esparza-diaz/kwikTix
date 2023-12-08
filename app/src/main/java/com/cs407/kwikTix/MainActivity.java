@@ -1,12 +1,18 @@
 package com.cs407.kwikTix;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, KwikTix.class);
             String username = sharedPreferences.getString("username","");
             intent.putExtra("username", username);
+
+            // Setup Notifications Channel and requests notification permissions
+            requestPermission();
+
             startActivity(intent);
         }else {
             setContentView(R.layout.activity_main);
@@ -66,6 +76,28 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
+
+            // Setup Notifications Channel and requests notification permissions
+            requestPermission();
+        }
+    }
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (!isGranted) {
+                    Toast.makeText(this, "Please Allow Notifications", Toast.LENGTH_LONG).show();
+                }
+            });
+
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return;
+        }
+        if (ContextCompat.checkSelfPermission(
+                getApplicationContext(), android.Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            NotificationHelper.getInstance().createNotificationChannel(getApplicationContext());
         }
     }
 

@@ -23,6 +23,7 @@ public class DBHelper {
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT,date DATETIME,price TEXT, college TEXT,seller TEXT,buyer TEXT,available TEXT, FOREIGN KEY(college) REFERENCES colleges(college), FOREIGN KEY(seller) REFERENCES users(username))");
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS offers "+
                 "(id INTEGER ,offerAmount TEXT,buyerUsername TEXT, status TEXT,PRIMARY KEY (id, buyerUsername),FOREIGN KEY (id) REFERENCES listings(id),FOREIGN KEY (buyerUsername) REFERENCES users(username))");
+
     }
 
     /**

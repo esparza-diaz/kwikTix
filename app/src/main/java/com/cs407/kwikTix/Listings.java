@@ -47,7 +47,7 @@ public class Listings extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String userLoggedIn;
+    private String userLoggedInUsername;
     private String mParam2;
 
     public static ArrayList<Listing> listings;
@@ -76,6 +76,12 @@ public class Listings extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            userLoggedInUsername = getArguments().getString("username");
+        } else {
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+            userLoggedInUsername = sharedPreferences.getString("username", "");
+        }
     }
 
     TicketAdapter adapter;
@@ -103,13 +109,15 @@ public class Listings extends Fragment {
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
-        userLoggedIn = sharedPreferences.getString("username","");
+        userLoggedInUsername = sharedPreferences.getString("username","");
 
         ArrayList<Tickets> allTickets = dbHelper.getListings(null,null, null, false);
         displayListings.clear();
         for (Tickets ticket: allTickets) {
-            if (!ticket.getSeller().equals(userLoggedIn) && ticket.getAvailable().equals("1")) {
-                displayListings.add(ticket);
+            if (!ticket.getSeller().equals(userLoggedInUsername) && ticket.getAvailable().equals("1")) {
+                if (!ticket.getSeller().equals(userLoggedInUsername) && ticket.getAvailable().equals("1")) {
+                    displayListings.add(ticket);
+                }
             }
         }
         collegeList = dbHelper.getAllColleges();
@@ -127,7 +135,9 @@ public class Listings extends Fragment {
                 SingleTicket singleTicketFragment = new SingleTicket();
                 Bundle args = new Bundle();
                 args.putSerializable("selectedListing", selectedListing);
-                args.putString("username",userLoggedIn);
+
+                args.putString("userLoggedInUsername",userLoggedInUsername);
+
                 singleTicketFragment.setArguments(args);
 
                 // Replace Listings fragment with SingleTicketFragment
@@ -323,8 +333,8 @@ public class Listings extends Fragment {
         }
 
         for (Tickets ticket: tix) {
-            if (!ticket.getSeller().equals(userLoggedIn) && ticket.getAvailable().equals("1")) {
-                tix2.add(ticket);
+            if (!ticket.getSeller().equals(userLoggedInUsername) && ticket.getAvailable().equals("1")) {
+                displayListings.add(ticket);
             }
         }
 

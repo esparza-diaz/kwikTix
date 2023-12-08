@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -85,6 +86,12 @@ public class TicketOffers extends Fragment {
         adapter = new TicketOfferAdapter(v.getContext(), displayTicketOffers);
         adapter.setUsername(userLoggedIn);
         ticketOffersListView.setAdapter(adapter);
+
+        TextView gameNameTextView = v.findViewById(R.id.gameName);
+        gameNameTextView.setText(ticket.getTitle());
+
+        TextView ticketPriceTextView = v.findViewById(R.id.ticketPrice);
+        ticketPriceTextView.setText(ticket.getPrice());
 
         ticketOffersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

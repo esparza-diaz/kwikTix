@@ -11,14 +11,16 @@ public class Tickets implements Serializable {
     private String price;
     private String id;
     private String available;
+    private String sellPrice;
 
-    public Tickets(String title, String id, String date, String price, String college, String seller, String buyer, String available) {
+    public Tickets(String title, String id, String date, String price, String sellPrice, String college, String seller, String buyer, String available) {
         this.title = title;
         this.date = date;
         this.college = college;
         this.seller = seller;
         this.buyer = buyer;
         this.price = price;
+        this.sellPrice = sellPrice;
         this.id = id;
         this.available = available;
 
@@ -46,4 +48,8 @@ public class Tickets implements Serializable {
     }
     public String getId() { return id; }
     public String getAvailable(){ return available;}
+
+    public String getSellPrice() {
+        return sellPrice;
+    }
 }

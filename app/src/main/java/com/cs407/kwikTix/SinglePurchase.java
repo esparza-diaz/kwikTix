@@ -82,7 +82,6 @@ public class SinglePurchase extends Fragment {
         // Retrieve the selectedListing from arguments
         Bundle args = getArguments();
         if (args != null) {
-            Offer selectedPurchase = (Offer) args.getSerializable("selectedPurchase");
             Tickets selectedPurchase = (Tickets) args.getSerializable("selectedPurchase");
             if (selectedPurchase != null) {
                 //Tickets ticket = dbHelper.getTicket(selectedPurchase.getId());
@@ -100,13 +99,13 @@ public class SinglePurchase extends Fragment {
                 gameNameTextView.setText(selectedPurchase.getTitle());
 
                 TextView ticketPriceTextView = v.findViewById(R.id.ticketPrice);
-                ticketPriceTextView.setText("$" + selectedPurchase.getPrice().toString());
+                ticketPriceTextView.setText("$" + selectedPurchase.getPrice());
 
                 TextView sellerNameTextView = v.findViewById(R.id.sellerName);
                 sellerNameTextView.setText(selectedPurchase.getSeller());
 
                 TextView purchasedPriceTextView = v.findViewById(R.id.purchasedPrice);
-                purchasedPriceTextView.setText("$" + selectedPurchase.getOfferAmount().toString());
+                purchasedPriceTextView.setText("$" + selectedPurchase.getSellPrice());
                 //TODO: change to method junior adds to Tickets
 
                 SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);

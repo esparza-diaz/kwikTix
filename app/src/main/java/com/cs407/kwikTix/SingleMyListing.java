@@ -142,7 +142,7 @@ public class SingleMyListing extends Fragment {
                     TextView buyerTextView = v.findViewById(R.id.buyerUsername);
                     TextView contactTextView = v.findViewById(R.id.buyerInfo);
 
-                    finalPriceTextView.setText(selectedListing.getPrice());
+                    finalPriceTextView.setText("$" + selectedListing.getSellPrice());
                     buyerTextView.setText(selectedListing.getBuyer());
                     Users user = dbHelper.getUser(selectedListing.getBuyer());
                     if (user.getPrefContactMethod().equals("Phone")){

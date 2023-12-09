@@ -37,7 +37,7 @@ public class PurchaseAdapter extends ArrayAdapter<Tickets> {
         if (currentPurchase != null) {
             ticketName.setText(currentPurchase.getTitle());
             sellerName.setText(currentPurchase.getSeller());
-            purchasedPrice.setText(currentPurchase.getOfferAmount());
+            purchasedPrice.setText(currentPurchase.getSellPrice());
             //TODO: change to whatever method is added to Tickets
         }
         return convertView;

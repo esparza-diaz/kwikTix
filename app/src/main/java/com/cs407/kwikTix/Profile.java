@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -111,6 +112,8 @@ public class Profile extends Fragment {
             }
         });
 
+        TextView usernameText = v.findViewById(R.id.username);
+        usernameText.setText(userLoggedIn);
         LinearLayout myListings = v.findViewById(R.id.clickableMyListings);
         myListings.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -81,8 +81,15 @@ public class TicketOffers extends Fragment {
         Tickets ticket = (Tickets) args.getSerializable("selectedListing");
 
         //filter offers by username, not by ticket id
+        ArrayList<Offer> allOffers = dbHelper.getOffers(null,ticket.getId());
         displayTicketOffers.clear();
-        displayTicketOffers = dbHelper.getOffers(null,ticket.getId());
+
+        for (Offer offer: allOffers) {
+            if (!offer.getStatus().equals("REJECTED")) {
+                displayTicketOffers.add(offer);
+            }
+        }
+        //displayTicketOffers = dbHelper.getOffers(null,ticket.getId());
         adapter = new TicketOfferAdapter(v.getContext(), displayTicketOffers);
         adapter.setUsername(userLoggedIn);
         ticketOffersListView.setAdapter(adapter);

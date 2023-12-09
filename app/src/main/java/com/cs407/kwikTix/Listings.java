@@ -334,11 +334,11 @@ public class Listings extends Fragment {
 
         for (Tickets ticket: tix) {
             if (!ticket.getSeller().equals(userLoggedInUsername) && ticket.getAvailable().equals("1")) {
-                displayListings.add(ticket);
+                tix2.add(ticket);
             }
         }
 
-        if (tix2.size() == 0){
+        if (displayListings.size() == 0){
             Toast.makeText(requireContext(),"No tickets found. Modify filters.", Toast.LENGTH_SHORT).show();
         }
 

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,8 +37,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-//import pl.droidsonroids.gif.GifDrawable;
-//import pl.droidsonroids.gif.GifImageView;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,17 +53,15 @@ public class SingleTicket extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private SQLiteDatabase sqLiteDatabase;
-    private DBHelper dbHelper;
-    private Users seller;
-    private Users userLoggedIn; // buyer
-    private String userLoggedInUsername;
-    private String sellerUsername;
+    private String userLoggedIn;
     private String mParam2;
 
     public SingleTicket() {
         // Required empty public constructor
     }
+
+    SQLiteDatabase sqLiteDatabase;
+    DBHelper dbHelper;
 
     /**
      * Use this factory method to create a new instance of
@@ -85,8 +84,6 @@ public class SingleTicket extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
-        userLoggedInUsername = sharedPreferences.getString("username", "");
     }
 
     private TextWatcher priceTextWatcher;
@@ -97,21 +94,14 @@ public class SingleTicket extends Fragment {
         View v = inflater.inflate(R.layout.fragment_single_ticket, container, false);
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
-
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
-        userLoggedInUsername = sharedPreferences.getString("username","");
+        userLoggedIn = sharedPreferences.getString("username","");
         // Retrieve the selectedListing from arguments
         Bundle args = getArguments();
         if (args != null) {
             Tickets selectedListing = (Tickets) args.getSerializable("selectedListing");
             if (selectedListing != null) {
-                // Setting buyer and seller arguments to be used in notifications
-                userLoggedIn = dbHelper.getUser(userLoggedInUsername);
-                sellerUsername = selectedListing.getSeller().toString(); // TODO redundant toString?
-                seller = dbHelper.getUser(sellerUsername);
-
                 Log.i("TEST",selectedListing.getTitle());
-                Log.i("TEST", sellerUsername);
                 Log.i("TEST",selectedListing.getSeller());
                 // update offer notice if previously offered.
                 ArrayList<Offer> offers = dbHelper.getOffers(null,selectedListing.getId());
@@ -122,7 +112,6 @@ public class SingleTicket extends Fragment {
 
                     }
                 }
-
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(selectedListing.getTitle());
@@ -147,7 +136,6 @@ public class SingleTicket extends Fragment {
                 ticketPriceTextView.setText("$" + selectedListing.getPrice().toString());
 
                 TextView sellerNameTextView = v.findViewById(R.id.sellerName);
-                sellerNameTextView.setText(selectedListing.getSeller().toString()); // TODO redundant toString?
                 sellerNameTextView.setText(selectedListing.getSeller().toString());
 
                 SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
@@ -182,23 +170,8 @@ public class SingleTicket extends Fragment {
                 buy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dbHelper.boughtTicket(selectedListing, userLoggedInUsername);
+                        dbHelper.boughtTicket(selectedListing, userLoggedIn);
                         showCongratulationsPopup();
-
-                        // Notify User
-                        NotificationHelper notificationHelper = NotificationHelper.getInstance();
-                        notificationHelper.setNotificationContent(
-                                requireContext(),
-                                userLoggedIn,
-                                seller,
-                                selectedListing.getTitle(),
-                                null,
-                                "ACCEPTED",
-                                getContext().getString(R.string.BUYER_PURCHASED_TICKET),
-                                null,
-                                selectedListing.getId());
-                        notificationHelper.showNotification(
-                                requireContext(), -1);
                     }
                 });
 
@@ -257,14 +230,14 @@ public class SingleTicket extends Fragment {
     private void showCongratulationsPopup() {
         View overlayView = LayoutInflater.from(requireContext()).inflate(R.layout.overlay_confetti, null);
 
-//        GifImageView confettiGif = overlayView.findViewById(R.id.confettiGif);
-//        try {
-//            InputStream inputStream = requireContext().getAssets().open("confetti.gif");
-//            confettiGif.setImageDrawable(new GifDrawable(inputStream));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
+        GifImageView confettiGif = overlayView.findViewById(R.id.confettiGif);
+        try {
+            InputStream inputStream = requireContext().getAssets().open("confetti.gif");
+            confettiGif.setImageDrawable(new GifDrawable(inputStream));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // TODO: update listing to reflect that it is bought
         View rootView = requireActivity().getWindow().getDecorView().getRootView();
 
         ((ViewGroup) rootView).addView(overlayView);
@@ -301,10 +274,10 @@ public class SingleTicket extends Fragment {
         View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_counteroffer, null);
         String message = "";
         try {
-            dbHelper.addOffer(listing.getId(), offerAmount, userLoggedInUsername, "PENDING");
+            dbHelper.addOffer(listing.getId(), offerAmount, userLoggedIn, "PENDING");
             message = "We successfully sent a new CounterOffer to " + listing.getSeller() + " for $" + offerAmount;
         }catch(SQLiteConstraintException e){
-            dbHelper.updateOffer(listing.getId(), offerAmount, userLoggedInUsername);
+            dbHelper.updateOffer(listing.getId(), offerAmount, userLoggedIn);
             message = "We successfully sent your updated CounterOffer to " + listing.getSeller() + " for $" + offerAmount;
         }
 

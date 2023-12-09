@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -40,6 +42,9 @@ public class TicketOfferAdapter extends ArrayAdapter<Offer> {
 
         TextView offeredPrice = convertView.findViewById(R.id.offeredPrice);
         TextView offerBuyer = convertView.findViewById(R.id.offerBuyer);
+        Button acceptOfferButton = convertView.findViewById(R.id.acceptOffer);
+        Button rejectOfferButton = convertView.findViewById(R.id.rejectOffer);
+
 
 
         if (currentOffer != null) {
@@ -47,6 +52,33 @@ public class TicketOfferAdapter extends ArrayAdapter<Offer> {
             offerBuyer.setText(userLoggedIn);
         }
 
+        // ACCEPT OFFER LISTENER
+        acceptOfferButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Offer Accepted", Toast.LENGTH_SHORT).show();
+                dbHelper.acceptOffer(currentOffer);
+                clearOffer(position);
+            }
+        });
+
+        // Set click listener for "Reject Offer" button
+        rejectOfferButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Offer Rejected", Toast.LENGTH_SHORT).show();
+                dbHelper.declineOffer(currentOffer);
+                clearOffer(position);
+            }
+        });
+
         return convertView;
     }
+
+    public void clearOffer(int position) {
+        if (position >= 0 && position < getCount()) {
+            remove(getItem(position));
+        }
+    }
+
 }

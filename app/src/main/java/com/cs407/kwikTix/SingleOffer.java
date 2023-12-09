@@ -2,6 +2,7 @@ package com.cs407.kwikTix;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -77,6 +78,9 @@ public class SingleOffer extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userLoggedIn = getArguments().getString("username");
+        } else {
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+            userLoggedIn = sharedPreferences.getString("username", "");
         }
     }
 
@@ -88,6 +92,9 @@ public class SingleOffer extends Fragment {
         View v = inflater.inflate(R.layout.fragment_single_offer, container, false);
         SQLiteDatabase sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+        String userLoggedInUsername = sharedPreferences.getString("username","");
 
         counterOfferAmount = v.findViewById(R.id.OfferAmount);
         priceTextWatcher = new TextWatcher() {
@@ -171,8 +178,14 @@ public class SingleOffer extends Fragment {
                 changeOffer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(requireContext(), "Changing Offer as: " + userLoggedIn, Toast.LENGTH_SHORT).show();
-                        //TODO: initiate change in offer amount
+                        if (counterOfferAmount.getText().toString().equals("")) {
+                            Toast.makeText(requireContext(), "Please enter an amount", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Toast.makeText(requireContext(), "Successfully sent counteroffer!", Toast.LENGTH_SHORT).show();
+                        dbHelper.updateOffer(selectedOffer.getId(), counterOfferAmount.getText().toString(), userLoggedInUsername);
+                        FragmentManager fragmentManager = getParentFragmentManager();
+                        fragmentManager.popBackStack();
                     }
                 });
 

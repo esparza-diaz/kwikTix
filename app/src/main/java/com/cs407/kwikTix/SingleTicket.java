@@ -182,7 +182,7 @@ public class SingleTicket extends Fragment {
                 buy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dbHelper.boughtTicket(selectedListing, userLoggedInUsername, selectedListing.getPrice());
+                        dbHelper.boughtTicket(selectedListing, userLoggedInUsername);
                         showCongratulationsPopup();
 
                         // Notify User

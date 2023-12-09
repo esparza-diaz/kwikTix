@@ -20,10 +20,10 @@ import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MyListings#newInstance} factory method to
+ * Use the {@link MyPurchases#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyListings extends Fragment {
+public class MyPurchases extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,7 +32,7 @@ public class MyListings extends Fragment {
     // TODO: Rename and change types of parameters
     private String userLoggedIn;
 
-    public MyListings() {
+    public MyPurchases() {
     }
 
     /**
@@ -43,8 +43,8 @@ public class MyListings extends Fragment {
      * @return A new instance of fragment Listings.
      */
     // TODO: Rename and change types and number of parameters
-    public static MyListings newInstance(String param1) {
-        MyListings fragment = new MyListings();
+    public static MyPurchases newInstance(String param1) {
+        MyPurchases fragment = new MyPurchases();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         fragment.setArguments(args);
@@ -56,19 +56,20 @@ public class MyListings extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    ListingAdapter adapter;
-    ArrayList<Tickets> displayListings = new ArrayList<Tickets>();
+    PurchaseAdapter adapter;
+    //ArrayList<Offer> displayPurchases = new ArrayList<Offer>();
+    ArrayList<Tickets> displayPurchases = new ArrayList<Tickets>();
     SQLiteDatabase sqLiteDatabase;
     DBHelper dbHelper;
 
-    ListView myticketsListView;
+    ListView myPurchasesListView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.fragment_profile_listing, container, false);
-        myticketsListView = (ListView) v.findViewById(R.id.myListings);
+        View v =  inflater.inflate(R.layout.fragment_profile_purchase, container, false);
+        myPurchasesListView = (ListView) v.findViewById(R.id.myPurchases);
 
         // Init DB
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
@@ -76,30 +77,31 @@ public class MyListings extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
         userLoggedIn = sharedPreferences.getString("username","");
 
-        displayListings.clear();
-        displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
+        displayPurchases.clear();
+        displayPurchases = dbHelper.getPurchases(userLoggedIn);
 
-        adapter = new ListingAdapter(v.getContext(), displayListings);
-        myticketsListView.setAdapter(adapter);
+        adapter = new PurchaseAdapter(v.getContext(), displayPurchases);
+        myPurchasesListView.setAdapter(adapter);
 
         FragmentManager fragmentManager = getParentFragmentManager();
-        myticketsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        myPurchasesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Tickets selectedListing = displayListings.get(i);
+                //Offer selectedPurchase = displayPurchases.get(i);
+                Tickets selectedPurchase = displayPurchases.get(i);
+
 
                 // Create a new instance of SingleTicketFragment and pass the selectedListing
-                SingleMyListing singleListingFragment = new SingleMyListing();
+                SinglePurchase singlePurchaseFragment = new SinglePurchase();
                 Bundle args = new Bundle();
-                args.putSerializable("selectedListing", selectedListing);
-                //args.putString("username",userLoggedIn);
-                singleListingFragment.setArguments(args);
+                args.putSerializable("selectedPurchase", selectedPurchase);
+                singlePurchaseFragment.setArguments(args);
 
                 // Replace Listings fragment with SingleTicketFragment
                 fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, singleListingFragment)
+                        .replace(R.id.fragmentContainerView, singlePurchaseFragment)
                         //.setReorderingAllowed(true)
-                        .addToBackStack("showing Single Listing")
+                        .addToBackStack("showing Purchase")
                         .commit();
             }
         });
@@ -114,18 +116,18 @@ public class MyListings extends Fragment {
         });
 
         return v;
-
     }
 
-    public void refreshListings() {
-        // Notify the adapter that the data has changed
-        Log.i("TEST", displayListings.toString());
 
-        if (displayListings.size() == 0){
-            Toast.makeText(requireContext(),"No tickets found", Toast.LENGTH_LONG).show();
+    public void refreshPurchases() {
+        // Notify the adapter that the data has changed
+        Log.i("TEST", displayPurchases.toString());
+
+        if (displayPurchases.size() == 0){
+            Toast.makeText(requireContext(),"No purchases found", Toast.LENGTH_LONG).show();
         }
         adapter.clear();
-        adapter.addAll(displayListings);
+        adapter.addAll(displayPurchases);
 
         // Notify the adapter that the data has changed
         adapter.notifyDataSetChanged();

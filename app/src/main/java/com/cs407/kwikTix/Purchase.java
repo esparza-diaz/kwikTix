@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class Purchase implements Serializable {
     //"(id INTEGER ,offerAmount TEXT,buyerUsername TEXT,PRIMARY KEY (id, buyerUsername),FOREIGN KEY (id) REFERENCES listings(id),FOREIGN KEY (buyerUsername) REFERENCES users(username))");
 
+    private Offer offer;
+    private Tickets ticket;
     //params for Offers
     private String id;
     private String offerAmount;
@@ -22,20 +24,21 @@ public class Purchase implements Serializable {
 
 
     public Purchase(Tickets ticket, Offer offer) {
+        this.offer = offer;
+        this.ticket = ticket;
         //offer
         this.id = offer.getId();
         this.offerAmount = offer.getOfferAmount();
         this.buyerUsername = offer.getBuyerUsername();
-        this.status = offer.getStatus();
         //ticket
-        this.title = ticket.getTitle(); //don't need
         this.date = ticket.getDate();
         this.college = ticket.getCollege();
         this.sellerUsername = ticket.getSeller();
-        this.buyer = ticket.getBuyer();
         this.price = ticket.getPrice();
-        this.available = ticket.getAvailable(); //don't need
     }
+
+    public Offer getOffer(){ return offer; }
+    public Tickets getTicket(){ return ticket; }
 
     //offer
     public String getId() {

@@ -636,9 +636,9 @@ public class DBHelper {
         }
     }
 
-    public ArrayList<Purchase> getPurchases(String username){
+    public ArrayList<Offer> getPurchases(String username){
         createTable();
-        ArrayList<Purchase> purchases = new ArrayList<>();
+        ArrayList<Offer> purchases = new ArrayList<>();
         if (username != null) {
             Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM offers WHERE buyerUsername = ?",
                     new String[]{username});
@@ -649,14 +649,15 @@ public class DBHelper {
             while(!c.isAfterLast()){
                 String id = c.getString(idIndex);
                 Tickets ticket = getTicket(id);
-                if(ticket.getAvailable()=="0"){
+                if(ticket.getAvailable().equals("0")){
                     String offerAmt = c.getString(offerAmtIndex);
                     String status = c.getString(statusIndex);
                     Offer offer = new Offer(id,offerAmt,username,status);
                     //now we have a Tickets item and an Offer item
                     //create a Purchase item
-                    Purchase purchase = new Purchase(ticket, offer);
-                    purchases.add(purchase);
+                    //Purchase purchase = new Purchase(ticket, offer);
+                    //purchases.add(purchase);
+                    purchases.add(offer);
                 }
                 c.moveToNext();
             }

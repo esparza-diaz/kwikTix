@@ -125,7 +125,7 @@ public class Profile extends Fragment {
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainerView, listingsFragment)
                         .setReorderingAllowed(true)
-                        .addToBackStack("showing Post")
+                        .addToBackStack("Showing Listing")
                         .commit();
             }
         });
@@ -144,7 +144,26 @@ public class Profile extends Fragment {
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainerView, offersFragment)
                         .setReorderingAllowed(true)
-                        .addToBackStack("showing Post")
+                        .addToBackStack("Showing Offer")
+                        .commit();
+            }
+        });
+
+        LinearLayout myPurchases = v.findViewById(R.id.clickableMyPurchases);
+        myPurchases.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                FragmentManager fragmentManager = getParentFragmentManager();
+                MyPurchases purchasesFragment = new MyPurchases();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("username", userLoggedIn);
+                purchasesFragment.setArguments(bundle);
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, purchasesFragment)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("Showing Purchase")
                         .commit();
             }
         });

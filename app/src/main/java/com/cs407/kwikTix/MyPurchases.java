@@ -32,8 +32,6 @@ public class MyPurchases extends Fragment {
     // TODO: Rename and change types of parameters
     private String userLoggedIn;
 
-    public static ArrayList<Offer> offers;
-
     public MyPurchases() {
     }
 
@@ -58,59 +56,49 @@ public class MyPurchases extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    OfferAdapter adapter;
-    ArrayList<Offer> displayOffers = new ArrayList<Offer>();
+    PurchaseAdapter adapter;
+    ArrayList<Offer> displayPurchases = new ArrayList<Offer>();
     SQLiteDatabase sqLiteDatabase;
     DBHelper dbHelper;
 
-    ListView myOffersListView;
+    ListView myPurchasesListView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.fragment_profile_my_offers, container, false);
-        myOffersListView = (ListView) v.findViewById(R.id.myOffers);
+        View v =  inflater.inflate(R.layout.fragment_profile_purchase, container, false);
+        myPurchasesListView = (ListView) v.findViewById(R.id.myPurchases);
 
         // Init DB
         sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         dbHelper = new DBHelper(sqLiteDatabase);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
         userLoggedIn = sharedPreferences.getString("username","");
-        //filter offers by username, not by ticket id
-        displayOffers.clear();
-        displayOffers = dbHelper.getOffers(userLoggedIn, null);
 
-        //////////////////////////////////////////////////////
-        ArrayList<Offer> thisUsersOffers = dbHelper.getOffers(userLoggedIn, null);
-        //for each offer in this list, get the ticket and check if it's available=1 or
-        // not available and if it's available, then create new Purchase Item
+        displayPurchases.clear();
+        displayPurchases = dbHelper.getPurchases(userLoggedIn);
 
-
-
-        ///////////////////////////////////////////////////////////
-
-        adapter = new OfferAdapter(v.getContext(), displayOffers);
-        myOffersListView.setAdapter(adapter);
+        adapter = new PurchaseAdapter(v.getContext(), displayPurchases);
+        myPurchasesListView.setAdapter(adapter);
 
         FragmentManager fragmentManager = getParentFragmentManager();
-        myOffersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        myPurchasesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Offer selectedOffer = displayOffers.get(i);
+                Offer selectedPurchase = displayPurchases.get(i);
 
                 // Create a new instance of SingleTicketFragment and pass the selectedListing
-                SingleOffer singleOfferFragment = new SingleOffer();
+                SinglePurchase singlePurchaseFragment = new SinglePurchase();
                 Bundle args = new Bundle();
-                args.putSerializable("selectedOffer", selectedOffer);
-                //args.putString("buyerUsername",userLoggedIn);
-                singleOfferFragment.setArguments(args);
+                args.putSerializable("selectedPurchase", selectedPurchase);
+                singlePurchaseFragment.setArguments(args);
 
                 // Replace Listings fragment with SingleTicketFragment
                 fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, singleOfferFragment)
+                        .replace(R.id.fragmentContainerView, singlePurchaseFragment)
                         //.setReorderingAllowed(true)
-                        .addToBackStack("showing Single Offer")
+                        .addToBackStack("showing Purchase")
                         .commit();
             }
         });
@@ -128,15 +116,15 @@ public class MyPurchases extends Fragment {
     }
 
 
-    public void refreshOffers() {
+    public void refreshPurchases() {
         // Notify the adapter that the data has changed
-        Log.i("TEST", displayOffers.toString());
+        Log.i("TEST", displayPurchases.toString());
 
-        if (displayOffers.size() == 0){
-            Toast.makeText(requireContext(),"No offers found", Toast.LENGTH_LONG).show();
+        if (displayPurchases.size() == 0){
+            Toast.makeText(requireContext(),"No purchases found", Toast.LENGTH_LONG).show();
         }
         adapter.clear();
-        adapter.addAll(displayOffers);
+        adapter.addAll(displayPurchases);
 
         // Notify the adapter that the data has changed
         adapter.notifyDataSetChanged();

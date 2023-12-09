@@ -53,7 +53,7 @@ public class SinglePurchase extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SingleTicket.
+     * @return A new instance of fragment SinglePurchase.
      */
     // TODO: Rename and change types and number of parameters
     public static SinglePurchase newInstance(String param1, String param2) {
@@ -73,24 +73,21 @@ public class SinglePurchase extends Fragment {
         }
     }
 
-    private TextWatcher priceTextWatcher;
-
-    private EditText counterOfferAmount;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_single_offer, container, false);
+        View v = inflater.inflate(R.layout.fragment_single_purchase, container, false);
         SQLiteDatabase sqLiteDatabase = v.getContext().openOrCreateDatabase(getResources().getString(R.string.sql_db), Context.MODE_PRIVATE, null);
         DBHelper dbHelper = new DBHelper(sqLiteDatabase);
 
         // Retrieve the selectedListing from arguments
         Bundle args = getArguments();
         if (args != null) {
-            Offer selectedOffer = (Offer) args.getSerializable("selectedOffer");
-            if (selectedOffer != null) {
+            Offer selectedPurchase = (Offer) args.getSerializable("selectedPurchase");
+            if (selectedPurchase != null) {
+                Tickets ticket = dbHelper.getTicket(selectedPurchase.getId());
                 //retrieve ticket that the offer is associated with
-                Tickets ticket = dbHelper.getTicket(selectedOffer.getId());
                 Log.i("TEST",ticket.getTitle());
-                Log.i("TEST",selectedOffer.getBuyerUsername());
+                Log.i("TEST",selectedPurchase.getBuyerUsername());
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(ticket.getTitle());
@@ -107,11 +104,8 @@ public class SinglePurchase extends Fragment {
                 TextView sellerNameTextView = v.findViewById(R.id.sellerName);
                 sellerNameTextView.setText(ticket.getSeller());
 
-                TextView offeredPriceTextView = v.findViewById(R.id.offeredPrice);
-                offeredPriceTextView.setText(selectedOffer.getOfferAmount());
-
-                TextView offerStatusTextView = v.findViewById(R.id.offerStatus);
-                offerStatusTextView.setText(selectedOffer.getStatus());
+                TextView purchasedPriceTextView = v.findViewById(R.id.purchasedPrice);
+                purchasedPriceTextView.setText("$" + selectedPurchase.getOfferAmount().toString());
 
                 SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                 SimpleDateFormat outputFormat = new SimpleDateFormat("EEE MM/dd/yyyy 'at' hh:mm a", Locale.getDefault());
@@ -140,54 +134,10 @@ public class SinglePurchase extends Fragment {
                         fragmentManager.popBackStack();
                     }
                 });
-
-                Button changeOffer = v.findViewById(R.id.changeOfferButton);
-                changeOffer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(requireContext(), "Changing Offer as: " + userLoggedIn, Toast.LENGTH_SHORT).show();
-                        //TODO: initiate change in offer amount
-                    }
-                });
-
-                Button revokeOffer = v.findViewById(R.id.revokeOfferButton);
-                revokeOffer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        try{
-                            dbHelper.deleteOffer(selectedOffer.getId());
-                            Toast.makeText(requireContext(), "Successfully Revoked Offer", Toast.LENGTH_SHORT).show();
-                            FragmentManager fragmentManager = getParentFragmentManager();
-                            fragmentManager.popBackStack();
-                        }catch (Exception e) {
-                            Toast.makeText(requireContext(), "Error Revoking Offer", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-
             }
         }
 
         return v;
-    }
-
-    private void formatPriceInput(Editable editable) {
-        String input = editable.toString();
-        Log.i("TEST", "formatiing");
-
-        // Remove previous formatting
-        String cleanString = input.replaceAll("[^0-9]", "");
-
-        // Format the input as currency
-        if (!cleanString.isEmpty()) {
-            double parsed = Double.parseDouble(cleanString);
-            String formatted = DecimalFormat.getCurrencyInstance().format((parsed / 100));
-            counterOfferAmount.removeTextChangedListener(priceTextWatcher);
-            counterOfferAmount.setText(formatted);
-            counterOfferAmount.setSelection(formatted.length());
-            counterOfferAmount.addTextChangedListener(priceTextWatcher);
-        }
     }
 
 }

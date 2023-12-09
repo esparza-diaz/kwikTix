@@ -21,7 +21,6 @@ public class ListingAdapter extends ArrayAdapter<Tickets> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_listing, parent, false);
         }
-
         Tickets currentListing = getItem(position);
 
         TextView ticketName = convertView.findViewById(R.id.ticketName);

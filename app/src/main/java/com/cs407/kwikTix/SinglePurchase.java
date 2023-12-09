@@ -83,34 +83,36 @@ public class SinglePurchase extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             Offer selectedPurchase = (Offer) args.getSerializable("selectedPurchase");
+            Tickets selectedPurchase = (Tickets) args.getSerializable("selectedPurchase");
             if (selectedPurchase != null) {
-                Tickets ticket = dbHelper.getTicket(selectedPurchase.getId());
+                //Tickets ticket = dbHelper.getTicket(selectedPurchase.getId());
                 //retrieve ticket that the offer is associated with
-                Log.i("TEST",ticket.getTitle());
-                Log.i("TEST",selectedPurchase.getBuyerUsername());
+                Log.i("TEST",selectedPurchase.getTitle());
+                Log.i("TEST",selectedPurchase.getBuyer());
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
-                ticketNameTextView.setText(ticket.getTitle());
+                ticketNameTextView.setText(selectedPurchase.getTitle());
 
                 TextView locationNameTextView = v.findViewById(R.id.gameLocation);
-                locationNameTextView.setText(ticket.getCollege()); // Set the college name
+                locationNameTextView.setText(selectedPurchase.getCollege()); // Set the college name
 
                 TextView gameNameTextView = v.findViewById(R.id.gameName);
-                gameNameTextView.setText(ticket.getTitle());
+                gameNameTextView.setText(selectedPurchase.getTitle());
 
                 TextView ticketPriceTextView = v.findViewById(R.id.ticketPrice);
-                ticketPriceTextView.setText("$" + ticket.getPrice().toString());
+                ticketPriceTextView.setText("$" + selectedPurchase.getPrice().toString());
 
                 TextView sellerNameTextView = v.findViewById(R.id.sellerName);
-                sellerNameTextView.setText(ticket.getSeller());
+                sellerNameTextView.setText(selectedPurchase.getSeller());
 
                 TextView purchasedPriceTextView = v.findViewById(R.id.purchasedPrice);
                 purchasedPriceTextView.setText("$" + selectedPurchase.getOfferAmount().toString());
+                //TODO: change to method junior adds to Tickets
 
                 SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                 SimpleDateFormat outputFormat = new SimpleDateFormat("EEE MM/dd/yyyy 'at' hh:mm a", Locale.getDefault());
                 TextView dateTimeTextView = v.findViewById(R.id.dateTime);
-                String dateString = ticket.getDate();
+                String dateString = selectedPurchase.getDate();
                 try {
                     // Parse the input string into a Date object
                     Date date = inputFormat.parse(dateString);

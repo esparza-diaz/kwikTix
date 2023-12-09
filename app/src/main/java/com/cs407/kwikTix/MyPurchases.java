@@ -57,7 +57,8 @@ public class MyPurchases extends Fragment {
     }
 
     PurchaseAdapter adapter;
-    ArrayList<Offer> displayPurchases = new ArrayList<Offer>();
+    //ArrayList<Offer> displayPurchases = new ArrayList<Offer>();
+    ArrayList<Tickets> displayPurchases = new ArrayList<Tickets>();
     SQLiteDatabase sqLiteDatabase;
     DBHelper dbHelper;
 
@@ -86,7 +87,9 @@ public class MyPurchases extends Fragment {
         myPurchasesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Offer selectedPurchase = displayPurchases.get(i);
+                //Offer selectedPurchase = displayPurchases.get(i);
+                Tickets selectedPurchase = displayPurchases.get(i);
+
 
                 // Create a new instance of SingleTicketFragment and pass the selectedListing
                 SinglePurchase singlePurchaseFragment = new SinglePurchase();

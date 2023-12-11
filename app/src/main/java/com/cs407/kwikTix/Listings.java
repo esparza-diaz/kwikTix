@@ -195,7 +195,7 @@ public class Listings extends Fragment {
         View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.quick_view_popup, null);
 
         // Set up the PopupWindow
-        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
 
@@ -235,7 +235,7 @@ public class Listings extends Fragment {
         View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.filter_menu, null);
 
         // Set up the PopupWindow
-        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
 

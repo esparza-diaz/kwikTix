@@ -170,7 +170,7 @@ public class SingleTicket extends Fragment {
                 buy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dbHelper.boughtTicket(selectedListing, userLoggedIn);
+                        dbHelper.boughtTicket(selectedListing, userLoggedIn, selectedListing.getSellPrice());
                         showCongratulationsPopup();
                     }
                 });
@@ -270,15 +270,19 @@ public class SingleTicket extends Fragment {
         }, 4500);
     }
     private void showCounterOfferPopup(Tickets listing, String offerAmount) {
+        View overlayView = LayoutInflater.from(requireContext()).inflate(R.layout.overlay, null);
+
+        View rootView = requireActivity().getWindow().getDecorView().getRootView();
+        ((ViewGroup) rootView).addView(overlayView);
 
         View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_counteroffer, null);
         String message = "";
         try {
             dbHelper.addOffer(listing.getId(), offerAmount, userLoggedIn, "PENDING");
-            message = "We successfully sent a new CounterOffer to " + listing.getSeller() + " for $" + offerAmount;
+            message = "Your new offer has been sent to " + listing.getSeller() + " for $" + offerAmount;
         }catch(SQLiteConstraintException e){
             dbHelper.updateOffer(listing.getId(), offerAmount, userLoggedIn);
-            message = "We successfully sent your updated CounterOffer to " + listing.getSeller() + " for $" + offerAmount;
+            message = "Your updated offer has been sent to " + listing.getSeller() + " for $" + offerAmount;
         }
 
         // Replace placeholders with actual values
@@ -289,11 +293,12 @@ public class SingleTicket extends Fragment {
         popupWindow.setFocusable(true);
 
         // Show the popup at the center of the screen
-        View rootView = requireActivity().getWindow().getDecorView().getRootView();
         popupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
 
         // Dismiss the popup after a certain delay
         new Handler().postDelayed(() -> {
+            ((ViewGroup) rootView).removeView(overlayView);
+
             if (popupWindow.isShowing()) {
                 popupWindow.dismiss();
             }

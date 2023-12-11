@@ -106,7 +106,16 @@ public class SinglePurchase extends Fragment {
 
                 TextView purchasedPriceTextView = v.findViewById(R.id.purchasedPrice);
                 purchasedPriceTextView.setText("$" + selectedPurchase.getSellPrice());
-                //TODO: change to method junior adds to Tickets
+
+                TextView sellerTextView = v.findViewById(R.id.sellerUsername);
+                TextView contactTextView = v.findViewById(R.id.sellerInfo);
+                sellerTextView.setText(selectedPurchase.getBuyer());
+                Users user = dbHelper.getUser(selectedPurchase.getBuyer());
+                if (user.getPrefContactMethod().equals("Phone")){
+                    contactTextView.setText(user.getPhone());
+                }else{
+                    contactTextView.setText(user.getEmail());
+                }
 
                 SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                 SimpleDateFormat outputFormat = new SimpleDateFormat("EEE MM/dd/yyyy 'at' hh:mm a", Locale.getDefault());

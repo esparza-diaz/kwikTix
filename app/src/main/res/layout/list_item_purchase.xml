@@ -75,12 +75,6 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$"
-                    android:textSize="22sp" />
-
-                <TextView
                     android:id="@+id/purchasedPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

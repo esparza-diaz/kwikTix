@@ -29,13 +29,11 @@ public class OfferAdapter extends ArrayAdapter<Offer> {
         Tickets ticket = dbHelper.getTicket(currentOffer.getId());
 
         TextView ticketName = convertView.findViewById(R.id.ticketName);
-        TextView gameName = convertView.findViewById(R.id.gameName);
         TextView offerStatus = convertView.findViewById(R.id.offerStatus);
 
 
         if (currentOffer != null) {
             ticketName.setText(ticket.getTitle());
-            gameName.setText(ticket.getTitle());
             offerStatus.setText(currentOffer.getStatus());
         }
 

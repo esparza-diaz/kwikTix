@@ -195,7 +195,7 @@ public class Listings extends Fragment {
         View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.quick_view_popup, null);
 
         // Set up the PopupWindow
-        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
 
@@ -230,13 +230,17 @@ public class Listings extends Fragment {
 
 
     private void showCollegeFilterPopup(View view) {
+
         // Inflate the popup layout
         View popupView = LayoutInflater.from(requireContext()).inflate(R.layout.filter_menu, null);
 
         // Set up the PopupWindow
-        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
+
+        // Show the popup at the center of the screen
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
         Spinner collegeSpinner = popupView.findViewById(R.id.collegesSpinner);
 
@@ -275,8 +279,6 @@ public class Listings extends Fragment {
             }
         });
 
-        // Show the popup at the center of the screen
-        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
     private void showSortMenu(View view) {

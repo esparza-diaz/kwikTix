@@ -11,12 +11,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
+import androidx.fragment.app.FragmentManager;
 
+import java.util.List;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 public class TicketOfferAdapter extends ArrayAdapter<Offer> {
 
-    public TicketOfferAdapter(Context context, List<Offer> offer) {
+    private FragmentManager fragmentManager;
+    public TicketOfferAdapter(Context context, FragmentManager fragmentManager,List<Offer> offer) {
         super(context, 0, offer);
+        this.fragmentManager = fragmentManager;
     }
 
     public void setUsername(String username){
@@ -59,6 +64,7 @@ public class TicketOfferAdapter extends ArrayAdapter<Offer> {
                 Toast.makeText(getContext(), "Offer Accepted", Toast.LENGTH_SHORT).show();
                 dbHelper.acceptOffer(currentOffer);
                 clearOffer(position);
+                fragmentManager.popBackStack();
             }
         });
 

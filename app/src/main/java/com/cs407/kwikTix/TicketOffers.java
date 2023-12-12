@@ -90,7 +90,7 @@ public class TicketOffers extends Fragment {
             }
         }
         //displayTicketOffers = dbHelper.getOffers(null,ticket.getId());
-        adapter = new TicketOfferAdapter(v.getContext(), displayTicketOffers);
+        adapter = new TicketOfferAdapter(v.getContext(), getParentFragmentManager(), displayTicketOffers);
         adapter.setUsername(userLoggedIn);
         ticketOffersListView.setAdapter(adapter);
 

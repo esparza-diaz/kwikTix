@@ -64,8 +64,12 @@ public class TicketOfferAdapter extends ArrayAdapter<Offer> {
                 Toast.makeText(getContext(), "Offer Accepted", Toast.LENGTH_SHORT).show();
                 dbHelper.acceptOffer(currentOffer);
                 clearOffer(position);
-                fragmentManager.popBackStack();
-            }
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, Profile.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("showing Profile")
+                        .commit();
+            };
         });
 
         // Set click listener for "Reject Offer" button

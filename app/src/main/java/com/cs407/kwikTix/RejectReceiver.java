@@ -17,17 +17,18 @@ public class RejectReceiver extends BroadcastReceiver {
 
         int notificationId = intent.getIntExtra("notificationId", -1);
         String rejectedOfferId = intent.getStringExtra("offerId");
+        String buyerUsername = intent.getStringExtra("buyerUsername");
 
         ArrayList<Offer> offers = dbHelper.getOffers(null, rejectedOfferId);
-        Offer offer;
         if (offers.size() != 0) {
-            offer = offers.get(0);
-            dbHelper.declineOffer(offer);
+            for(Offer offer : offers) {
+                if (offer.getBuyerUsername().equals(buyerUsername)) {
+                    dbHelper.acceptOffer(offer);
+                    // Cancel notification
+                    notificationManagerCompat.cancel(notificationId);
+                }
+            }
         }
-
-
-        // Cancel notification
-        notificationManagerCompat.cancel(notificationId);
 
         Toast.makeText(context, context.getString(R.string.REJECTED),
                 Toast.LENGTH_LONG).show();

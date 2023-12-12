@@ -236,6 +236,7 @@ public class NotificationHelper {
             notificationsBuilder.addAction(acknowledgeNotificationAction);
         }
 
+
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(item.getId(), notificationsBuilder.build());
 

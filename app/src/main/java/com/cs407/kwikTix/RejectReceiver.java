@@ -16,20 +16,20 @@ public class RejectReceiver extends BroadcastReceiver {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
 
         int notificationId = intent.getIntExtra("notificationId", -1);
-        String listingId = intent.getStringExtra("listingId");
-        String buyerUsername = intent.getStringExtra("buyerUsername");
+        String rejectedOfferId = intent.getStringExtra("offerId");
 
-        ArrayList<Offer> offers = dbHelper.getOffers(buyerUsername, listingId);
+        ArrayList<Offer> offers = dbHelper.getOffers(null, rejectedOfferId);
         Offer offer;
         if (offers.size() != 0) {
             offer = offers.get(0);
             dbHelper.declineOffer(offer);
         }
 
-        Toast.makeText(context, context.getString(R.string.REJECTED),
-                Toast.LENGTH_LONG).show();
 
         // Cancel notification
         notificationManagerCompat.cancel(notificationId);
+
+        Toast.makeText(context, context.getString(R.string.REJECTED),
+                Toast.LENGTH_LONG).show();
     }
 }

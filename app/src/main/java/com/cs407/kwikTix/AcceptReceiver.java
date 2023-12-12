@@ -17,12 +17,9 @@ public class AcceptReceiver extends BroadcastReceiver {
 
         int notificationId = intent.getIntExtra("notificationId", -1);
         String acceptedOfferId = intent.getStringExtra("offerId");
-        String listingId = intent.getStringExtra("listingId");
-        String buyerUsername = intent.getStringExtra("buyerUsername");
 
-        ArrayList<Offer> offers = dbHelper.getOffers(buyerUsername, acceptedOfferId);
+        ArrayList<Offer> offers = dbHelper.getOffers(null, acceptedOfferId);
         Offer offer;
-
         if (offers.size() != 0) {
             offer = offers.get(0);
             dbHelper.acceptOffer(offer);

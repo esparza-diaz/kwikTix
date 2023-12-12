@@ -101,7 +101,7 @@ public class SinglePurchase extends Fragment {
                 sellerNameTextView.setText(selectedPurchase.getSeller());
 
                 TextView purchasedPriceTextView = v.findViewById(R.id.purchasedPrice);
-                purchasedPriceTextView.setText("$" + selectedPurchase.getPrice());
+                purchasedPriceTextView.setText("$" + selectedPurchase.getSellPrice());
 
                 TextView sellerTextView = v.findViewById(R.id.sellerUsername);
                 TextView contactTextView = v.findViewById(R.id.sellerInfo);

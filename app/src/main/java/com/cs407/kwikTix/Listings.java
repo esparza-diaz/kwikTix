@@ -340,7 +340,7 @@ public class Listings extends Fragment {
             }
         }
 
-        if (displayListings.size() == 0){
+        if (tix2.size() == 0){
             Toast.makeText(requireContext(),"No tickets found. Modify filters.", Toast.LENGTH_SHORT).show();
         }
 

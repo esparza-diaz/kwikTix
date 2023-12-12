@@ -38,7 +38,7 @@ public class PurchaseAdapter extends ArrayAdapter<Tickets> {
         if (currentPurchase != null) {
             ticketName.setText(currentPurchase.getTitle());
             sellerName.setText(currentPurchase.getSeller());
-            purchasedPrice.setText("$" + currentPurchase.getPrice());
+            purchasedPrice.setText("$" + currentPurchase.getSellPrice());
         }
         return convertView;
     }

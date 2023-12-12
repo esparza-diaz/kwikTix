@@ -105,8 +105,8 @@ public class SinglePurchase extends Fragment {
 
                 TextView sellerTextView = v.findViewById(R.id.sellerUsername);
                 TextView contactTextView = v.findViewById(R.id.sellerInfo);
-                sellerTextView.setText(selectedPurchase.getBuyer());
-                Users user = dbHelper.getUser(selectedPurchase.getBuyer());
+                sellerTextView.setText(selectedPurchase.getSeller());
+                Users user = dbHelper.getUser(selectedPurchase.getSeller());
                 if (user.getPrefContactMethod().equals("Phone")){
                     contactTextView.setText(user.getPhone());
                 }else{

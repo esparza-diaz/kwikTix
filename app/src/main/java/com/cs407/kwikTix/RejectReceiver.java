@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.core.app.NotificationManagerCompat;
 import java.util.ArrayList;
@@ -16,13 +17,16 @@ public class RejectReceiver extends BroadcastReceiver {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
 
         int notificationId = intent.getIntExtra("notificationId", -1);
+        String rejectedOfferId = intent.getStringExtra("offerId");
         String listingId = intent.getStringExtra("listingId");
         String buyerUsername = intent.getStringExtra("buyerUsername");
 
-        ArrayList<Offer> offers = dbHelper.getOffers(buyerUsername, listingId);
+        Log.d("RejectReceiver", "onReceive");
+
+        ArrayList<Offer> offers = dbHelper.getOffers(buyerUsername, rejectedOfferId);
         Offer offer;
         if (offers.size() != 0) {
-            offer = offers.get(0);
+            offer = offers.get(Integer.parseInt(rejectedOfferId) - 1);
             dbHelper.declineOffer(offer);
         }
 

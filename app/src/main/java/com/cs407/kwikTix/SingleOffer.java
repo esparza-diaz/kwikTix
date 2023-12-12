@@ -148,7 +148,7 @@ public class SingleOffer extends Fragment {
                 sellerNameTextView.setText(ticket.getSeller());
 
                 TextView offeredPriceTextView = v.findViewById(R.id.offeredPrice);
-                offeredPriceTextView.setText(selectedOffer.getOfferAmount());
+                offeredPriceTextView.setText("$" + selectedOffer.getOfferAmount());
 
                 TextView offerStatusTextView = v.findViewById(R.id.offerStatus);
                 offerStatusTextView.setText(selectedOffer.getStatus());
@@ -190,7 +190,7 @@ public class SingleOffer extends Fragment {
                             return;
                         }
                         Toast.makeText(requireContext(), "Successfully sent counteroffer!", Toast.LENGTH_SHORT).show();
-                        dbHelper.updateOffer(selectedOffer.getId(), counterOfferAmount.getText().toString(), userLoggedInUsername);
+                        dbHelper.updateOffer(selectedOffer.getId(),  counterOfferAmount.getText().toString().replaceAll("[^0-9.]", ""), userLoggedInUsername);
                         FragmentManager fragmentManager = getParentFragmentManager();
                         fragmentManager.popBackStack();
                     }

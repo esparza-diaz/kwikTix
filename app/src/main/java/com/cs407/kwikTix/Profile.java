@@ -84,6 +84,8 @@ public class Profile extends Fragment {
         dbHelper = new DBHelper(sqLiteDatabase);
         displayListings = dbHelper.getListings(userLoggedIn,null, null, false);
 
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.cs407.kwikTix", Context.MODE_PRIVATE);
+        userLoggedIn = sharedPreferences.getString("username","");
         Button logout = v.findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -49,7 +49,7 @@ public class TicketOfferAdapter extends ArrayAdapter<Offer> {
 
         if (currentOffer != null) {
             offeredPrice.setText("$" + currentOffer.getOfferAmount());
-            offerBuyer.setText(userLoggedIn);
+            offerBuyer.setText(currentOffer.getBuyerUsername());
         }
 
         // ACCEPT OFFER LISTENER

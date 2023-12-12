@@ -84,10 +84,6 @@ public class SinglePurchase extends Fragment {
         if (args != null) {
             Tickets selectedPurchase = (Tickets) args.getSerializable("selectedPurchase");
             if (selectedPurchase != null) {
-                //Tickets ticket = dbHelper.getTicket(selectedPurchase.getId());
-                //retrieve ticket that the offer is associated with
-                Log.i("TEST",selectedPurchase.getTitle());
-                Log.i("TEST",selectedPurchase.getBuyer());
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(selectedPurchase.getTitle());
@@ -105,7 +101,7 @@ public class SinglePurchase extends Fragment {
                 sellerNameTextView.setText(selectedPurchase.getSeller());
 
                 TextView purchasedPriceTextView = v.findViewById(R.id.purchasedPrice);
-                purchasedPriceTextView.setText("$" + selectedPurchase.getSellPrice());
+                purchasedPriceTextView.setText("$" + selectedPurchase.getPrice());
 
                 TextView sellerTextView = v.findViewById(R.id.sellerUsername);
                 TextView contactTextView = v.findViewById(R.id.sellerInfo);

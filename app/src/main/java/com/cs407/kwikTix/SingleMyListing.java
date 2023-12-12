@@ -88,8 +88,8 @@ public class SingleMyListing extends Fragment {
         if (args != null) {
             Tickets selectedListing = (Tickets) args.getSerializable("selectedListing");
             if (selectedListing != null) {
-                Log.i("TEST",selectedListing.getTitle());
-                Log.i("TEST",selectedListing.getSeller());
+                //Log.i("TEST",selectedListing.getTitle());
+                //Log.i("TEST",selectedListing.getSeller());
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(selectedListing.getTitle());

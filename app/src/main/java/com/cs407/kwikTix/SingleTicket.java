@@ -101,8 +101,8 @@ public class SingleTicket extends Fragment {
         if (args != null) {
             Tickets selectedListing = (Tickets) args.getSerializable("selectedListing");
             if (selectedListing != null) {
-                Log.i("TEST",selectedListing.getTitle());
-                Log.i("TEST",selectedListing.getSeller());
+               // Log.i("TEST",selectedListing.getTitle());
+               // Log.i("TEST",selectedListing.getSeller());
                 // update offer notice if previously offered.
                 ArrayList<Offer> offers = dbHelper.getOffers(null,selectedListing.getId());
                 for (Offer offer : offers){

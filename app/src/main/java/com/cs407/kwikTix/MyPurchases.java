@@ -121,7 +121,7 @@ public class MyPurchases extends Fragment {
 
     public void refreshPurchases() {
         // Notify the adapter that the data has changed
-        Log.i("TEST", displayPurchases.toString());
+       // Log.i("TEST", displayPurchases.toString());
 
         if (displayPurchases.size() == 0){
             Toast.makeText(requireContext(),"No purchases found", Toast.LENGTH_LONG).show();

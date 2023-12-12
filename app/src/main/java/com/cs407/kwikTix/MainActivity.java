@@ -102,8 +102,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onSignupButtonClick(View view) {
-        // TODO Implement
-        Log.d("Signup Button", "onSignupButtonClick: Clicked");
+        //Log.d("Signup Button", "onSignupButtonClick: Clicked");
         Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
         intent.putStringArrayListExtra("collegesArrayList", colleges);
         startActivity(intent);

@@ -119,7 +119,7 @@ public class MyListings extends Fragment {
 
     public void refreshListings() {
         // Notify the adapter that the data has changed
-        Log.i("TEST", displayListings.toString());
+        //Log.i("TEST", displayListings.toString());
 
         if (displayListings.size() == 0){
             Toast.makeText(requireContext(),"No tickets found", Toast.LENGTH_LONG).show();

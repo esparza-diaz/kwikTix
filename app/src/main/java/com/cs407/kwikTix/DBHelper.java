@@ -140,10 +140,10 @@ public class DBHelper {
         try {
             sqLiteDatabase.execSQL("INSERT INTO listings (title, date, price, college, seller, available) VALUES (?,?,?,?,?,?)",
                     new String[]{title,date,price,college,seller,available});
-            Log.i("Yay", "Ticket created");
+            //Log.i("Yay", "Ticket created");
         } catch (SQLiteConstraintException e) {
             // Handle the exception (e.g., log it or show a message) TODO: Same title
-            Log.i("Info Listings(Primary Key)", "Same primary key for " + title);
+            //Log.i("Info Listings(Primary Key)", "Same primary key for " + title);
         }
     }
 

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -120,10 +121,16 @@ public class SingleOffer extends Fragment {
         if (args != null) {
             Offer selectedOffer = (Offer) args.getSerializable("selectedOffer");
             if (selectedOffer != null) {
+                LinearLayout offerButtonsLayout = v.findViewById(R.id.offerNotAccepted);
+                if(selectedOffer.getStatus().equals("ACCEPTED")) {
+                    offerButtonsLayout.setVisibility(View.GONE);
+                } else {
+                    offerButtonsLayout.setVisibility(View.VISIBLE);
+                }
                 //retrieve ticket that the offer is associated with
                 Tickets ticket = dbHelper.getTicket(selectedOffer.getId());
-                Log.i("TEST",ticket.getTitle());
-                Log.i("TEST",selectedOffer.getBuyerUsername());
+                //Log.i("TEST",ticket.getTitle());
+                //Log.i("TEST",selectedOffer.getBuyerUsername());
                 // Update your UI with the selectedListing details
                 TextView ticketNameTextView = v.findViewById(R.id.ticketName);
                 ticketNameTextView.setText(ticket.getTitle());
@@ -213,7 +220,7 @@ public class SingleOffer extends Fragment {
 
     private void formatPriceInput(Editable editable) {
         String input = editable.toString();
-        Log.i("TEST", "formatiing");
+        //Log.i("TEST", "formatiing");
 
         // Remove previous formatting
         String cleanString = input.replaceAll("[^0-9]", "");

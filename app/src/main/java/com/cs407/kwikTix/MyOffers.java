@@ -126,7 +126,7 @@ public class MyOffers extends Fragment {
 
     public void refreshOffers() {
         // Notify the adapter that the data has changed
-        Log.i("TEST", displayOffers.toString());
+        //Log.i("TEST", displayOffers.toString());
 
         if (displayOffers.size() == 0){
             Toast.makeText(requireContext(),"No offers found", Toast.LENGTH_LONG).show();

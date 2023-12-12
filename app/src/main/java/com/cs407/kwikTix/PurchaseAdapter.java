@@ -2,6 +2,7 @@ package com.cs407.kwikTix;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class PurchaseAdapter extends ArrayAdapter<Tickets> {
         if (currentPurchase != null) {
             ticketName.setText(currentPurchase.getTitle());
             sellerName.setText(currentPurchase.getSeller());
-            purchasedPrice.setText("$" + currentPurchase.getSellPrice());
+            purchasedPrice.setText("$" + currentPurchase.getPrice());
         }
         return convertView;
     }

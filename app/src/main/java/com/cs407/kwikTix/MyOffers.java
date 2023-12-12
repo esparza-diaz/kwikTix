@@ -84,7 +84,16 @@ public class MyOffers extends Fragment {
         userLoggedIn = sharedPreferences.getString("username","");
         //filter offers by username, not by ticket id
         displayOffers.clear();
-        displayOffers = dbHelper.getOffers(userLoggedIn, null);
+
+        ArrayList<Offer> allOffers = dbHelper.getOffers(userLoggedIn, null);
+
+        for (Offer offer: allOffers){
+            if(dbHelper.getTicket(offer.getId()).getAvailable().equals("1")) {
+                displayOffers.add(offer);
+            } else if (offer.getStatus().equals("ACCEPTED")){
+                displayOffers.add(offer);
+            }
+        }
 
         adapter = new OfferAdapter(v.getContext(), displayOffers);
         myOffersListView.setAdapter(adapter);

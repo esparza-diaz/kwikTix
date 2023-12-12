@@ -110,7 +110,7 @@ public class DBHelper {
         boughtTicket(ticket,buyer, amt);
 
         // update price to reflect offer price
-        sqLiteDatabase.execSQL("UPDATE listings SET price = ? WHERE id = ?",
+        sqLiteDatabase.execSQL("UPDATE listings SET sellPrice = ? WHERE id = ?",
                 new String[]{amt,id});
 
         // set the accepted offer

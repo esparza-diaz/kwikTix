@@ -17,15 +17,20 @@ public class AcceptReceiver extends BroadcastReceiver {
 
         int notificationId = intent.getIntExtra("notificationId", -1);
         String acceptedOfferId = intent.getStringExtra("offerId");
+        String buyerUsername = intent.getStringExtra("buyerUsername");
 
         ArrayList<Offer> offers = dbHelper.getOffers(null, acceptedOfferId);
-        Offer offer;
         if (offers.size() != 0) {
-            offer = offers.get(0);
-            dbHelper.acceptOffer(offer);
+            for(Offer offer : offers) {
+                if (offer.getBuyerUsername().equals(buyerUsername)) {
+                    dbHelper.acceptOffer(offer);
+                    // Cancel notification
+                    notificationManagerCompat.cancel(notificationId);
+                }
+            }
 
-            // Cancel notification
-            notificationManagerCompat.cancel(notificationId);
+
+
         }
 
         Toast.makeText(context, context.getString(R.string.ACCEPTED),
